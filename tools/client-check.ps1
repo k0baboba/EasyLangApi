@@ -13,11 +13,13 @@ param(
     [Parameter(Mandatory)] [string] $ClientExe,
     [Parameter(Mandatory)] [string] $Password,
     [Parameter(Mandatory)] [string] $OutDir,
-    [string] $ScenePng = (Resolve-Path (Join-Path (Split-Path $PSScriptRoot) 'sample.png')).Path,
+    [string] $ScenePng = '',
     [string] $SceneTitle = 'Harbor Lights'
 )
 
 $ErrorActionPreference = 'Stop'
+# В 5.1 $PSScriptRoot пуст в значениях параметров по умолчанию — вычисляем здесь.
+if (-not $ScenePng) { $ScenePng = (Resolve-Path (Join-Path (Split-Path $PSScriptRoot) 'sample.png')).Path }
 Add-Type -AssemblyName System.Windows.Forms, System.Drawing, UIAutomationClient, UIAutomationTypes
 
 Add-Type -ReferencedAssemblies System.Drawing, System.Windows.Forms -TypeDefinition @'
@@ -46,7 +48,7 @@ public static class Desk
     [DllImport("user32.dll")] static extern IntPtr GetForegroundWindow();
     [DllImport("user32.dll", CharSet = CharSet.Unicode)] static extern int GetWindowText(IntPtr h, System.Text.StringBuilder s, int n);
 
-    const uint INPUT_MOUSE = 0, INPUT_KEYBOARD = 1, KEYUP = 2;
+    const uint INPUT_MOUSE = 0, INPUT_KEYBOARD = 1, KEYUP = 2, UNICODE = 4;
     const uint MOVE = 0x0001, LEFTDOWN = 0x0002, LEFTUP = 0x0004, ABSOLUTE = 0x8000, VIRTUALDESK = 0x4000;
 
     static uint Send(params INPUT[] inputs) { return SendInput((uint)inputs.Length, inputs, Marshal.SizeOf(typeof(INPUT))); }
@@ -74,6 +76,20 @@ public static class Desk
         var list = new System.Collections.Generic.List<INPUT>();
         foreach (var k in keys) list.Add(Key(k, false));
         for (int i = keys.Length - 1; i >= 0; i--) list.Add(Key(keys[i], true));
+        return Send(list.ToArray());
+    }
+
+    /// Набрать текст символами Unicode — не зависит от раскладки и спецсимволов SendKeys.
+    public static uint TypeText(string text)
+    {
+        var list = new System.Collections.Generic.List<INPUT>();
+        foreach (char c in text)
+        {
+            var down = new INPUT { type = INPUT_KEYBOARD };
+            down.u.ki.wScan = c; down.u.ki.dwFlags = UNICODE;
+            var up = down; up.u.ki.dwFlags = UNICODE | KEYUP;
+            list.Add(down); list.Add(up);
+        }
         return Send(list.ToArray());
     }
 
@@ -229,7 +245,9 @@ Step 'Запуск клиента и вход через окно входа' {
     Shot 'login'
     $password = Find-ById $login 'password'
     $password.SetFocus()
-    [System.Windows.Forms.SendKeys]::SendWait($Password)
+    Start-Sleep -Milliseconds 300
+    $typed = [Desk]::TypeText($Password)
+    Note "  пароль набран через SendInput: событий $typed из $($Password.Length * 2)"
     Invoke-Button (Find-ById $login 'login')
     $deadline = (Get-Date).AddSeconds(30)
     while ((Get-Date) -lt $deadline) {
@@ -253,7 +271,7 @@ Step 'Хоткей Ctrl+Shift+E через SendInput, когда активна 
     $focused = [Desk]::Focus([IntPtr]$sceneWindow.Current.NativeWindowHandle)
     Start-Sleep -Milliseconds 500
     Note "  SetForegroundWindow: $focused, активное окно: «$([Desk]::ForegroundTitle())»"
-    $sent = [Desk]::Chord(0x11, 0x10, 0x45)   # Ctrl, Shift, E
+    $sent = [Desk]::Chord([uint16[]](0x11, 0x10, 0x45))   # Ctrl, Shift, E
     Note "  SendInput принял событий: $sent из 6"
     $select = Find-Window 'EasyLangSelect' 15
     Note "  рамка выбора области открылась: $($select.Current.BoundingRectangle)"
