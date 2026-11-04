@@ -14,6 +14,8 @@ services:
       Llm__ApiKey: ${LLM_API_KEY:-}
       Llm__BaseUrl: ${LLM_BASE_URL:-https://api.openai.com/v1/}
       Llm__Model: ${LLM_MODEL:-gpt-4o-mini}
+      # Локальная модель на CPU отвечает десятки секунд — таймаут можно поднять из .env.
+      Llm__TimeoutSeconds: ${LLM_TIMEOUT_SECONDS:-60}
     volumes:
       - easylang-data:/data
     restart: unless-stopped

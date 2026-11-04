@@ -1,0 +1,95 @@
+name: live-check
+
+# Живая проверка с настоящими словарём (dictionaryapi.dev), языковой моделью (Ollama, qwen2.5:7b на CPU)
+# и Tesseract — через docker compose с профилем llm. Запускается только пушем в ветку run/live.
+# Результаты — в ветку results (папка live/) и в artifact live-check. Модель не сохраняется.
+on:
+  push:
+    branches: ["run/live"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-check
+  cancel-in-progress: false
+
+jobs:
+  live:
+    name: Приложение с настоящими сервисами
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      MODEL: qwen2.5:7b
+      OUT: out/live
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Освободить место (модель ~4,7 ГБ и образы)
+        run: |
+          df -h /
+          sudo rm -rf /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL /usr/share/swift
+          df -h /
+
+      - name: Настройки docker compose (.env только на раннере)
+        run: |
+          {
+            echo "JWT_SIGNING_KEY=$(openssl rand -hex 32)"
+            echo "LLM_API_KEY=ollama"
+            echo "LLM_BASE_URL=http://ollama:11434/v1"
+            echo "LLM_MODEL=$MODEL"
+            echo "LLM_TIMEOUT_SECONDS=900"
+          } > .env
+          mkdir -p "$OUT"
+
+      - name: docker compose --profile llm up
+        run: docker compose --profile llm up -d --build
+
+      - name: Скачать модель
+        run: |
+          docker compose exec -T ollama ollama pull "$MODEL"
+          docker compose exec -T ollama ollama list | tee "$OUT/ollama-list.txt"
+
+      - name: Второй экземпляр API без ключа — для словаря
+        run: |
+          IMAGE=$(docker inspect --format '{{.Image}}' "$(docker compose ps -q api)")
+          docker run -d --name api-dictionary -p 8081:8080 -e Jwt__SigningKey="$(openssl rand -hex 32)" "$IMAGE"
+          for port in 8080 8081; do
+            for i in $(seq 1 60); do curl -fs "http://localhost:$port/health" && break; sleep 2; done
+            echo " — порт $port"
+          done
+
+      - name: Версии
+        run: |
+          {
+            echo "commit: $GITHUB_SHA"
+            echo "runner: $RUNNER_OS $(uname -m), $(nproc) CPU, $(free -g | awk '/Mem/{print $2}') ГБ RAM"
+            echo "ollama: $(docker compose exec -T ollama ollama --version 2>&1 | tail -1)"
+            echo "tesseract: $(docker compose exec -T api tesseract --version 2>&1 | head -1)"
+            echo "model: $MODEL"
+          } | tee "$OUT/versions.txt"
+
+      - name: Пробный прогон (1 фраза)
+        run: python3 tools/live_check.py --dictionary http://localhost:8081 --llm http://localhost:8080 --out "$OUT/trial" --limit 1
+
+      - name: Полный прогон
+        run: python3 tools/live_check.py --dictionary http://localhost:8081 --llm http://localhost:8080 --out "$OUT"
+
+      - name: Логи контейнеров
+        if: always()
+        run: |
+          docker compose logs --no-color > "$OUT/compose.log" 2>&1 || true
+          docker logs api-dictionary > "$OUT/api-dictionary.log" 2>&1 || true
+
+      - name: Artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: live-check
+          path: out/live
+
+      - name: В ветку results
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash tools/push-results.sh live "$OUT"
