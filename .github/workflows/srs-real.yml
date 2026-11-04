@@ -1,0 +1,66 @@
+# Модель планировщика (srs/) на реальных ответах людей: данные Duolingo, Settles & Meeder (2016), CC BY-NC 4.0.
+# Запускается только пушем в ветку run/srs. Данные не коммитятся и не кладутся в artifact — только агрегаты.
+name: srs-real
+
+on:
+  push:
+    branches: [run/srs]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: srs-real
+  cancel-in-progress: false
+
+jobs:
+  duolingo:
+    name: Duolingo, разбиение по времени
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Скачать данные (вне репозитория)
+        run: |
+          mkdir -p "$RUNNER_TEMP/data"
+          curl -fL --retry 5 --retry-delay 10 -o "$RUNNER_TEMP/data/traces.csv.gz" \
+            https://dataverse.harvard.edu/api/access/datafile/3091087
+          ls -l "$RUNNER_TEMP/data/traces.csv.gz"
+          sha256sum "$RUNNER_TEMP/data/traces.csv.gz" | tee "$RUNNER_TEMP/sha256.txt"
+          head -c 2 "$RUNNER_TEMP/data/traces.csv.gz" | od -An -tx1
+
+      - name: Проба на 200 тысячах строк
+        working-directory: srs
+        run: python3 -m srs_sim.duolingo --data "$RUNNER_TEMP/data/traces.csv.gz" --out out/duolingo-probe --limit 200000
+
+      - name: Полный прогон
+        working-directory: srs
+        run: python3 -m srs_sim.duolingo --data "$RUNNER_TEMP/data/traces.csv.gz" --out out/duolingo
+
+      - name: Окружение
+        if: always()
+        run: |
+          mkdir -p srs/out/duolingo
+          {
+            echo "data: settles.acl16.learning_traces.13m.csv.gz, https://dataverse.harvard.edu/api/access/datafile/3091087"
+            echo "license: CC BY-NC 4.0, authors: Burr Settles, Brendan Meeder (Duolingo)"
+            echo "sha256: $(cut -d' ' -f1 "$RUNNER_TEMP/sha256.txt" 2>/dev/null)"
+            echo "python: $(python3 --version 2>&1)"
+            echo "cpu: $(nproc), memory: $(free -g | awk '/Mem:/ {print $2}') GiB"
+            echo "git: $GITHUB_SHA ($GITHUB_REF_NAME), run $GITHUB_RUN_ID"
+            echo "date: $(date -u '+%Y-%m-%d %H:%M UTC')"
+          } > srs/out/duolingo/environment.txt
+          cp -r srs/out/duolingo-probe srs/out/duolingo/probe 2>/dev/null || true
+
+      - name: Сохранить в results
+        if: always()
+        run: bash eval/ci/save_results.sh srs/out/duolingo results/srs "srs-real — Duolingo, run ${{ github.run_id }}"
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: srs-real
+          path: srs/out/duolingo
