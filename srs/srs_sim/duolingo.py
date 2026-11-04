@@ -172,13 +172,46 @@ def features_bias(t: Traces, i: int) -> list[float]:
 
 
 class LogisticModel:
-    """Базовая линия без формы «экспонента от времени»: логистическая регрессия, онлайн, log-loss."""
+    """Базовая линия без формы «экспонента от времени»: логистическая регрессия.
+
+    Обучается не онлайн, а точно — методом Ньютона (IRLS) по всей обучающей части,
+    по кросс-энтропии с долей верных в сессии как целью. Так базовая линия не проигрывает
+    из-за плохо подобранного шага: онлайн-спуск с шагом 0.01 на ненормированных признаках
+    в первом прогоне не сошёлся (MAE 0.29, хуже константы).
+    """
 
     name = "logistic"
 
-    def __init__(self, learning_rate: float = 0.01, l2: float = 1e-6) -> None:
+    def __init__(self, iterations: int = 8, l2: float = 1e-6) -> None:
         self.weights = [0.0] * 5
-        self.learning_rate, self.l2 = learning_rate, l2
+        self.iterations, self.l2 = iterations, l2
+
+    def fit(self, t: Traces, rows: list[int]) -> None:
+        k = len(self.weights)
+        for _ in range(self.iterations):
+            g = [0.0] * k
+            h = [[0.0] * k for _ in range(k)]
+            for i in rows:
+                x = self.x(t, i)
+                p = self.predict(t, i)
+                r = p - t.p_recall[i]
+                w = max(p * (1.0 - p), 1e-9)
+                for a in range(k):
+                    g[a] += r * x[a]
+                    xa = w * x[a]
+                    ha = h[a]
+                    for b in range(a, k):
+                        ha[b] += xa * x[b]
+            n = len(rows)
+            for a in range(k):
+                g[a] = g[a] / n + self.l2 * self.weights[a]
+                for b in range(a, k):
+                    h[a][b] = h[a][b] / n + (self.l2 if a == b else 0.0)
+                    h[b][a] = h[a][b]
+            step = solve(h, g)
+            self.weights = [w - s for w, s in zip(self.weights, step)]
+            if max(abs(s) for s in step) < 1e-7:
+                break
 
     @staticmethod
     def x(t: Traces, i: int) -> list[float]:
@@ -190,11 +223,23 @@ class LogisticModel:
         z = max(-30.0, min(30.0, z))
         return 1.0 / (1.0 + math.exp(-z))
 
-    def update(self, t: Traces, i: int) -> None:
-        x = self.x(t, i)
-        g = self.predict(t, i) - t.p_recall[i]
-        for k, v in enumerate(x):
-            self.weights[k] -= self.learning_rate * (g * v + self.l2 * self.weights[k])
+
+
+def solve(a: list[list[float]], b: list[float]) -> list[float]:
+    """Решение a·x = b методом Гаусса с выбором главного элемента (маленькие системы)."""
+    n = len(b)
+    m = [row[:] + [b[i]] for i, row in enumerate(a)]
+    for c in range(n):
+        piv = max(range(c, n), key=lambda r: abs(m[r][c]))
+        if abs(m[piv][c]) < 1e-15:
+            raise ValueError("вырожденная система")
+        m[c], m[piv] = m[piv], m[c]
+        for r in range(n):
+            if r != c:
+                f = m[r][c] / m[c][c]
+                for cc in range(c, n + 1):
+                    m[r][cc] -= f * m[c][cc]
+    return [m[i][n] / m[i][i] for i in range(n)]
 
 
 class ConstantModel:
@@ -292,8 +337,11 @@ def run(path: Path, train_share: float = 0.8, limit: int | None = None, log=prin
     results = {}
     for model in make_models():
         s = time.monotonic()
-        for i in train:
-            model.update(t, i)
+        if hasattr(model, "fit"):
+            model.fit(t, train)
+        else:
+            for i in train:
+                model.update(t, i)
         metrics = evaluate(model, t, test)
         metrics["weights"] = [round(w, 6) for w in model.weights]
         metrics["seconds"] = round(time.monotonic() - s, 1)
@@ -321,7 +369,7 @@ def run(path: Path, train_share: float = 0.8, limit: int | None = None, log=prin
 NAMES = {
     "constant": "Константа (средняя доля верных на обучении)",
     "hlr_bias": "Экспонента с одним периодом полураспада для всех",
-    "logistic": "Логистическая регрессия (те же признаки + log(1+Δ))",
+    "logistic": "Логистическая регрессия (те же признаки + log(1+Δ), метод Ньютона)",
     "hlr_ours": "**Наш планировщик** (HLR, признаки AdaptiveScheduler)",
 }
 

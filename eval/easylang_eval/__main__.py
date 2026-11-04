@@ -8,9 +8,10 @@ import re
 import sys
 from pathlib import Path
 
+from . import blind
 from .dataset import CATEGORIES, DEFAULT_PATH, DatasetError, load
 from .explainers import VARIANTS, LlmConfig
-from .runner import ConfigMismatch, RunConfig, run, write_report
+from .runner import ConfigMismatch, RunConfig, merge_runs, run, write_report
 
 OUT_ROOT = Path(__file__).resolve().parent.parent / "out"
 
@@ -47,6 +48,7 @@ def build_parser() -> argparse.ArgumentParser:
     o.add_argument("--category", choices=CATEGORIES, help="только одна категория")
     o.add_argument("--ids", help="только эти id через запятую")
     o.add_argument("--limit", type=int, help="только первые N фраз (для пробного запуска)")
+    o.add_argument("--shard", help="часть набора i/N: фразы с номерами i, i+N, i+2N… (с нуля), для параллельных задач")
     o.add_argument("--language", default="Russian", help="язык объяснений, как Llm:ExplanationLanguage")
     o.add_argument("--workers", type=int, default=1, help="параллельных запросов (для Ollama оставьте 1)")
     o.add_argument("--timeout", type=float, default=60.0, help="таймаут запроса, секунд")
@@ -54,6 +56,23 @@ def build_parser() -> argparse.ArgumentParser:
     o.add_argument("--dataset", type=Path, default=DEFAULT_PATH)
     o.add_argument("--out", type=Path, help="папка прогона (по умолчанию out/<модель>)")
     o.add_argument("--fresh", action="store_true", help="начать заново, удалив прежние ответы в папке")
+
+    m = sub.add_parser("merge", help="собрать части прогона (--shard) в одну папку и построить отчёт")
+    m.add_argument("--into", type=Path, required=True)
+    m.add_argument("parts", type=Path, nargs="+")
+    m.add_argument("--dataset", type=Path, default=DEFAULT_PATH)
+
+    b = sub.add_parser("blind", help="слепая проверка судьи человеком")
+    bsub = b.add_subparsers(dest="blind_command", required=True)
+    be = bsub.add_parser("export", help="выгрузить случайные ответы без варианта и вердикта")
+    be.add_argument("--run", type=Path, required=True, help="папка готового прогона")
+    be.add_argument("--out", type=Path, required=True, help="куда положить blind.csv и ключ")
+    be.add_argument("--n", type=int, default=60)
+    be.add_argument("--seed", type=int, default=2026)
+    be.add_argument("--dataset", type=Path, default=DEFAULT_PATH)
+    bs = bsub.add_parser("score", help="посчитать согласие человека с судьёй")
+    bs.add_argument("--dir", type=Path, required=True, help="папка с заполненным blind.csv и blind_key.json")
+    bs.add_argument("--dataset", type=Path, default=DEFAULT_PATH)
 
     rep = sub.add_parser("report", help="пересчитать results.md по готовым файлам прогона")
     rep.add_argument("--out", type=Path, required=True)
@@ -70,6 +89,13 @@ def select(items, args):
         if unknown:
             raise SystemExit(f"нет таких id: {', '.join(sorted(unknown))}")
         items = [i for i in items if i.id in wanted]
+    if args.shard:
+        try:
+            i, n = (int(x) for x in args.shard.split("/"))
+            assert 0 <= i < n
+        except (ValueError, AssertionError):
+            raise SystemExit("--shard ожидает i/N, где 0 <= i < N, например 0/6")
+        items = items[i::n]
     if args.limit is not None:
         items = items[: args.limit]
     return items
@@ -85,6 +111,25 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "report":
         print(write_report(items, args.out))
+        return 0
+    if args.command == "blind":
+        if args.blind_command == "export":
+            try:
+                print(blind.export(items, args.run, args.out, n=args.n, seed=args.seed))
+            except (ValueError, OSError) as e:
+                print(e, file=sys.stderr)
+                return 2
+        else:
+            agreement = blind.score(args.dir)
+            (args.dir / "agreement.md").write_text(agreement.as_markdown(), encoding="utf-8")
+            print(agreement.as_markdown())
+        return 0
+    if args.command == "merge":
+        try:
+            print(merge_runs(items, args.parts, args.into))
+        except ConfigMismatch as e:
+            print(e, file=sys.stderr)
+            return 2
         return 0
 
     variants = tuple(v.strip() for v in args.variants.split(",") if v.strip())

@@ -14,21 +14,25 @@ import random
 import re
 from dataclasses import dataclass
 
-from .dataset import Item
+from .dataset import Item, tokenize
 from .explainers import LlmConfig, chat
 from .http_client import HttpClient, ServiceError
 
 NONE_OPTION = "Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)"
 
+# Версия 2: судья не видит саму фразу. В пробе 04.11.2026 судья версии 1 (llama3.1:8b) видел фразу
+# и выбирал правильный смысл по своему знанию, даже когда объяснение было о другом
+# (словарь про no cap: «шапка» — вердикт «верно»). Без фразы ему остаётся только текст объяснения.
+JUDGE_VERSION = 2
 JUDGE_SYSTEM_PROMPT = (
     "You grade explanations produced by a language-learning tool.\n"
-    "You get an English phrase, an explanation of it, and numbered candidate meanings (in Russian).\n"
-    "Pick the single candidate that matches what the explanation says the phrase means.\n"
-    "Judge only the explanation text: do not use your own knowledge of the phrase to fix a wrong or vague explanation.\n"
+    "You get an explanation of some English phrase (the phrase itself is hidden) and numbered candidate meanings (in Russian).\n"
+    "Pick the single candidate whose meaning matches what the explanation says.\n"
     "If the explanation is empty, matches none of the candidates, or lists several unrelated meanings "
     "without committing to one, pick the last candidate.\n"
     'Reply with one JSON object and nothing else: {"choice": <number>}'
 )
+MASK = "[…]"
 
 
 @dataclass(frozen=True)
@@ -54,11 +58,17 @@ def options_for(item: Item) -> Options:
     return Options(texts=texts, correct=meanings.index(item.correct), none=len(texts) - 1)
 
 
+def mask_phrase(text: str, phrase: str) -> str:
+    """Убрать из объяснения саму фразу и её слова длиннее двух букв, чтобы судья не узнал фразу."""
+    words = sorted({w for w in tokenize(phrase) if len(w) > 2}, key=len, reverse=True)
+    patterns = [re.escape(phrase)] + [re.escape(w) for w in words]
+    return re.sub(r"(?<![\w'])(?:" + "|".join(patterns) + r")(?![\w'])", MASK, text, flags=re.IGNORECASE)
+
+
 def build_judge_prompt(item: Item, explanation: str, options: Options) -> str:
     lines = [
-        f'Phrase: "{item.phrase}"',
         "Explanation:",
-        explanation.strip() or "(empty)",
+        mask_phrase(explanation.strip(), item.phrase) or "(empty)",
         "",
         "Candidates:",
     ]
