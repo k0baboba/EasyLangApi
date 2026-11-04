@@ -1,0 +1,93 @@
+api-1  | info: Microsoft.EntityFrameworkCore.Migrations[20411]
+api-1  |       Acquiring an exclusive lock for migration application. See https://aka.ms/efcore-docs-migrations-lock for more information if this takes too long.
+api-1  | info: Microsoft.EntityFrameworkCore.Migrations[20402]
+api-1  |       Applying migration '20261104121405_InitialCreate'.
+api-1  | info: Microsoft.EntityFrameworkCore.Migrations[20402]
+api-1  |       Applying migration '20261104123007_AddUsers'.
+api-1  | warn: Microsoft.EntityFrameworkCore.Migrations[20410]
+api-1  |       The migration operation 'PRAGMA foreign_keys = 0;
+api-1  |       ' from migration 'AddUsers' cannot be executed in a transaction. If the app is terminated or an unrecoverable error occurs while this operation is being executed then the migration will be left in a partially applied state and would need to be reverted manually before it can be applied again. Create a separate migration that contains just this operation.
+api-1  | warn: Microsoft.AspNetCore.DataProtection.Repositories.FileSystemXmlRepository[60]
+api-1  |       Storing keys in a directory '/home/app/.aspnet/DataProtection-Keys' that may not be persisted outside of the container. Protected data will be unavailable when container is destroyed. For more information go to https://aka.ms/aspnet/dataprotectionwarning
+api-1  | warn: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[35]
+api-1  |       No XML encryptor configured. Key {e73004dd-d10a-4189-a179-04775d8071bc} may be persisted to storage in unencrypted form.
+api-1  | info: Microsoft.Hosting.Lifetime[14]
+api-1  |       Now listening on: http://[::]:8080
+api-1  | info: Microsoft.Hosting.Lifetime[0]
+api-1  |       Application started. Press Ctrl+C to shut down.
+api-1  | info: Microsoft.Hosting.Lifetime[0]
+api-1  |       Hosting environment: Production
+api-1  | info: Microsoft.Hosting.Lifetime[0]
+api-1  |       Content root path: /app
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 53409.5181ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 53416.4844ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 22137.3949ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 22137.5296ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 31875.6081ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 31875.7606ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 40586.9972ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 40587.1473ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 32207.664ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 32207.8154ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 37956.0801ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 37956.2443ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 34145.75ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 34146.0858ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 30054.1377ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 30054.512ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[100]
+api-1  |       Start processing HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[100]
+api-1  |       Sending HTTP request POST http://ollama:11434/v1/chat/completions
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.ClientHandler[101]
+api-1  |       Received HTTP response headers after 38925.6484ms - 200
+api-1  | info: System.Net.Http.HttpClient.LlmExplainer.LogicalHandler[101]
+api-1  |       End processing HTTP request after 38925.759ms - 200

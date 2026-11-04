@@ -1,0 +1,5 @@
+commit: 2daf1e57ddd5528d2d0a6bca59bddb08acc9594b
+runner: Linux x86_64, 4 CPU, 15 ГБ RAM
+ollama: ollama version is 0.12.6
+tesseract: tesseract 5.3.4
+model: qwen2.5:7b

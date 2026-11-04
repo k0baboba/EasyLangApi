@@ -1,0 +1,563 @@
+{
+ "phrases": [
+  {
+   "phrase": "shift",
+   "line": "LEO: I'm beat. Double shift at the docks again.",
+   "dictionary": {
+    "status": 200,
+    "seconds": 0.04,
+    "explanation": {
+     "phrase": "shift",
+     "source": "dictionary",
+     "found": true,
+     "summary": "A modifier key whose main function is shifting between two or more functions of any of certain other keys (usually by pressing Shift and the other button simultaneously).",
+     "phonetic": "/ʃɪft/",
+     "translation": null,
+     "contextNote": null,
+     "senses": [
+      {
+       "word": "shift",
+       "partOfSpeech": "noun",
+       "definition": "A modifier key whose main function is shifting between two or more functions of any of certain other keys (usually by pressing Shift and the other button simultaneously).",
+       "example": null
+      },
+      {
+       "word": "shift",
+       "partOfSpeech": "noun",
+       "definition": "A type of women's undergarment, a slip.",
+       "example": "Just last week she bought a new shift at the market."
+      },
+      {
+       "word": "shift",
+       "partOfSpeech": "verb",
+       "definition": "(sometimes figurative) To move from one place to another; to redistribute.",
+       "example": "We'll have to shift these boxes to the downtown office."
+      },
+      {
+       "word": "shift",
+       "partOfSpeech": "noun",
+       "definition": "A change of workers, now specifically a set group of workers or period of working time.",
+       "example": "We'll work three shifts a day till the job's done."
+      },
+      {
+       "word": "shift",
+       "partOfSpeech": "verb",
+       "definition": "To change in form or character; swap.",
+       "example": null
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "Rain on the window. The diner is almost empty.",
+      "MAYA: You look like you haven't slept in days."
+     ],
+     "currentLine": "LEO: I'm beat. Double shift at the docks again.",
+     "after": [
+      "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+      "LEO: Thanks. So, are you gonna spill the beans or what?"
+     ]
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 22.15,
+    "explanation": {
+     "phrase": "shift",
+     "source": "llm",
+     "found": true,
+     "summary": "Лео очень устал после работы на двойной смене в порту.",
+     "phonetic": null,
+     "translation": "устал",
+     "contextNote": "Лео говорит об усталости после трудного дня работы, что объясняет его состояние и желание выпить кофе. В контексте сериала это показывает его уставший и раздраженный настроение.",
+     "senses": [
+      {
+       "word": "shift",
+       "partOfSpeech": "verb / idiom",
+       "definition": "Лео очень устал после работы на двойной смене в порту.",
+       "example": "I'm beat after a long day of meetings."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "Rain on the window. The diner is almost empty.",
+      "MAYA: You look like you haven't slept in days."
+     ],
+     "currentLine": "LEO: I'm beat. Double shift at the docks again.",
+     "after": [
+      "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+      "LEO: Thanks. So, are you gonna spill the beans or what?"
+     ]
+    }
+   }
+  },
+  {
+   "phrase": "beat",
+   "line": "LEO: I'm beat. Double shift at the docks again.",
+   "dictionary": {
+    "status": 200,
+    "seconds": 0.04,
+    "explanation": {
+     "phrase": "beat",
+     "source": "dictionary",
+     "found": true,
+     "summary": "Dilapidated, beat up",
+     "phonetic": "/biːt/",
+     "translation": null,
+     "contextNote": null,
+     "senses": [
+      {
+       "word": "beat",
+       "partOfSpeech": "adjective",
+       "definition": "Dilapidated, beat up",
+       "example": "Dude, you drive a beat car like that and you ain’t gonna get no honeys."
+      },
+      {
+       "word": "beat",
+       "partOfSpeech": "noun",
+       "definition": "A pulsation or throb.",
+       "example": "a beat of the heart; the beat of the pulse"
+      },
+      {
+       "word": "beat",
+       "partOfSpeech": "verb",
+       "definition": "To hit; strike",
+       "example": "As soon as she heard that her father had died, she went into a rage and beat the wall with her fists until her knuckles bled."
+      },
+      {
+       "word": "beat",
+       "partOfSpeech": "verb",
+       "definition": "To strike or pound repeatedly, usually in some sort of rhythm.",
+       "example": "He danced hypnotically while she beat the atabaque."
+      },
+      {
+       "word": "beat",
+       "partOfSpeech": "adjective",
+       "definition": "Exhausted",
+       "example": "After the long day, she was feeling completely beat."
+      },
+      {
+       "word": "beat",
+       "partOfSpeech": "noun",
+       "definition": "A stroke; a blow.",
+       "example": null
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "Rain on the window. The diner is almost empty.",
+      "MAYA: You look like you haven't slept in days."
+     ],
+     "currentLine": "LEO: I'm beat. Double shift at the docks again.",
+     "after": [
+      "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+      "LEO: Thanks. So, are you gonna spill the beans or what?"
+     ]
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 31.88,
+    "explanation": {
+     "phrase": "beat",
+     "source": "llm",
+     "found": true,
+     "summary": "Лео чувствует себя уставшим после двойной смены на доках.",
+     "phonetic": null,
+     "translation": "устал",
+     "contextNote": "Фраза используется, чтобы показать состояние Лео после тяжелого дня работы. Это повседневный разговорный язык.",
+     "senses": [
+      {
+       "word": "beat",
+       "partOfSpeech": "verb / idiom",
+       "definition": "Лео чувствует себя уставшим после двойной смены на доках.",
+       "example": "I'm beat after that long meeting. Let's call it a day."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "Rain on the window. The diner is almost empty.",
+      "MAYA: You look like you haven't slept in days."
+     ],
+     "currentLine": "LEO: I'm beat. Double shift at the docks again.",
+     "after": [
+      "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+      "LEO: Thanks. So, are you gonna spill the beans or what?"
+     ]
+    }
+   }
+  },
+  {
+   "phrase": "casing",
+   "line": "MAYA: About the guy in the grey coat? He's been casing the place all week.",
+   "dictionary": {
+    "status": 200,
+    "seconds": 0.03,
+    "explanation": {
+     "phrase": "casing",
+     "source": "dictionary",
+     "found": true,
+     "summary": "To place (an item or items of manufacture) into a box, as in preparation for shipment.",
+     "phonetic": "/ˈkeɪsɪŋ/",
+     "translation": null,
+     "contextNote": null,
+     "senses": [
+      {
+       "word": "casing",
+       "partOfSpeech": "verb",
+       "definition": "To place (an item or items of manufacture) into a box, as in preparation for shipment.",
+       "example": null
+      },
+      {
+       "word": "casing",
+       "partOfSpeech": "noun",
+       "definition": "That which encloses or encases.",
+       "example": "Some people like to split the casing of a sausage before cooking so it doesn't burst."
+      },
+      {
+       "word": "casing",
+       "partOfSpeech": "noun",
+       "definition": "The decorative trim around a door or window.",
+       "example": null
+      },
+      {
+       "word": "casing",
+       "partOfSpeech": "verb",
+       "definition": "To propose hypothetical cases.",
+       "example": null
+      },
+      {
+       "word": "casing",
+       "partOfSpeech": "verb",
+       "definition": "To cover or protect with, or as if with, a case; to enclose.",
+       "example": null
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "MAYA",
+     "before": [
+      "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+      "LEO: Thanks. So, are you gonna spill the beans or what?"
+     ],
+     "currentLine": "MAYA: About the guy in the grey coat? He's been casing the place all week.",
+     "after": [
+      "LEO: Casing it? Come on, you're pulling my leg.",
+      "MAYA: No cap. He counts the register every time I turn around."
+     ]
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 40.59,
+    "explanation": {
+     "phrase": "casing",
+     "source": "llm",
+     "found": true,
+     "summary": "Он обходил здание всю неделю.",
+     "phonetic": null,
+     "translation": "обход",
+     "contextNote": "Майя использует термин 'casing', который в данном контексте означает, что человек осматривает или изучает место с целью совершения преступления. Это профессиональный термин, часто используемый в полиции и следственных делах.",
+     "senses": [
+      {
+       "word": "casing",
+       "partOfSpeech": "verb / idiom",
+       "definition": "Он обходил здание всю неделю.",
+       "example": "Он пришел на новую работу, чтобы посмотреть все маршруты выхода и входа - он там уже касался."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "MAYA",
+     "before": [
+      "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+      "LEO: Thanks. So, are you gonna spill the beans or what?"
+     ],
+     "currentLine": "MAYA: About the guy in the grey coat? He's been casing the place all week.",
+     "after": [
+      "LEO: Casing it? Come on, you're pulling my leg.",
+      "MAYA: No cap. He counts the register every time I turn around."
+     ]
+    }
+   }
+  },
+  {
+   "phrase": "on the house",
+   "line": "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+   "dictionary": {
+    "status": 503,
+    "seconds": 0.24,
+    "problem": {
+     "type": "https://tools.ietf.org/html/rfc9110#section-15.6.4",
+     "title": "Сервис разбора фраз недоступен",
+     "status": 503,
+     "detail": "Словарь ответил кодом 403.",
+     "traceId": "00-e89f2f0f931fa02fa161882724ca4ddd-99360c34592d6b64-00"
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 32.22,
+    "explanation": {
+     "phrase": "on the house",
+     "source": "llm",
+     "found": true,
+     "summary": "Кофе今晚免费。别告诉我老板。",
+     "phonetic": null,
+     "translation": "бесплатно",
+     "contextNote": "Майя говорит это, чтобыLeo не чувствовал себя виноватым за то, что она платит за кофе. Это дружеский жест.",
+     "senses": [
+      {
+       "word": "on the house",
+       "partOfSpeech": "phrase / idiom",
+       "definition": "Кофе今晚免费。别告诉我老板。",
+       "example": "The restaurant said drinks were on the house for the anniversary celebration."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "MAYA",
+     "before": [
+      "MAYA: You look like you haven't slept in days.",
+      "LEO: I'm beat. Double shift at the docks again."
+     ],
+     "currentLine": "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+     "after": [
+      "LEO: Thanks. So, are you gonna spill the beans or what?",
+      "MAYA: About the guy in the grey coat? He's been casing the place all week."
+     ]
+    }
+   }
+  },
+  {
+   "phrase": "no cap",
+   "line": "MAYA: No cap. He counts the register every time I turn around.",
+   "dictionary": {
+    "status": 503,
+    "seconds": 0.13,
+    "problem": {
+     "type": "https://tools.ietf.org/html/rfc9110#section-15.6.4",
+     "title": "Сервис разбора фраз недоступен",
+     "status": 503,
+     "detail": "Словарь ответил кодом 403.",
+     "traceId": "00-c2e98c0c26ff584dd2817f9e21f925f9-768e077e91884aeb-00"
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 37.96,
+    "explanation": {
+     "phrase": "no cap",
+     "source": "llm",
+     "found": true,
+     "summary": "Don't exaggerate or lie. He's just observing the place regularly.",
+     "phonetic": null,
+     "translation": "не шути",
+     "contextNote": "Майя говорит это, чтобы Лео не сомневался в её словах и показать, что она говорит правду, а не шутит или преувеличивает. В контексте сериала это подчеркивает серьезность ситуации.",
+     "senses": [
+      {
+       "word": "no cap",
+       "partOfSpeech": "idiom / slang",
+       "definition": "Don't exaggerate or lie. He's just observing the place regularly.",
+       "example": "Don't worry, no cap, I'm just here for a coffee."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "MAYA",
+     "before": [
+      "MAYA: About the guy in the grey coat? He's been casing the place all week.",
+      "LEO: Casing it? Come on, you're pulling my leg."
+     ],
+     "currentLine": "MAYA: No cap. He counts the register every time I turn around.",
+     "after": [
+      "LEO: Then we call the cops before he makes a move.",
+      "MAYA: And say what? That a guy likes our pie a little too much?"
+     ]
+    }
+   }
+  },
+  {
+   "phrase": "pulling my leg",
+   "line": "LEO: Casing it? Come on, you're pulling my leg.",
+   "dictionary": {
+    "status": 503,
+    "seconds": 0.23,
+    "problem": {
+     "type": "https://tools.ietf.org/html/rfc9110#section-15.6.4",
+     "title": "Сервис разбора фраз недоступен",
+     "status": 503,
+     "detail": "Словарь ответил кодом 403.",
+     "traceId": "00-52bae6ee3dad1331f310b7e0c211594d-bdb34c5793122d48-00"
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 34.15,
+    "explanation": {
+     "phrase": "pulling my leg",
+     "source": "llm",
+     "found": true,
+     "summary": "ты шутишь со мной",
+     "phonetic": null,
+     "translation": "шутить со мной",
+     "contextNote": "Leo thinks Maya is joking when she says the man in the grey coat has been casing the place. He believes that what she's saying isn't true and suspects she's just making fun of him.",
+     "senses": [
+      {
+       "word": "pulling my leg",
+       "partOfSpeech": "phrasal verb / slang",
+       "definition": "ты шутишь со мной",
+       "example": "Don't pull my leg, I saw them with my own eyes."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "LEO: Thanks. So, are you gonna spill the beans or what?",
+      "MAYA: About the guy in the grey coat? He's been casing the place all week."
+     ],
+     "currentLine": "LEO: Casing it? Come on, you're pulling my leg.",
+     "after": [
+      "MAYA: No cap. He counts the register every time I turn around.",
+      "LEO: Then we call the cops before he makes a move."
+     ]
+    }
+   }
+  },
+  {
+   "phrase": "gonna",
+   "line": "LEO: Thanks. So, are you gonna spill the beans or what?",
+   "dictionary": {
+    "status": 503,
+    "seconds": 0.1,
+    "problem": {
+     "type": "https://tools.ietf.org/html/rfc9110#section-15.6.4",
+     "title": "Сервис разбора фраз недоступен",
+     "status": 503,
+     "detail": "Словарь ответил кодом 403.",
+     "traceId": "00-28bcbb7f2bc5e96d7c123268697315f2-dc56699c7293463d-00"
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 30.06,
+    "explanation": {
+     "phrase": "gonna",
+     "source": "llm",
+     "found": true,
+     "summary": "Are you going to do it or not?",
+     "phonetic": null,
+     "translation": "справишься или нет",
+     "contextNote": "Leo is using a casual form of speech, asking Maya if she will reveal the information. This fits the informal tone of their conversation.",
+     "senses": [
+      {
+       "word": "gonna",
+       "partOfSpeech": "verb phrase / slang",
+       "definition": "Are you going to do it or not?",
+       "example": "I'm gonna go for a walk after dinner."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "LEO: I'm beat. Double shift at the docks again.",
+      "MAYA: Coffee's on the house tonight. Don't tell my boss."
+     ],
+     "currentLine": "LEO: Thanks. So, are you gonna spill the beans or what?",
+     "after": [
+      "MAYA: About the guy in the grey coat? He's been casing the place all week.",
+      "LEO: Casing it? Come on, you're pulling my leg."
+     ]
+    }
+   }
+  },
+  {
+   "phrase": "spill the beans",
+   "line": "LEO: Thanks. So, are you gonna spill the beans or what?",
+   "dictionary": {
+    "status": 503,
+    "seconds": 0.2,
+    "problem": {
+     "type": "https://tools.ietf.org/html/rfc9110#section-15.6.4",
+     "title": "Сервис разбора фраз недоступен",
+     "status": 503,
+     "detail": "Словарь ответил кодом 403.",
+     "traceId": "00-29117c22b72b1cde069088379cb8aefe-c2863fd516e1751a-00"
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 38.93,
+    "explanation": {
+     "phrase": "spill the beans",
+     "source": "llm",
+     "found": true,
+     "summary": "скажешь ли ты что-нибудь или нет, расскажи всё, не скрывай",
+     "phonetic": null,
+     "translation": "рассказать все, не скрывать",
+     "contextNote": "Leo использует это выражение, чтобы узнать, собирается ли Maya говорить с ним о чем-то важном. Это типично для разговорной речи, когда кто-то хочет услышать правду или информацию.",
+     "senses": [
+      {
+       "word": "spill the beans",
+       "partOfSpeech": "phrasal verb",
+       "definition": "скажешь ли ты что-нибудь или нет, расскажи всё, не скрывай",
+       "example": "Don't worry, I won't spill the beans about who's organizing the surprise party."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "LEO: I'm beat. Double shift at the docks again.",
+      "MAYA: Coffee's on the house tonight. Don't tell my boss."
+     ],
+     "currentLine": "LEO: Thanks. So, are you gonna spill the beans or what?",
+     "after": [
+      "MAYA: About the guy in the grey coat? He's been casing the place all week.",
+      "LEO: Casing it? Come on, you're pulling my leg."
+     ]
+    }
+   }
+  }
+ ],
+ "recognize": {
+  "status": 200,
+  "seconds": 0.16,
+  "response": {
+   "text": "Are you gonna spill the beans?\n\nNo cap. He counts the register.",
+   "episodeId": 4,
+   "lines": [
+    {
+     "id": 27,
+     "index": 0,
+     "text": "Are you gonna spill the beans?"
+    },
+    {
+     "id": 28,
+     "index": 1,
+     "text": "No cap. He counts the register."
+    }
+   ]
+  }
+ }
+}

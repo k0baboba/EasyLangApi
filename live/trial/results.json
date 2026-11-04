@@ -1,0 +1,120 @@
+{
+ "phrases": [
+  {
+   "phrase": "shift",
+   "line": "LEO: I'm beat. Double shift at the docks again.",
+   "dictionary": {
+    "status": 200,
+    "seconds": 0.41,
+    "explanation": {
+     "phrase": "shift",
+     "source": "dictionary",
+     "found": true,
+     "summary": "A modifier key whose main function is shifting between two or more functions of any of certain other keys (usually by pressing Shift and the other button simultaneously).",
+     "phonetic": "/ʃɪft/",
+     "translation": null,
+     "contextNote": null,
+     "senses": [
+      {
+       "word": "shift",
+       "partOfSpeech": "noun",
+       "definition": "A modifier key whose main function is shifting between two or more functions of any of certain other keys (usually by pressing Shift and the other button simultaneously).",
+       "example": null
+      },
+      {
+       "word": "shift",
+       "partOfSpeech": "noun",
+       "definition": "A type of women's undergarment, a slip.",
+       "example": "Just last week she bought a new shift at the market."
+      },
+      {
+       "word": "shift",
+       "partOfSpeech": "verb",
+       "definition": "(sometimes figurative) To move from one place to another; to redistribute.",
+       "example": "We'll have to shift these boxes to the downtown office."
+      },
+      {
+       "word": "shift",
+       "partOfSpeech": "noun",
+       "definition": "A change of workers, now specifically a set group of workers or period of working time.",
+       "example": "We'll work three shifts a day till the job's done."
+      },
+      {
+       "word": "shift",
+       "partOfSpeech": "verb",
+       "definition": "To change in form or character; swap.",
+       "example": null
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "Rain on the window. The diner is almost empty.",
+      "MAYA: You look like you haven't slept in days."
+     ],
+     "currentLine": "LEO: I'm beat. Double shift at the docks again.",
+     "after": [
+      "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+      "LEO: Thanks. So, are you gonna spill the beans or what?"
+     ]
+    }
+   },
+   "llm": {
+    "status": 200,
+    "seconds": 53.58,
+    "explanation": {
+     "phrase": "shift",
+     "source": "llm",
+     "found": true,
+     "summary": "Лео очень устал после работы на доках.",
+     "phonetic": null,
+     "translation": "утомленный",
+     "contextNote": "Лео говорит, что он устал и работает двойную смену на доках снова. Это фраза, которая показывает его состояние после тяжелого дня.",
+     "senses": [
+      {
+       "word": "shift",
+       "partOfSpeech": "verb / idiom",
+       "definition": "Лео очень устал после работы на доках.",
+       "example": "I'm beat after a long day of meetings."
+      }
+     ]
+    },
+    "context": {
+     "title": "Night Shift S01E01",
+     "speaker": "LEO",
+     "before": [
+      "Rain on the window. The diner is almost empty.",
+      "MAYA: You look like you haven't slept in days."
+     ],
+     "currentLine": "LEO: I'm beat. Double shift at the docks again.",
+     "after": [
+      "MAYA: Coffee's on the house tonight. Don't tell my boss.",
+      "LEO: Thanks. So, are you gonna spill the beans or what?"
+     ]
+    }
+   }
+  }
+ ],
+ "recognize": {
+  "status": 200,
+  "seconds": 0.22,
+  "response": {
+   "text": "Are you gonna spill the beans?\n\nNo cap. He counts the register.",
+   "episodeId": 2,
+   "lines": [
+    {
+     "id": 13,
+     "index": 0,
+     "text": "Are you gonna spill the beans?"
+    },
+    {
+     "id": 14,
+     "index": 1,
+     "text": "No cap. He counts the register."
+    }
+   ]
+  }
+ }
+}
