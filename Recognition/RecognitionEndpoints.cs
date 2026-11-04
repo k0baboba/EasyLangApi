@@ -1,4 +1,5 @@
 using EasyLangApi.Episodes;
+using EasyLangApi.Quotas;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,9 @@ public static class RecognitionEndpoints
 
     public static IEndpointRouteBuilder MapRecognitionEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/recognize", RecognizeAsync).DisableAntiforgery();
+        app.MapPost("/recognize", RecognizeAsync)
+            .DisableAntiforgery()
+            .RequireRateLimiting(RateLimitingExtensions.ExpensivePolicy);
         return app;
     }
 

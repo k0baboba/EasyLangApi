@@ -1,8 +1,10 @@
+using EasyLangApi.Auth;
 using EasyLangApi.Data;
 using EasyLangApi.Episodes;
 using EasyLangApi.Explaining;
 using EasyLangApi.Infrastructure;
 using EasyLangApi.Lookups;
+using EasyLangApi.Quotas;
 using EasyLangApi.Recognition;
 using EasyLangApi.Review;
 using EasyLangApi.Vocabulary;
@@ -21,6 +23,8 @@ builder.Services.AddDbContext<AppDbContext>((sp, options) =>
     options.UseSqlite(sp.GetRequiredService<IConfiguration>().GetConnectionString("Default")
                       ?? "Data Source=easylang.db"));
 
+builder.Services.AddJwtAuth(builder.Configuration);
+builder.Services.AddQuotas(builder.Configuration);
 builder.Services.AddPhraseExplainers(builder.Configuration);
 builder.Services.Configure<OcrOptions>(builder.Configuration.GetSection(OcrOptions.SectionName));
 builder.Services.AddSingleton<ITextRecognizer, TesseractRecognizer>();
@@ -47,10 +51,15 @@ var app = builder.Build();
 
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+app.UseAuthentication();
+app.UseAuthorization();
+// После аутентификации: лимит считается по пользователю из токена.
+app.UseRateLimiter();
 
 await app.Services.MigrateDatabaseAsync();
 
-app.MapGet("/translate", () => "Привет");
+app.MapGet("/translate", () => "Привет").AllowAnonymous();
+app.MapAuthEndpoints();
 app.MapEpisodeEndpoints();
 app.MapRecognitionEndpoints();
 app.MapLookupEndpoints();

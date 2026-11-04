@@ -34,7 +34,12 @@ namespace EasyLangApi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Episodes");
                 });
@@ -61,11 +66,14 @@ namespace EasyLangApi.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DueAt");
+                    b.HasIndex("UserId", "DueAt");
 
-                    b.HasIndex("PhraseNormalized")
+                    b.HasIndex("UserId", "PhraseNormalized")
                         .IsUnique();
 
                     b.ToTable("KnowledgeItems");
@@ -133,6 +141,38 @@ namespace EasyLangApi.Data.Migrations
                     b.ToTable("Lookups");
                 });
 
+            modelBuilder.Entity("EasyLangApi.Data.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TokenHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TokenHash")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("EasyLangApi.Data.ReviewEvent", b =>
                 {
                     b.Property<int>("Id")
@@ -156,6 +196,49 @@ namespace EasyLangApi.Data.Migrations
                     b.HasIndex("KnowledgeItemId");
 
                     b.ToTable("ReviewEvents");
+                });
+
+            modelBuilder.Entity("EasyLangApi.Data.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("EasyLangApi.Data.Episode", b =>
+                {
+                    b.HasOne("EasyLangApi.Data.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("EasyLangApi.Data.KnowledgeItem", b =>
+                {
+                    b.HasOne("EasyLangApi.Data.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("EasyLangApi.Data.Line", b =>
@@ -186,6 +269,17 @@ namespace EasyLangApi.Data.Migrations
                     b.Navigation("KnowledgeItem");
 
                     b.Navigation("Line");
+                });
+
+            modelBuilder.Entity("EasyLangApi.Data.RefreshToken", b =>
+                {
+                    b.HasOne("EasyLangApi.Data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EasyLangApi.Data.ReviewEvent", b =>

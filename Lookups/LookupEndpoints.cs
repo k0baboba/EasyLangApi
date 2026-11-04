@@ -1,3 +1,4 @@
+using EasyLangApi.Quotas;
 using EasyLangApi.Vocabulary;
 using Microsoft.AspNetCore.Http.HttpResults;
 
@@ -9,7 +10,8 @@ public static class LookupEndpoints
 
     public static IEndpointRouteBuilder MapLookupEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/lines/{id:int}/explain", ExplainAsync);
+        app.MapGet("/lines/{id:int}/explain", ExplainAsync)
+            .RequireRateLimiting(RateLimitingExtensions.ExpensivePolicy);
         return app;
     }
 

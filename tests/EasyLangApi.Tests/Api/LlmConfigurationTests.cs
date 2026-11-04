@@ -25,7 +25,7 @@ public class LlmConfigurationTests
         factory.WithSetting("Llm:ApiKey", "local-test-key")
             .WithSetting("Llm:BaseUrl", "http://localhost:11434/v1")
             .WithSetting("Llm:Model", "llama3.2");
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
 
         var response = await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 3), "on the house");

@@ -1,9 +1,12 @@
 using System.Text.Json;
+using EasyLangApi.Auth;
 using EasyLangApi.Data;
 using EasyLangApi.Episodes;
 using EasyLangApi.Explaining;
 using EasyLangApi.Vocabulary;
+using EasyLangApi.Quotas;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EasyLangApi.Lookups;
 
@@ -14,7 +17,8 @@ public sealed record LookupResult(
 /// Сценарий "разобрать фразу": собрать контекст вокруг реплики, спросить разборщик,
 /// сохранить наблюдение (Lookup) и завести или найти элемент учёта (KnowledgeItem).
 /// </summary>
-public sealed class LookupService(AppDbContext db, IPhraseExplainer explainer, TimeProvider time)
+public sealed class LookupService(
+    AppDbContext db, IPhraseExplainer explainer, ICurrentUser currentUser, IOptions<QuotaOptions> quotas, TimeProvider time)
 {
     public const int ContextRadius = 2;
 
@@ -29,10 +33,12 @@ public sealed class LookupService(AppDbContext db, IPhraseExplainer explainer, T
         if (line is null)
             return null;
 
+        var now = time.GetUtcNow().UtcDateTime;
+        await EnsureDailyQuotaAsync(now, cancellationToken);
+
         var context = await BuildContextAsync(line, cancellationToken);
         var explanation = await explainer.ExplainAsync(phrase, context, cancellationToken);
 
-        var now = time.GetUtcNow().UtcDateTime;
         var normalized = PhraseNormalizer.Normalize(phrase);
         var item = await db.KnowledgeItems.FirstOrDefaultAsync(k => k.PhraseNormalized == normalized, cancellationToken);
         var isNewItem = item is null;
@@ -42,6 +48,7 @@ public sealed class LookupService(AppDbContext db, IPhraseExplainer explainer, T
             // "посмотрел → повторил" можно пройти за одну сессию.
             item = new KnowledgeItem
             {
+                UserId = line.Episode.UserId,
                 PhraseNormalized = normalized,
                 FirstSeenAt = now,
                 IntervalDays = 0,
@@ -63,6 +70,16 @@ public sealed class LookupService(AppDbContext db, IPhraseExplainer explainer, T
         await db.SaveChangesAsync(cancellationToken);
 
         return new LookupResult(lookup.Id, item.Id, isNewItem, phrase, context, explanation);
+    }
+
+    /// <summary>Разборы стоят денег (LLM) — ограничиваем их число в сутки. Фильтр по пользователю добавит EF.</summary>
+    private async Task EnsureDailyQuotaAsync(DateTime now, CancellationToken cancellationToken)
+    {
+        var limit = quotas.Value.LookupsPerDay;
+        var dayStart = now.Date;
+        var usedToday = await db.Lookups.CountAsync(l => l.CreatedAt >= dayStart, cancellationToken);
+        if (usedToday >= limit)
+            throw new QuotaExceededException($"Суточная квота разборов ({limit}) исчерпана для пользователя {currentUser.UserId}.");
     }
 
     /// <summary>Название эпизода, текущая реплика, две предыдущие и две следующие.</summary>

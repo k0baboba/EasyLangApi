@@ -11,7 +11,7 @@ public class RecognitionTests
     {
         Tesseract.SkipIfMissing();
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var image = TextImages.Render("I'm beat. Double shift\nat the docks again.", "Coffee is on the house tonight.");
 
         var response = await client.RecognizeAsync(image, title: "Harbor Lights");
@@ -33,7 +33,7 @@ public class RecognitionTests
     public async Task Without_tesseract_app_works_and_endpoint_explains_why()
     {
         await using var factory = new ApiFactory().WithSetting("Ocr:TesseractPath", "/nonexistent/tesseract");
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
 
         var response = await client.RecognizeAsync(TextImages.Render("hello"));
 
@@ -50,7 +50,7 @@ public class RecognitionTests
         var recognizer = new FakeRecognizer("never");
         await using var factory = new ApiFactory { Recognizer = recognizer };
 
-        var response = await factory.CreateClient().RecognizeAsync("plain text"u8.ToArray(), "notes.txt");
+        var response = await (await factory.CreateUserClientAsync()).RecognizeAsync("plain text"u8.ToArray(), "notes.txt");
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal(0, recognizer.Calls);
@@ -60,7 +60,7 @@ public class RecognitionTests
     public async Task Screenshots_can_be_appended_to_one_episode()
     {
         await using var factory = new ApiFactory { Recognizer = new FakeRecognizer("First box.\n\nSecond box.") };
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
 
         var first = await (await client.RecognizeAsync(TextImages.Render("x"), title: "Some Game")).ReadJsonAsync();
         var episodeId = first["episodeId"]!.GetValue<int>();
@@ -79,7 +79,7 @@ public class RecognitionTests
     {
         await using var factory = new ApiFactory { Recognizer = new FakeRecognizer("Text.") };
 
-        var response = await factory.CreateClient().RecognizeAsync(TextImages.Render("x"), episodeId: 999);
+        var response = await (await factory.CreateUserClientAsync()).RecognizeAsync(TextImages.Render("x"), episodeId: 999);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -88,7 +88,7 @@ public class RecognitionTests
     public async Task Image_without_text_creates_no_episode()
     {
         await using var factory = new ApiFactory { Recognizer = new FakeRecognizer("   ") };
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
 
         var body = await (await client.RecognizeAsync(TextImages.Render(""))).ReadJsonAsync();
 

@@ -4,6 +4,7 @@ using EasyLangApi.Recognition;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using System.Net.Http.Json;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Time.Testing;
@@ -55,7 +56,25 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
         });
     }
 
-    /// <summary>Прямой доступ к базе — проверить, что именно сохранилось.</summary>
+    public const string Password = "correct-horse-battery";
+
+    /// <summary>Клиент, вошедший под новым пользователем (или под указанным email).</summary>
+    public async Task<HttpClient> CreateUserClientAsync(string? email = null)
+    {
+        var client = CreateClient();
+        var response = await client.PostAsJsonAsync("/auth/register",
+            new { email = email ?? $"user-{Guid.NewGuid():N}@test.local", password = Password });
+        Assert.Equal(System.Net.HttpStatusCode.Created, response.StatusCode);
+        var tokens = await response.ReadJsonAsync();
+        client.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokens["accessToken"]!.GetValue<string>());
+        return client;
+    }
+
+    /// <summary>
+    /// Прямой доступ к базе — проверить, что именно сохранилось. Здесь нет HTTP-запроса и пользователя,
+    /// поэтому фильтры по владельцу скрывают всё: в запросах нужен IgnoreQueryFilters().
+    /// </summary>
     public async Task<T> WithDbAsync<T>(Func<AppDbContext, Task<T>> action)
     {
         using var scope = Services.CreateScope();

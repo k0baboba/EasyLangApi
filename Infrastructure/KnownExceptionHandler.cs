@@ -1,4 +1,5 @@
 using EasyLangApi.Explaining;
+using EasyLangApi.Quotas;
 using EasyLangApi.Recognition;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -19,6 +20,7 @@ public sealed class KnownExceptionHandler(
             ExplainerUnavailableException => (StatusCodes.Status503ServiceUnavailable, "Сервис разбора фраз недоступен"),
             TextRecognitionUnavailableException => (StatusCodes.Status503ServiceUnavailable, "Распознавание текста недоступно"),
             TextRecognitionFailedException => (StatusCodes.Status422UnprocessableEntity, "Не удалось распознать изображение"),
+            QuotaExceededException => (StatusCodes.Status429TooManyRequests, "Квота исчерпана"),
             _ => null,
         };
         if (known is null)

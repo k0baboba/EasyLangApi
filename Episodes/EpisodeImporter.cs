@@ -1,3 +1,4 @@
+using EasyLangApi.Auth;
 using EasyLangApi.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,13 +9,16 @@ namespace EasyLangApi.Episodes;
 /// существующего (так скриншоты одной игровой сессии становятся одним эпизодом
 /// и дают друг другу контекст).
 /// </summary>
-public sealed class EpisodeImporter(AppDbContext db, TimeProvider time)
+public sealed class EpisodeImporter(AppDbContext db, ICurrentUser currentUser, TimeProvider time)
 {
     public async Task<Episode> ImportAsync(
         string title, string sourceFile, IReadOnlyList<SourceLine> lines, CancellationToken cancellationToken)
     {
+        var userId = currentUser.UserId
+                     ?? throw new InvalidOperationException("Эпизод можно создать только от имени пользователя.");
         var episode = new Episode
         {
+            UserId = userId,
             Title = title,
             SourceFile = sourceFile,
             CreatedAt = time.GetUtcNow().UtcDateTime,

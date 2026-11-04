@@ -7,6 +7,7 @@ namespace EasyLangApi.Data;
 public class Episode
 {
     public int Id { get; set; }
+    public int UserId { get; set; }
     public string Title { get; set; } = "";
     public string SourceFile { get; set; } = "";
     public DateTime CreatedAt { get; set; }
@@ -46,6 +47,7 @@ public class Lookup
 public class KnowledgeItem
 {
     public int Id { get; set; }
+    public int UserId { get; set; }
     public string PhraseNormalized { get; set; } = "";
     public DateTime FirstSeenAt { get; set; }
     public double IntervalDays { get; set; }
@@ -68,4 +70,28 @@ public class ReviewEvent
     public DateTime ShownAt { get; set; }
     public DateTime? AnsweredAt { get; set; }
     public bool? WasCorrect { get; set; }
+}
+
+/// <summary>Пользователь. Email хранится в нижнем регистре, пароль — только хешем (PBKDF2).</summary>
+public class User
+{
+    public int Id { get; set; }
+    public string Email { get; set; } = "";
+    public string PasswordHash { get; set; } = "";
+    public DateTime CreatedAt { get; set; }
+}
+
+/// <summary>
+/// Refresh-токен. В базе только SHA-256 от токена: утечка базы не даёт войти.
+/// При обновлении старый токен отзывается и выдаётся новый (ротация).
+/// </summary>
+public class RefreshToken
+{
+    public int Id { get; set; }
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
+    public string TokenHash { get; set; } = "";
+    public DateTime CreatedAt { get; set; }
+    public DateTime ExpiresAt { get; set; }
+    public DateTime? RevokedAt { get; set; }
 }

@@ -23,7 +23,7 @@ public class ReviewSchedulingTests
     public async Task Adaptive_scheduler_is_chosen_by_configuration()
     {
         await using var factory = new ApiFactory().WithSetting("Review:Scheduler", "Adaptive");
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
         await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 2), "beat");
 
@@ -40,7 +40,7 @@ public class ReviewSchedulingTests
     public async Task Fixed_scheduler_is_the_default()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
         await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 2), "beat");
 
@@ -56,14 +56,14 @@ public class ReviewSchedulingTests
     {
         await using var factory = new ApiFactory().WithSetting("Review:Scheduler", "Bogus");
 
-        Assert.ThrowsAny<Exception>(() => factory.CreateClient());
+        Assert.ThrowsAny<Exception>(() => factory.CreateClient()); // приложение не стартует
     }
 
     [Fact]
     public async Task Review_shows_line_where_only_the_reviewed_item_is_unknown()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var created = await (await client.UploadSrtAsync(Srt, title: "Test")).ReadJsonAsync();
         var episodeId = created["id"]!.GetValue<int>();
         var firstLine = await client.GetLineIdAsync(episodeId, 0);
@@ -82,7 +82,7 @@ public class ReviewSchedulingTests
     public async Task Without_a_clean_line_the_original_one_is_shown_and_marked()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var created = await (await client.UploadSrtAsync(
             "1\n00:00:01,000 --> 00:00:02,000\nNo cap, he's beat.\n", title: "Short")).ReadJsonAsync();
         var lineId = await client.GetLineIdAsync(created["id"]!.GetValue<int>(), 0);
@@ -100,7 +100,7 @@ public class ReviewSchedulingTests
     public async Task Examples_endpoint_lists_lines_and_filters_single_unknown()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var created = await (await client.UploadSrtAsync(Srt, title: "Test")).ReadJsonAsync();
         var firstLine = await client.GetLineIdAsync(created["id"]!.GetValue<int>(), 0);
         var item = await (await client.ExplainAsync(firstLine, "break a leg")).ReadJsonAsync();

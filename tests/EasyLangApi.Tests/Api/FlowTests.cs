@@ -10,8 +10,9 @@ public class FlowTests
     [Fact]
     public async Task Full_flow_from_subtitles_to_review()
     {
-        await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        // Тест сдвигает часы на сутки — access-токен должен это пережить.
+        await using var factory = new ApiFactory().WithSetting("Jwt:AccessTokenMinutes", "2880");
+        var client = await factory.CreateUserClientAsync();
 
         var episodeId = await client.UploadSampleAsync();
         var lineId = await client.GetLineIdAsync(episodeId, index: 2); // "LEO: I'm beat. ..."
@@ -61,7 +62,7 @@ public class FlowTests
     public async Task First_line_has_no_previous_context()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
 
         await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 0), "rain");
@@ -76,7 +77,7 @@ public class FlowTests
     public async Task Same_phrase_in_other_form_reuses_knowledge_item()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
         var lineId = await client.GetLineIdAsync(episodeId, 4);
 
@@ -93,7 +94,7 @@ public class FlowTests
     public async Task Every_show_is_kept_in_review_history()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
         await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 2), "beat");
 
@@ -101,7 +102,7 @@ public class FlowTests
         var secondShow = await (await client.GetAsync("/review/next")).ReadJsonAsync();
         await client.AnswerAsync(secondShow["reviewId"]!.GetValue<int>(), wasCorrect: false);
 
-        var events = await factory.WithDbAsync(db => db.ReviewEvents.OrderBy(e => e.Id).ToListAsync());
+        var events = await factory.WithDbAsync(db => db.ReviewEvents.IgnoreQueryFilters().OrderBy(e => e.Id).ToListAsync());
         Assert.Equal(2, events.Count);
         Assert.Equal(firstShow["reviewId"]!.GetValue<int>(), events[0].Id);
         Assert.Null(events[0].AnsweredAt);
@@ -114,7 +115,7 @@ public class FlowTests
     public async Task Answering_twice_is_conflict_and_unknown_review_is_not_found()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
         await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 2), "beat");
         var reviewId = (await (await client.GetAsync("/review/next")).ReadJsonAsync())["reviewId"]!.GetValue<int>();
@@ -128,7 +129,7 @@ public class FlowTests
     public async Task Answer_without_body_is_bad_request()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
 
         var response = await client.PostAsync("/review/1", new StringContent("{}", System.Text.Encoding.UTF8, "application/json"));
 
@@ -140,7 +141,7 @@ public class FlowTests
     {
         await using var factory = new ApiFactory();
 
-        var response = await factory.CreateClient().GetAsync("/review/next");
+        var response = await (await factory.CreateUserClientAsync()).GetAsync("/review/next");
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
     }

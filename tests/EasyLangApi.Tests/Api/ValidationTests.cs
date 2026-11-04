@@ -13,7 +13,7 @@ public class ValidationTests
     {
         await using var factory = new ApiFactory();
 
-        var response = await factory.CreateClient().UploadSrtAsync("not a subtitle file at all");
+        var response = await (await factory.CreateUserClientAsync()).UploadSrtAsync("not a subtitle file at all");
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -24,7 +24,7 @@ public class ValidationTests
         await using var factory = new ApiFactory();
         using var form = new MultipartFormDataContent { { new StringContent("title"), "title" } };
 
-        var response = await factory.CreateClient().PostAsync("/episodes", form);
+        var response = await (await factory.CreateUserClientAsync()).PostAsync("/episodes", form);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
@@ -33,7 +33,7 @@ public class ValidationTests
     public async Task Title_defaults_to_file_name()
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
 
         var response = await client.UploadSrtAsync("1\n00:00:01,000 --> 00:00:02,000\nHi\n", "Pilot.srt");
 
@@ -46,7 +46,7 @@ public class ValidationTests
     {
         await using var factory = new ApiFactory();
 
-        var response = await factory.CreateClient().GetAsync("/episodes/42/lines");
+        var response = await (await factory.CreateUserClientAsync()).GetAsync("/episodes/42/lines");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -56,7 +56,7 @@ public class ValidationTests
     {
         await using var factory = new ApiFactory();
 
-        var response = await factory.CreateClient().ExplainAsync(12345, "beat");
+        var response = await (await factory.CreateUserClientAsync()).ExplainAsync(12345, "beat");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
@@ -67,7 +67,7 @@ public class ValidationTests
     public async Task Explain_without_words_is_bad_request(string phrase)
     {
         await using var factory = new ApiFactory();
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
 
         var response = await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 2), phrase);
@@ -81,15 +81,15 @@ public class ValidationTests
     {
         await using var factory = new ApiFactory();
         factory.Explainer.Unavailable = true;
-        var client = factory.CreateClient();
+        var client = await factory.CreateUserClientAsync();
         var episodeId = await client.UploadSampleAsync();
 
         var response = await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 2), "beat");
 
         Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType!.MediaType);
-        Assert.Equal(0, await factory.WithDbAsync(db => db.Lookups.CountAsync()));
-        Assert.Equal(0, await factory.WithDbAsync(db => db.KnowledgeItems.CountAsync()));
+        Assert.Equal(0, await factory.WithDbAsync(db => db.Lookups.IgnoreQueryFilters().CountAsync()));
+        Assert.Equal(0, await factory.WithDbAsync(db => db.KnowledgeItems.IgnoreQueryFilters().CountAsync()));
     }
 
     [Fact]
