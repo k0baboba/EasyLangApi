@@ -1,0 +1,7 @@
+data: settles.acl16.learning_traces.13m.csv.gz, https://dataverse.harvard.edu/api/access/datafile/3091087
+license: CC BY-NC 4.0, authors: Burr Settles, Brendan Meeder (Duolingo)
+sha256: 26cf9b33f2e9b2e8aa9a8f262a017b30699ca2f625c56a12ce699d4ea7076873
+python: Python 3.12.3
+cpu: 4, memory: 15 GiB
+git: 5d4cb05374936c912f113bd9e4dc92d79cef4f46 (run/srs), run 41859080470
+date: 2026-11-04 15:40 UTC
