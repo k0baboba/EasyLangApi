@@ -129,11 +129,13 @@ dotnet test tests/EasyLangApi.Tests
 `IReviewScheduler`, выбирается настройкой `Review:Scheduler`:
 
 - `Fixed` (по умолчанию) — лесенка 1, 3, 7, 14, 30, 60, 120 дней; ошибка — снова 1 день.
-- `Adaptive` — модель полураспада памяти. Вероятность вспомнить через `t` дней — `2^(-t/h)`;
-  период полураспада `h` растёт с верными ответами и падает с ошибками, а поправка сложности
-  конкретной фразы подбирается по её истории `ReviewEvent` (максимум правдоподобия).
-  Следующий показ — когда вероятность вспомнить упадёт до `Review:Adaptive:TargetRetention` (0.85).
-  `/review/next` возвращает оценку `forgettingProbability`.
+- `Adaptive` — обучаемая модель забывания из [`srs/`](srs/README.md) (half-life regression).
+  Вероятность вспомнить через `t` дней — `2^(-t/h)`, `h = 2^(θ·x)`,
+  `x = [1, √верных, √ошибок, последний ответ — ошибка]`. Веса `θ` свои у каждого пользователя:
+  они обучаются онлайн-градиентным спуском на его ответах из `ReviewEvent`. Следующий показ —
+  когда вероятность вспомнить упадёт до `Review:Adaptive:TargetRetention` (0.8), интервал
+  округляется до дней, от 1 до 365. `/review/next` возвращает оценку `forgettingProbability`.
+  Как реализация на C# проверена против Python-версии — в [srs/REPORT.md](srs/REPORT.md).
 
 `/review/next` показывает фразу в реплике, где незнакомо **ровно одно** — повторяемое
 (принцип «i + 1»). Незнакомыми считаются элементы словаря с интервалом меньше
@@ -204,7 +206,10 @@ Llm__ApiKey=ollama Llm__BaseUrl=http://localhost:11434/v1 Llm__Model=llama3.2 do
 | `Review:Scheduler` | `Fixed` | `Fixed` или `Adaptive` |
 | `Review:FixedIntervals` | `1,3,7,14,30,60,120` | Ступеньки фиксированного планировщика |
 | `Review:KnownAfterDays` | `21` | С какого интервала элемент считается выученным |
-| `Review:Adaptive:TargetRetention` | `0.85` | Целевая вероятность вспомнить |
+| `Review:Adaptive:TargetRetention` | `0.8` | Целевая вероятность вспомнить |
+| `Review:Adaptive:LearningRate`, `L2` | `0.05`, `0.0001` | Обучение модели |
+| `Review:Adaptive:InitialWeights` | пусто (нули) | Начальные веса `θ` |
+| `Review:Adaptive:RoundToWholeDays` | `true` | Округлять интервал до дней |
 | `Ocr:TesseractPath` | `tesseract` | Путь к Tesseract (по умолчанию из PATH) |
 | `Ocr:Language` | `eng` | Языки распознавания, например `eng+rus` |
 | `Ocr:PageSegmentationMode` | пусто | `--psm` Tesseract; для одного блока диалога попробуйте `6` |

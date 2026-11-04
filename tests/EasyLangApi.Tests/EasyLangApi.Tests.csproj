@@ -17,9 +17,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.14" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <!-- Только для тестов: рисуем картинки с текстом для проверки распознавания. -->
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.2.0" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="2.2.0" />
+    <!-- Только для тестов: рисуем картинки с текстом для проверки распознавания.
+         SkiaSharp (MIT). NoDependencies — нативная библиотека для Linux без fontconfig:
+         шрифт всё равно грузим из файла. -->
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.4" />
     <PackageReference Include="xunit.v3" Version="3.2.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>

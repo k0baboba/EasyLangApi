@@ -25,22 +25,27 @@ public sealed class ReviewOptions
 }
 
 /// <summary>
-/// Параметры модели полураспада памяти: p(вспомнит через t дней) = 2^(-t / h),
-/// log2(h) = Base + CorrectWeight·√(верных) + WrongWeight·√(ошибок) + d,
-/// где d — поправка сложности конкретного элемента, подбирается по его истории.
+/// Параметры адаптивного планировщика (обучаемая half-life regression из srs/).
+/// Значения по умолчанию — как в srs/srs_sim/schedulers.py, кроме цели: 0.8 вместо 0.9,
+/// потому что srs/REPORT.md рекомендует 0.8 при отсутствии дневного лимита повторений.
 /// </summary>
 public sealed class AdaptiveOptions
 {
-    /// <summary>Какую долю вспоминаний держим: следующий показ — когда p(вспомнит) упадёт до этого значения.</summary>
-    public double TargetRetention { get; set; } = 0.85;
+    /// <summary>Какую вероятность вспомнить держим: следующий показ — когда предсказанная p упадёт до неё.</summary>
+    public double TargetRetention { get; set; } = 0.8;
 
-    public double BaseLog2HalfLife { get; set; } = 2.0;
-    public double CorrectWeight { get; set; } = 2.0;
-    public double WrongWeight { get; set; } = -1.0;
+    /// <summary>Шаг градиентного спуска.</summary>
+    public double LearningRate { get; set; } = 0.05;
 
-    /// <summary>Насколько сильно держим поправку сложности около нуля, пока ответов мало (σ нормального априорного).</summary>
-    public double DifficultyPriorSigma { get; set; } = 1.0;
+    /// <summary>Сила L2-регуляризации весов.</summary>
+    public double L2 { get; set; } = 1e-4;
 
-    public double MinIntervalDays { get; set; } = 10.0 / (24 * 60);
+    /// <summary>Начальные веса [bias, √верных, √ошибок, последний — ошибка]. null — нули (h = 1 дню).</summary>
+    public double[]? InitialWeights { get; set; }
+
+    /// <summary>Округлять интервал до целых дней, как в симуляции srs/.</summary>
+    public bool RoundToWholeDays { get; set; } = true;
+
+    public double MinIntervalDays { get; set; } = 1;
     public double MaxIntervalDays { get; set; } = 365;
 }
