@@ -52,12 +52,29 @@ dotnet test tests/EasyLangApi.Tests
 | `POST` | `/recognize` | Форма: `image` — PNG/JPEG/BMP/GIF/TIFF/WebP, `title` — название игры (необязательно), `episodeId` — дописать в существующий эпизод. Распознанные абзацы сохраняются как реплики |
 | `GET` | `/lines/{id}/explain?phrase=...` | Разбор фразы с контекстом: название эпизода, говорящий, текущая реплика, две до и две после. Результат сохраняется |
 | `GET` | `/vocabulary` | Сохранённые элементы и где их видели в последний раз |
+| `GET` | `/vocabulary/{id}/examples?singleUnknownOnly=true` | Реплики с элементом и что ещё в них не выучено |
 | `GET` | `/review/next` | Следующий элемент на повторение (`204`, если повторять нечего). Каждый вызов — новый показ с `reviewId` |
 | `POST` | `/review/{reviewId}` | Тело `{"wasCorrect": true}` — ответ на показ, пересчёт интервала |
 
 Ошибки возвращаются в формате [ProblemDetails](https://www.rfc-editor.org/rfc/rfc9457):
 `400` — неверный запрос, `404` — нет такой реплики/показа, `409` — на показ уже ответили,
 `422` — Tesseract не смог прочитать изображение, `503` — внешний разборщик или Tesseract недоступен.
+
+## Планировщик повторений
+
+`IReviewScheduler`, выбирается настройкой `Review:Scheduler`:
+
+- `Fixed` (по умолчанию) — лесенка 1, 3, 7, 14, 30, 60, 120 дней; ошибка — снова 1 день.
+- `Adaptive` — модель полураспада памяти. Вероятность вспомнить через `t` дней — `2^(-t/h)`;
+  период полураспада `h` растёт с верными ответами и падает с ошибками, а поправка сложности
+  конкретной фразы подбирается по её истории `ReviewEvent` (максимум правдоподобия).
+  Следующий показ — когда вероятность вспомнить упадёт до `Review:Adaptive:TargetRetention` (0.85).
+  `/review/next` возвращает оценку `forgettingProbability`.
+
+`/review/next` показывает фразу в реплике, где незнакомо **ровно одно** — повторяемое
+(принцип «i + 1»). Незнакомыми считаются элементы словаря с интервалом меньше
+`Review:KnownAfterDays` (21 день). Если такой реплики нет, показывается та, где фразу смотрели,
+с `singleUnknown: false` и списком `otherUnknown`.
 
 ## Распознавание текста
 
@@ -114,6 +131,10 @@ Llm__ApiKey=ollama Llm__BaseUrl=http://localhost:11434/v1 Llm__Model=llama3.2 do
 | `Llm:Model` | `gpt-4o-mini` | Модель |
 | `Llm:ExplanationLanguage` | `Russian` | На каком языке объяснять |
 | `Llm:UseJsonMode` | `true` | Передавать `response_format: json_object` |
+| `Review:Scheduler` | `Fixed` | `Fixed` или `Adaptive` |
+| `Review:FixedIntervals` | `1,3,7,14,30,60,120` | Ступеньки фиксированного планировщика |
+| `Review:KnownAfterDays` | `21` | С какого интервала элемент считается выученным |
+| `Review:Adaptive:TargetRetention` | `0.85` | Целевая вероятность вспомнить |
 | `Ocr:TesseractPath` | `tesseract` | Путь к Tesseract (по умолчанию из PATH) |
 | `Ocr:Language` | `eng` | Языки распознавания, например `eng+rus` |
 | `Ocr:PageSegmentationMode` | пусто | `--psm` Tesseract; для одного блока диалога попробуйте `6` |
@@ -129,7 +150,7 @@ Explaining/    IPhraseExplainer, словарь, языковая модель, 
 Lookups/       сценарий «разобрать фразу»
 Recognition/   распознавание текста (Tesseract), POST /recognize
 Vocabulary/    нормализация фраз, список словаря
-Review/        выдача на повторение и пересчёт интервала
+Review/        выдача на повторение, планировщики, отбор фраз «i + 1»
 Infrastructure/ обработка ожидаемых ошибок
 tests/         xUnit
 ```

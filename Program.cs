@@ -7,6 +7,7 @@ using EasyLangApi.Recognition;
 using EasyLangApi.Review;
 using EasyLangApi.Vocabulary;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,19 @@ builder.Services.AddSingleton<SrtTextSource>();
 builder.Services.AddScoped<ImageTextSource>();
 builder.Services.AddScoped<EpisodeImporter>();
 builder.Services.AddScoped<LookupService>();
+builder.Services.AddOptions<ReviewOptions>()
+    .Bind(builder.Configuration.GetSection(ReviewOptions.SectionName))
+    .Validate(o => o.Adaptive.TargetRetention is > 0 and < 1, "Review:Adaptive:TargetRetention должен быть между 0 и 1.")
+    .ValidateOnStart();
+builder.Services.AddSingleton<FixedIntervalScheduler>();
+builder.Services.AddSingleton<AdaptiveScheduler>();
+builder.Services.AddSingleton<IReviewScheduler>(sp =>
+    sp.GetRequiredService<IOptions<ReviewOptions>>().Value.Scheduler switch
+    {
+        SchedulerKind.Adaptive => sp.GetRequiredService<AdaptiveScheduler>(),
+        _ => sp.GetRequiredService<FixedIntervalScheduler>(),
+    });
+builder.Services.AddScoped<ExampleLineFinder>();
 builder.Services.AddScoped<ReviewService>();
 
 var app = builder.Build();
