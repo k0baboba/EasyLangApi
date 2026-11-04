@@ -1,4 +1,6 @@
+using System.Net;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
@@ -9,7 +11,8 @@ namespace EasyLangApi.Explaining;
 /// Разбор через языковую модель по протоколу OpenAI Chat Completions
 /// (POST {BaseUrl}/chat/completions). Подходит для OpenAI, OpenRouter, Ollama и т.п.
 /// </summary>
-public sealed class LlmExplainer(HttpClient http, IOptions<LlmOptions> options) : IPhraseExplainer
+public sealed class LlmExplainer(HttpClient http, IOptions<LlmOptions> options, ILogger<LlmExplainer> logger)
+    : IPhraseExplainer
 {
     public const string SourceName = "llm";
 
@@ -26,9 +29,11 @@ public sealed class LlmExplainer(HttpClient http, IOptions<LlmOptions> options) 
             Temperature: 0.2,
             ResponseFormat: settings.UseJsonMode ? new ResponseFormat("json_object") : null);
 
+        // JsonContent отправил бы тело чанками без Content-Length; не все совместимые
+        // серверы это принимают, поэтому сериализуем в строку заранее.
         using var request = new HttpRequestMessage(HttpMethod.Post, "chat/completions")
         {
-            Content = JsonContent.Create(body),
+            Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"),
         };
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", settings.ApiKey);
 
@@ -49,7 +54,11 @@ public sealed class LlmExplainer(HttpClient http, IOptions<LlmOptions> options) 
         using (response)
         {
             if (!response.IsSuccessStatusCode)
-                throw new ExplainerUnavailableException($"Языковая модель ответила кодом {(int)response.StatusCode}.");
+            {
+                var error = await response.Content.ReadAsStringAsync(cancellationToken);
+                logger.LogWarning("LLM API ответил {Status}: {Body}", (int)response.StatusCode, Truncate(error, 500));
+                throw new ExplainerUnavailableException(DescribeFailure(response.StatusCode));
+            }
 
             ChatResponse? chat;
             try
@@ -68,6 +77,19 @@ public sealed class LlmExplainer(HttpClient http, IOptions<LlmOptions> options) 
             return LlmResponseParser.Parse(phrase, content);
         }
     }
+
+    private static string DescribeFailure(HttpStatusCode status) => status switch
+    {
+        HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden =>
+            "Языковая модель отклонила ключ: проверьте Llm:ApiKey.",
+        HttpStatusCode.NotFound =>
+            "Языковая модель не найдена: проверьте Llm:BaseUrl и Llm:Model.",
+        HttpStatusCode.TooManyRequests =>
+            "Превышен лимит запросов к языковой модели, повторите позже.",
+        _ => $"Языковая модель ответила кодом {(int)status}.",
+    };
+
+    private static string Truncate(string text, int max) => text.Length <= max ? text : text[..max] + "…";
 
     // Протокол OpenAI использует snake_case, поэтому имена заданы явно.
     internal sealed record ChatRequest(

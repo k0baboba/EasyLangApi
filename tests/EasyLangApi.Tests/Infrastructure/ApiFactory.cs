@@ -26,6 +26,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     /// <summary>Заменять ли IPhraseExplainer подставным. false — проверяем настоящий выбор реализации.</summary>
     public bool UseFakeExplainer { get; init; } = true;
 
+    /// <summary>Дополнительные подмены сервисов для конкретного теста.</summary>
+    public Action<IServiceCollection>? ConfigureServices { get; init; }
+
     /// <summary>Если задан — подменяет Tesseract.</summary>
     public ITextRecognizer? Recognizer { get; init; }
 
@@ -48,6 +51,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
                 services.AddScoped<IPhraseExplainer>(_ => Explainer);
             if (Recognizer is not null)
                 services.AddSingleton(Recognizer);
+            ConfigureServices?.Invoke(services);
         });
     }
 

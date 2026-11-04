@@ -83,6 +83,22 @@ dotnet test tests/EasyLangApi.Tests
 - `DictionaryExplainer` — [dictionaryapi.dev](https://dictionaryapi.dev), бесплатно, без ключа.
   Работает по умолчанию. Контекст использует только для порядка значений.
 - `LlmExplainer` — любой API, совместимый с OpenAI Chat Completions. Включается, если задан `Llm:ApiKey`.
+  Получает промпт с контекстом (`PromptBuilder`) и просит ответ в JSON: перевод, смысл в сцене,
+  часть речи, заметка о регистре/сленге, пример. Если модель ответила не JSON,
+  текст ответа сохраняется как есть (`LlmResponseParser`).
+
+Примеры настройки языковой модели:
+
+```bash
+# OpenAI
+dotnet user-secrets set "Llm:ApiKey" "sk-..."
+
+# Локальный Ollama (ключ не проверяется, но должен быть непустым — это включатель)
+ollama pull llama3.2
+Llm__ApiKey=ollama Llm__BaseUrl=http://localhost:11434/v1 Llm__Model=llama3.2 dotnet run
+```
+
+Если сервис не понимает поле `response_format`, выключите его: `Llm:UseJsonMode=false`.
 
 ## Конфигурация
 
@@ -97,6 +113,7 @@ dotnet test tests/EasyLangApi.Tests
 | `Llm:BaseUrl` | `https://api.openai.com/v1/` | Адрес API |
 | `Llm:Model` | `gpt-4o-mini` | Модель |
 | `Llm:ExplanationLanguage` | `Russian` | На каком языке объяснять |
+| `Llm:UseJsonMode` | `true` | Передавать `response_format: json_object` |
 | `Ocr:TesseractPath` | `tesseract` | Путь к Tesseract (по умолчанию из PATH) |
 | `Ocr:Language` | `eng` | Языки распознавания, например `eng+rus` |
 | `Ocr:PageSegmentationMode` | пусто | `--psm` Tesseract; для одного блока диалога попробуйте `6` |
