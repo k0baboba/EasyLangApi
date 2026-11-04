@@ -1,162 +1,225 @@
 # 4. Архитектура
 
-> Черновик. Описывает **целевую** архитектуру по `SPEC.md`. На момент
-> написания в репозитории есть только пустой проект ASP.NET Core
-> (`Program.cs`) — **[факт]**, проверено по содержимому репозитория.
-> Всё, что ниже, — проект, а не описание готового кода. Названия классов,
-> кроме интерфейсов из `SPEC.md`, условные — **[предположение]**.
+> Черновик. Раздел описывает **код ветки `prototype`** — версии V1–V7 из `SPEC.md`
+> и обучаемый планировщик, перенесённый из `srs/`. Первая версия раздела писалась,
+> когда в репозитории был только пустой проект ASP.NET Core, и описывала целевую
+> архитектуру с условными именами классов. Теперь имена настоящие, пути к файлам
+> даны от корня репозитория. Пометки: **[код]** — так сделано в коде;
+> **[факт]** — следует из `SPEC.md` или источника; **[предположение]** — оценка автора.
 
 ## 4.1. Контекст системы
 
 ```mermaid
 flowchart LR
     U(["Пользователь"])
-    C["Десктопный клиент<br/>(V7, Windows)"]
+    C["Десктопный клиент<br/>client/ (Windows)"]
     H["HTTP-клиент<br/>requests.http / curl"]
     S["EasyLangApi<br/>ASP.NET Core"]
-    DB[("SQLite")]
+    DB[("SQLite<br/>easylang.db")]
     D["dictionaryapi.dev"]
     L["OpenAI-совместимый API<br/>облако или локальный Ollama"]
-    T["Tesseract<br/>(локально на сервере)"]
+    T["tesseract<br/>(процесс на сервере)"]
 
     U --> C
     U --> H
-    C -- "скриншот области" --> S
-    H -- "srt, запросы" --> S
+    C -- "PNG области + JWT" --> S
+    H -- "srt, запросы + JWT" --> S
     S --> DB
-    S -- "по умолчанию" --> D
-    S -. "если задан ключ" .-> L
+    S -- "если нет Llm:ApiKey" --> D
+    S -. "если задан Llm:ApiKey" .-> L
     S -. "если установлен" .-> T
 ```
 
-Сплошные стрелки — обязательные зависимости, пунктир — необязательные: без
-них система работает в урезанном режиме (NFR-04).
+Сплошные стрелки — обязательные зависимости, пунктир — необязательные: без них
+система работает в урезанном режиме (NFR-04).
 
-## 4.2. Логические слои
+[код] Без Tesseract приложение стартует, а `POST /recognize` отвечает 503 с объяснением
+(`Recognition/TesseractRecognizer.cs`). Без ключа LLM работает словарь
+(`Explaining/ExplainingServiceCollectionExtensions.cs`). Если же внешний сервис **выбран, но
+недоступен** (словарь не отвечает, у LLM неверный ключ), запрос отвечает 503: автоматического
+перехода с LLM на словарь нет.
 
-[предположение] Для учебного монолита достаточно трёх слоёв внутри одного
-проекта. Отдельные проекты (Clean Architecture) для прототипа избыточны.
+## 4.2. Устройство кода
+
+[код] Один проект `EasyLangApi.csproj` в корне, папки по функциям, а не по слоям. Внутри каждой
+функции три уровня: эндпоинт (minimal API) → сервис со сценарием → `AppDbContext` и внешние
+сервисы за интерфейсами. Отдельные проекты в духе Clean Architecture не заводились.
+
+| Папка | Что внутри |
+|---|---|
+| `Data/` | `AppDbContext`, сущности, миграции EF Core, глобальные фильтры по владельцу |
+| `Episodes/` | `POST /episodes`, разбор SRT (`SrtParser`), `ITextSource`, `EpisodeImporter`, имя говорящего (`SpeakerParser`) |
+| `Recognition/` | `POST /recognize`, `ITextRecognizer` → `TesseractRecognizer`, `ImageTextSource` |
+| `Explaining/` | `IPhraseExplainer` → `DictionaryExplainer`, `LlmExplainer`; `PromptBuilder`, `LlmResponseParser` |
+| `Lookups/` | `GET /lines/{id}/explain`, `LookupService`: контекст ±2 реплики, разбор, `Lookup` + `KnowledgeItem` |
+| `Vocabulary/` | `GET /vocabulary`, `GET /vocabulary/{id}/examples`, нормализация фраз (`PhraseNormalizer`) |
+| `Review/` | `GET /review/next`, `POST /review/{id}`, `ReviewService`, `IReviewScheduler` → `FixedIntervalScheduler`, `AdaptiveScheduler` (`HalfLifeRegression`), отбор «i + 1» (`SingleUnknownSelector`, `ExampleLineFinder`) |
+| `Auth/` | `/auth/*`, `AuthService`, `TokenService` (JWT + refresh), `ICurrentUser` |
+| `Quotas/` | лимит запросов в минуту и суточная квота разборов |
+| `Infrastructure/` | `KnownExceptionHandler`: ожидаемые исключения → ProblemDetails с кодом 503/422/429 |
+| `client/` | клиент для Windows, отдельный проект, в сборку приложения не входит |
+| `srs/` | эксперимент с планировщиками на Python и мост к C#-планировщику, в сборку приложения не входит |
 
 ```mermaid
 flowchart TB
-    subgraph API["Слой API: minimal API эндпоинты"]
-        E1["/episodes"]
-        E2["/lines/{id}/explain"]
-        E3["/vocabulary"]
-        E4["/review/next, /review/{id}"]
-        E5["/recognize"]
+    subgraph API["Эндпоинты (minimal API)"]
+        E1["POST /episodes"]
+        E5["POST /recognize"]
+        E2["GET /lines/{id}/explain"]
+        E3["GET /vocabulary"]
+        E4["GET /review/next<br/>POST /review/{id}"]
+        E6["/auth/*"]
     end
 
-    subgraph Domain["Слой предметной логики"]
-        SP["Разбор .srt"]
-        CB["Сборщик контекста<br/>PhraseContext"]
+    subgraph Services["Сценарии"]
+        SRT["SrtTextSource"]
+        IMG["ImageTextSource"]
+        IMP["EpisodeImporter"]
+        LS["LookupService"]
+        RV["ReviewService"]
+        EXF["ExampleLineFinder"]
+        AU["AuthService"]
+    end
+
+    subgraph Ports["Интерфейсы и реализации"]
         EX["IPhraseExplainer"]
-        TS["ITextSource"]
-        TR["ITextRecognizer"]
-        RS["IReviewScheduler"]
-        N["Нормализация фразы"]
-    end
-
-    subgraph Infra["Слой инфраструктуры"]
-        EF["EF Core DbContext"]
         DE["DictionaryExplainer"]
         LE["LlmExplainer"]
-        TE["Tesseract-распознаватель"]
-        FS["Фиксированный планировщик"]
-        AS["Адаптивный планировщик"]
+        TR["ITextRecognizer"]
+        TE["TesseractRecognizer"]
+        RS["IReviewScheduler"]
+        FS["FixedIntervalScheduler"]
+        AS["AdaptiveScheduler"]
     end
 
-    E1 --> SP --> EF
-    E2 --> CB --> EX
-    E2 --> N --> EF
-    E5 --> TR
-    TR --> TS
-    SP --> TS
-    E3 --> EF
-    E4 --> RS --> EF
-    EX -.реализация.- DE
-    EX -.реализация.- LE
-    TR -.реализация.- TE
-    RS -.реализация.- FS
-    RS -.реализация.- AS
+    DB[("AppDbContext<br/>SQLite")]
+
+    E1 --> SRT --> IMP
+    E5 --> IMG --> TR
+    IMG --> IMP
+    IMP --> DB
+    E2 --> LS --> EX
+    LS --> DB
+    E3 --> DB
+    E3 --> EXF
+    E4 --> RV --> RS
+    RV --> EXF --> DB
+    RV --> DB
+    E6 --> AU --> DB
+    EX -.- DE
+    EX -.- LE
+    TR -.- TE
+    RS -.- FS
+    RS -.- AS
 ```
 
-Ключевой приём — **интерфейс и несколько реализаций, выбор в
-конфигурации**. Он повторяется трижды (`IPhraseExplainer`,
-`ITextRecognizer`, `IReviewScheduler`) и опирается на встроенный в ASP.NET
-Core контейнер зависимостей. Для ВКР это удобная точка: одна и та же
-архитектурная идея решает и плавную деградацию (нет ключа → словарь), и
-эксперимент (сравнить два планировщика на одних данных).
+Ключевой приём — **интерфейс и несколько реализаций, выбор в конфигурации**. [код] Он
+повторяется трижды и опирается на встроенный контейнер зависимостей ASP.NET Core:
+
+| Интерфейс | Реализации | Как выбирается |
+|---|---|---|
+| `IPhraseExplainer` | `DictionaryExplainer`, `LlmExplainer` | непустой `Llm:ApiKey` → LLM, иначе словарь |
+| `ITextRecognizer` | `TesseractRecognizer` | одна реализация; в тестах подменяется |
+| `IReviewScheduler` | `FixedIntervalScheduler`, `AdaptiveScheduler` | `Review:Scheduler` = `Fixed` (по умолчанию) или `Adaptive` |
+| `ITextSource` | `SrtTextSource`, `ImageTextSource` | по эндпоинту: субтитры или скриншот |
 
 Документация: [Dependency injection in ASP.NET Core](https://learn.microsoft.com/aspnet/core/fundamentals/dependency-injection).
 
 ## 4.3. Модель данных
 
-[факт, SPEC.md] Фраза — единица показа, слово — единица учёта. Наблюдение и
-элемент знания хранятся отдельно.
+[факт, SPEC.md] Фраза — единица показа, слово — единица учёта. Наблюдение и элемент
+знания хранятся отдельно. [код] `Data/Entities.cs`, миграции `Data/Migrations/`.
 
 ```mermaid
 erDiagram
+    User ||--o{ Episode : "владеет"
+    User ||--o{ KnowledgeItem : "владеет"
+    User ||--o{ RefreshToken : "сессии"
     Episode ||--o{ Line : "содержит"
     Line ||--o{ Lookup : "в ней посмотрели"
     KnowledgeItem ||--o{ Lookup : "наблюдения элемента"
-    KnowledgeItem ||--o{ ReviewEvent : "история ответов"
+    KnowledgeItem ||--o{ ReviewEvent : "история показов"
 
+    User {
+        int Id PK
+        string Email "уникальный, в нижнем регистре"
+        string PasswordHash "PBKDF2"
+        datetime CreatedAt
+    }
+    RefreshToken {
+        int Id PK
+        int UserId FK
+        string TokenHash "SHA-256, уникальный"
+        datetime CreatedAt
+        datetime ExpiresAt
+        datetime RevokedAt "null — действует"
+    }
     Episode {
-        int id PK
-        string title
-        string source_file
-        datetime created_at
+        int Id PK
+        int UserId FK
+        string Title
+        string SourceFile
+        datetime CreatedAt
     }
     Line {
-        int id PK
-        int episode_id FK
-        int index
-        int start_ms
-        int end_ms
-        string text
+        int Id PK
+        int EpisodeId FK
+        int Index
+        int StartMs
+        int EndMs
+        string Text
     }
     Lookup {
-        int id PK
-        int line_id FK
-        string phrase
-        string explanation_json
-        datetime created_at
+        int Id PK
+        int LineId FK
+        int KnowledgeItemId FK
+        string Phrase
+        string ExplanationJson
+        datetime CreatedAt
     }
     KnowledgeItem {
-        int id PK
-        string phrase_normalized
-        datetime first_seen_at
-        double interval_days
-        datetime due_at
-        double ease
+        int Id PK
+        int UserId FK
+        string PhraseNormalized
+        datetime FirstSeenAt
+        double IntervalDays
+        datetime DueAt
+        double Ease
     }
     ReviewEvent {
-        int id PK
-        int knowledge_item_id FK
-        datetime shown_at
-        datetime answered_at
-        bool was_correct
+        int Id PK
+        int KnowledgeItemId FK
+        datetime ShownAt
+        datetime AnsweredAt "null — показ без ответа"
+        bool WasCorrect "null — показ без ответа"
     }
 ```
 
-[предположение] В `SPEC.md` связь `Lookup → KnowledgeItem` явно не указана:
-у `Lookup` нет поля `knowledge_item_id`. Связать их можно двумя способами:
+Отличия от схемы в `SPEC.md` [код]:
 
-1. добавить внешний ключ `Lookup.knowledge_item_id`;
-2. связывать по значению: нормализовать `Lookup.phrase` и искать
-   `KnowledgeItem.phrase_normalized`.
+- **`Lookup.KnowledgeItemId`** — выбран первый из двух вариантов, которые обсуждала прежняя
+  версия раздела: явный внешний ключ, а не связь по нормализованной строке. Если правило
+  нормализации поменяется, старые наблюдения останутся привязаны к своим элементам.
+- **`UserId`** у `Episode` и `KnowledgeItem` (V5). У `Line`, `Lookup`, `ReviewEvent` владельца
+  нет: он определяется через связь. Разделение данных сделано глобальными фильтрами EF Core
+  (`HasQueryFilter`): любой запрос видит только строки текущего пользователя.
+- **`User`, `RefreshToken`** — таблицы для входа (V5).
+- `ReviewEvent.AnsweredAt` и `WasCorrect` допускают null: `GET /review/next` записывает показ,
+  `POST /review/{id}` дописывает в ту же строку ответ. Показы без ответа остаются в истории.
+- Время хранится в UTC; SQLite не хранит `DateTimeKind`, поэтому при чтении значения помечаются как UTC.
 
-На диаграмме нарисован первый вариант. Это решение владельца проекта, его
-нужно принять и отразить в `SPEC.md`. Вопрос для обдумывания: что
-произойдёт со связью во втором варианте, если позже поменяется правило
-нормализации?
+Индексы [код] (прежний раздел предлагал первые четыре):
 
-[предположение] Индексы, которые понадобятся почти наверняка:
-`Line(episode_id, index)` для выборки соседних реплик,
-`KnowledgeItem(phrase_normalized)` уникальный,
-`KnowledgeItem(due_at)` для `GET /review/next`,
-`ReviewEvent(knowledge_item_id, shown_at)` для адаптивного планировщика.
+| Индекс | Зачем |
+|---|---|
+| `Line(EpisodeId, Index)`, уникальный | соседние реплики для контекста |
+| `KnowledgeItem(UserId, PhraseNormalized)`, уникальный | одна фраза — один элемент у пользователя |
+| `KnowledgeItem(UserId, DueAt)` | `GET /review/next`: самый просроченный элемент |
+| `ReviewEvent(KnowledgeItemId)` | история элемента. Составного `(KnowledgeItemId, ShownAt)` нет: истории короткие |
+| `Users(Email)`, `RefreshTokens(TokenHash)`, уникальные | вход и обновление токена |
+| `Episode(UserId)`, `Lookup(LineId)`, `Lookup(KnowledgeItemId)`, `RefreshToken(UserId)` | внешние ключи |
+
+`ReviewEvent → KnowledgeItem` — `DeleteBehavior.Restrict`: история не удаляется каскадом.
 
 ## 4.4. Последовательности
 
@@ -166,16 +229,24 @@ erDiagram
 sequenceDiagram
     actor U as Пользователь
     participant API as POST /episodes
-    participant P as Разбор .srt
+    participant P as SrtTextSource / SrtParser
+    participant I as EpisodeImporter
     participant DB as SQLite
 
-    U->>API: файл .srt
+    U->>API: multipart: file (.srt), title
     API->>P: поток файла
-    P-->>API: список реплик (index, start, end, text)
-    API->>DB: Episode + Lines
-    DB-->>API: id эпизода
-    API-->>U: 201 Created, id, число реплик
+    P-->>API: реплики (start, end, text)
+    alt реплик нет
+        API-->>U: 400 ProblemDetails
+    else есть
+        API->>I: title, имя файла, реплики
+        I->>DB: Episode (UserId) + Lines, один SaveChanges
+        API-->>U: 201 Created, id, число реплик
+    end
 ```
+
+[код] Битые блоки SRT пропускаются, теги `<i>` и `{\an8}` вырезаются, строки реплики
+склеиваются через пробел, `Index` — порядковый номер в файле, а не номер блока.
 
 ### Разбор фразы с контекстом
 
@@ -183,35 +254,40 @@ sequenceDiagram
 sequenceDiagram
     actor U as Пользователь
     participant API as GET /lines/{id}/explain
+    participant LS as LookupService
     participant DB as SQLite
-    participant CB as Сборщик контекста
     participant EX as IPhraseExplainer
     participant EXT as Словарь или LLM
 
     U->>API: id реплики, phrase
-    API->>DB: реплика, эпизод, соседи ±2
-    DB-->>API: данные
-    API->>CB: что пришло
-    CB-->>API: PhraseContext (Title, Before, After, ...)
-    API->>EX: ExplainAsync(phrase, context)
-    EX->>EXT: HTTP-запрос
-    alt внешний сервис ответил
-        EXT-->>EX: ответ
-        EX-->>API: Explanation
-        API->>DB: Lookup + KnowledgeItem (создать или найти)
-        API-->>U: 200, объяснение
-    else ошибка или таймаут
-        EXT-->>EX: ошибка
-        EX-->>API: исключение
-        API-->>U: понятная ошибка (например, 502 или 503)
+    API->>API: проверка фразы (400)
+    API->>LS: ExplainAsync
+    LS->>DB: реплика и эпизод (чужая → нет)
+    alt реплики нет
+        API-->>U: 404
+    else
+        LS->>DB: разборов сегодня (суточная квота)
+        LS->>DB: соседи ±2 по (EpisodeId, Index)
+        LS->>EX: ExplainAsync(phrase, PhraseContext)
+        EX->>EXT: HTTP
+        alt ответ получен
+            EXT-->>EX: данные
+            EX-->>LS: Explanation
+            LS->>DB: Lookup + KnowledgeItem (найти или создать)
+            API-->>U: 200: контекст и объяснение
+        else сервис недоступен
+            EX-->>LS: ExplainerUnavailableException
+            API-->>U: 503 ProblemDetails, ничего не сохранено
+        end
     end
 ```
 
-[предположение] Выбор кода ответа при отказе внешнего сервиса — хорошая
-тема для разбора обработки исключений: чем ошибка «сервис словаря
-недоступен» отличается от «слово не найдено» и почему у них должны быть
-разные коды. См. [Handle errors in ASP.NET Core](https://learn.microsoft.com/aspnet/core/fundamentals/error-handling)
-и [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457).
+[код] `PhraseContext` — `Title`, `Speaker` (из префикса `MAYA: ...`), `Before`, `CurrentLine`,
+`After`; поле `CurrentLine` добавлено к перечисленным в `SPEC.md`. Коды ответов различают
+причины, как и предлагала прежняя версия раздела: 400 — фраза без слов, 404 — нет такой реплики
+(или она чужая), 429 — лимит или квота, 503 — внешний сервис недоступен. «Слово не найдено»
+(404 словаря) — не отказ: ответ 200 с `found: false`. Для выражения из нескольких слов так же
+трактуется и 5xx словаря: показываются значения отдельных слов.
 
 ### Повторение
 
@@ -219,24 +295,35 @@ sequenceDiagram
 sequenceDiagram
     actor U as Пользователь
     participant API as Review API
+    participant RV as ReviewService
     participant RS as IReviewScheduler
     participant DB as SQLite
 
     U->>API: GET /review/next
-    API->>DB: ближайший KnowledgeItem по due_at
-    API->>DB: ReviewEvent (shown_at)
-    API-->>U: элемент + пример реплики из Lookup
-    U->>API: POST /review/{id} {remembered}
-    API->>DB: ReviewEvent (answered_at, was_correct)
-    API->>RS: история элемента
-    RS-->>API: новый interval_days, due_at, ease
-    API->>DB: обновить KnowledgeItem
-    API-->>U: 200, следующая дата
+    API->>RV: NextAsync
+    RV->>DB: самый просроченный KnowledgeItem
+    RV->>DB: реплики с фразой, невыученные элементы
+    RV->>RS: ForgettingProbability (история, ответы пользователя)
+    RV->>DB: ReviewEvent (ShownAt)
+    API-->>U: reviewId, фраза, реплика «i + 1», forgettingProbability
+    U->>API: POST /review/{reviewId} {wasCorrect}
+    API->>RV: AnswerAsync
+    RV->>DB: показ, история элемента, все ответы пользователя
+    RV->>RS: Schedule(элемент, история, ответы)
+    RS-->>RV: IntervalDays, DueAt
+    RV->>DB: AnsweredAt и WasCorrect + KnowledgeItem, один SaveChanges
+    API-->>U: 200: интервал и дата
 ```
 
-[предположение] Порядок «сначала записать событие, потом пересчитать» важен:
-даже если пересчёт упадёт, история ответов не потеряется. Это напрямую
-следует из требования FR-16 о полноте `ReviewEvent`.
+[код] Расхождение с рекомендацией прежней версии раздела («сначала записать событие, потом
+пересчитать»): ответ и новый интервал сохраняются одним `SaveChanges`. Если планировщик
+выбросит исключение, ответ не сохранится. Пока планировщики не обращаются к внешним сервисам,
+это маловероятно, но полноте `ReviewEvent` (FR-16) двухшаговая запись соответствовала бы лучше.
+
+[код] Адаптивный планировщик (`Review/AdaptiveScheduler.cs`, `Review/HalfLifeRegression.cs`) —
+half-life regression из `srs/`. Веса модели нигде не хранятся: при каждом решении они заново
+обучаются по всем ответам пользователя из `ReviewEvent`. Совпадение решений C# и Python
+проверено в `srs/REPORT.md`, раздел «Проверка C#-планировщика».
 
 ### Распознавание с экрана (V2 + V7)
 
@@ -245,43 +332,56 @@ sequenceDiagram
     actor U as Пользователь
     participant C as Клиент Windows
     participant API as POST /recognize
-    participant TR as ITextRecognizer
-    participant TS as ITextSource
+    participant IS as ImageTextSource
+    participant TR as TesseractRecognizer
+    participant I as EpisodeImporter
 
-    U->>C: горячая клавиша, выбор области
-    C->>API: PNG области
-    API->>TR: изображение
-    alt Tesseract установлен
-        TR-->>API: текст
-        API->>TS: текст как источник реплики
-        API-->>C: текст и id для разбора
-        C-->>U: оверлей
-    else не установлен
-        API-->>C: понятная ошибка
+    U->>C: хоткей, выбор области на стоп-кадре
+    C->>API: PNG, title (заголовок окна), episodeId
+    API->>API: сигнатура файла (400, если не картинка)
+    API->>IS: поток изображения
+    IS->>TR: RecognizeAsync
+    alt tesseract есть
+        TR-->>IS: текст, абзацы через пустую строку
+        IS-->>API: абзац = реплика
+        API->>I: новый эпизод или дописать в episodeId
+        API-->>C: текст и id реплик
+        C-->>U: окно с кликабельными словами
+        U->>C: слово → «Разобрать»
+        C->>API: GET /lines/{id}/explain
+    else tesseract не найден
+        API-->>C: 503 «Tesseract не найден»
     end
 ```
 
-Где выполнять распознавание — на клиенте или на сервере — разобрано в
-разделе 5.
+[код] Клиент дописывает скриншоты одного окна в один эпизод (`episodeId`), поэтому предыдущие
+окна диалога попадают в контекст разбора как соседние реплики. Изображение сервер сохраняет
+только во временный файл на время работы tesseract и затем удаляет.
+
+Где выполнять распознавание — на клиенте или на сервере — разобрано в разделе 5.
 
 ## 4.5. Развёртывание
 
 ```mermaid
 flowchart LR
     subgraph PC["ПК пользователя (Windows)"]
-        CL["Клиент V7"]
+        CL["client/EasyLangClient<br/>settings.json: serverUrl"]
     end
-    subgraph Host["Хост: локально или Docker (V6)"]
-        APP["EasyLangApi<br/>+ Tesseract"]
-        F[("easylang.db")]
-        OL["Ollama (опционально)"]
+    subgraph Host["Хост: dotnet run или docker compose"]
+        APP["EasyLangApi + tesseract<br/>порт 5057 / 8080"]
+        F[("том /data<br/>easylang.db")]
+        OL["Ollama<br/>профиль llm"]
     end
     EXT["dictionaryapi.dev"]
-    CL -- "HTTP" --> APP
+    CL -- "HTTP + JWT" --> APP
     APP --> F
     APP -.-> OL
     APP --> EXT
 ```
 
-[факт, SPEC.md] Публичного деплоя нет; `docker-compose` поднимает
-приложение и опциональный Ollama.
+[код] `Dockerfile`: сборка в образе SDK, запуск в образе aspnet с `tesseract-ocr`, без root,
+база в томе `/data`. `docker-compose.yml`: приложение и Ollama в профиле `llm`; секреты — из `.env`.
+CI (`.github/workflows/ci.yml`): сборка и тесты с Tesseract, сборка образа и проверка, что контейнер
+распознаёт `sample.png`, отдельная необязательная сборка клиента на Windows.
+
+[факт, SPEC.md] Публичного деплоя нет.
