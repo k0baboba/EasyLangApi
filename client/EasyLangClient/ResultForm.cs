@@ -30,8 +30,10 @@ internal sealed partial class ResultForm : Form
         Text = string.IsNullOrWhiteSpace(title) ? "EasyLang" : $"EasyLang — {title}";
         TopMost = true;
         StartPosition = FormStartPosition.Manual;
-        Location = Cursor.Position;
         Size = new Size(520, 480);
+        // Возле курсора, но целиком на экране: проверка на windows-latest (экран 1024×768) показала,
+        // что при выделении у правого края окно уходило за экран и слова нельзя было нажать.
+        Location = FitOnScreen(Cursor.Position, Size, Screen.FromPoint(Cursor.Position).WorkingArea);
         Font = new Font("Segoe UI", 10);
 
         var lines = new FlowLayoutPanel
@@ -56,6 +58,14 @@ internal sealed partial class ResultForm : Form
         _explain.Click += async (_, _) => await ExplainAsync();
         if (result.Lines.Count > 0)
             _selectedLineId = result.Lines[0].Id;
+    }
+
+    /// <summary>Сдвинуть окно размера <paramref name="size"/> от точки <paramref name="desired"/> так, чтобы оно поместилось.</summary>
+    internal static Point FitOnScreen(Point desired, Size size, Rectangle workingArea)
+    {
+        var x = Math.Min(desired.X, workingArea.Right - size.Width);
+        var y = Math.Min(desired.Y, workingArea.Bottom - size.Height);
+        return new Point(Math.Max(x, workingArea.Left), Math.Max(y, workingArea.Top));
     }
 
     private FlowLayoutPanel CreateLineRow(RecognizedLine line)
