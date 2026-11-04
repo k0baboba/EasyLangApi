@@ -88,7 +88,7 @@ class Agreement:
             return f"{k}/{self.n} ({100 * k / self.n:.0f} %)" if self.n else "—"
 
         lines = [
-            "# Согласие судьи с человеком",
+            "# Согласие судьи со слепым проверяющим",
             "",
             f"Оценено строк: {self.n}, пропущено: {self.skipped}.",
             "",
@@ -98,8 +98,8 @@ class Agreement:
             "",
             "| | судья: верно | судья: неверно |",
             "|---|---:|---:|",
-            f"| человек: верно | {self.confusion[(True, True)]} | {self.confusion[(True, False)]} |",
-            f"| человек: неверно | {self.confusion[(False, True)]} | {self.confusion[(False, False)]} |",
+            f"| проверяющий: верно | {self.confusion[(True, True)]} | {self.confusion[(True, False)]} |",
+            f"| проверяющий: неверно | {self.confusion[(False, True)]} | {self.confusion[(False, False)]} |",
             "",
             "Точность вариантов на этой выборке: «слепая» — доля строк, где проверяющий выбрал правильный смысл;",
             "«судья» — доля, где правильный смысл выбрал судья. В скобках 95 % интервал Уилсона.",
