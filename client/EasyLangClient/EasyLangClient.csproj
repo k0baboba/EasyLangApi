@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Клиент для Windows. Отдельный проект: основное приложение и тесты от него не зависят.
+    EnableWindowsTargeting позволяет собрать его (но не запустить) и на Linux/macOS.
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- Нужен генератору LibraryImport для вызовов Win32 (Native.cs) -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <RootNamespace>EasyLangClient</RootNamespace>
+    <AssemblyName>EasyLangClient</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="settings.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

@@ -71,3 +71,18 @@ jobs:
       - name: Логи контейнера
         if: always()
         run: docker logs api || true
+
+  # Десктопный клиент — отдельно и необязательно: его поломка не валит основную сборку.
+  client:
+    name: Клиент для Windows
+    runs-on: windows-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Собрать клиент
+        run: dotnet build client/EasyLangClient -c Release

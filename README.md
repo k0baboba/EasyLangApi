@@ -66,6 +66,16 @@ docker compose exec ollama ollama pull llama3.2
 результаты — артефакт `test-results`), сборка Docker-образа и проверка, что контейнер поднимается
 и распознаёт `sample.png`.
 
+## Десктопный клиент
+
+[client/](client/README.md) — приложение для Windows в трее: хоткей, выделение области экрана,
+отправка на `/recognize`, показ текста и разбора. Отдельный проект, основное решение от него
+не зависит. **На Windows не проверялся.**
+
+```bash
+dotnet run --project client/EasyLangClient
+```
+
 ## Тесты
 
 ```bash
@@ -215,6 +225,7 @@ Auth/          регистрация, вход, JWT и refresh-токены
 Quotas/        лимиты запросов и суточная квота
 Infrastructure/ обработка ожидаемых ошибок
 tests/         xUnit
+client/        клиент для Windows (отдельный проект)
 ```
 
 Миграции создаются локальным инструментом: `dotnet tool restore`, затем
