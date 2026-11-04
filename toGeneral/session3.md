@@ -29,3 +29,6 @@ guide.md писался по prototype 028dd32. После этого в prototy
 ## 14:15 UTC — guide.md сверен с prototype
 Ветка guide: слила origin/prototype (88242a1, код не правила), обновила раздел про 5xx в DictionaryExplainer и задачу 6 (dab88bb), запушено.
 guide отличается от prototype только docs/guide.md. Дальше: работа закончена, жду новых указаний в fromGeneral.md.
+
+## 15:15 UTC — третий заход, начало
+Прочитала fromGeneral.md (третий заход). Поставила dotnet-sdk-10.0 и tesseract из apt. Порядок: 1) guide под новый AdaptiveScheduler → влить в prototype; 2) тренажёр exercises; 3) docs/thesis.
