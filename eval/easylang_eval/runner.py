@@ -17,6 +17,7 @@ import csv
 import hashlib
 import json
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -26,7 +27,7 @@ from typing import Callable
 from .dataset import DEFAULT_PATH, Item
 from .explainers import VARIANTS, Answer, DictionaryExplainer, LlmConfig, LlmExplainer
 from .http_client import HttpClient
-from .judge import LlmJudge, options_for
+from .judge import JUDGE_VERSION, LlmJudge, options_for
 from .report import render_report
 from .metrics import Row
 
@@ -62,6 +63,7 @@ class RunConfig:
             "language": self.language,
             "dataset": str(self.dataset_path.name),
             "dataset_sha256": sha256(self.dataset_path),
+            "judge_version": JUDGE_VERSION,
         }
 
 
@@ -101,7 +103,7 @@ def _check_config(out_dir: Path, public: dict, fresh: bool) -> None:
             (out_dir / name).unlink(missing_ok=True)
     elif path.exists():
         old = json.loads(path.read_text(encoding="utf-8"))
-        keys = ("llm", "judge", "dictionary_url", "language", "dataset_sha256")
+        keys = ("llm", "judge", "dictionary_url", "language", "dataset_sha256", "judge_version")
         changed = [k for k in keys if old.get(k) != public.get(k)]
         if changed:
             raise ConfigMismatch(
@@ -166,8 +168,10 @@ def run(items: list[Item], cfg: RunConfig, fresh: bool = False, log: Callable[[s
     def do_judge(task):
         it, v = task
         text = answers[(it.id, v)]["text"]
+        start = time.monotonic()
         verdict = judge.judge(it, text)
-        rec = {"id": it.id, "variant": v, "answer_text": text, **asdict(verdict)}
+        rec = {"id": it.id, "variant": v, "answer_text": text, **asdict(verdict),
+               "elapsed_ms": int((time.monotonic() - start) * 1000)}
         jwriter.write(rec)
         judgments[(it.id, v)] = rec
         log(f"[{jcounter.next()}/{len(todo_j)}] судья {v:<11} {it.id} " + (verdict.kind if verdict.ok else f"ОШИБКА: {verdict.error}"))
@@ -175,6 +179,26 @@ def run(items: list[Item], cfg: RunConfig, fresh: bool = False, log: Callable[[s
     _map(do_judge, todo_j, cfg.workers)
 
     return write_report(items, cfg.out_dir, public, cfg.variants)
+
+
+def merge_runs(items: list[Item], parts: list[Path], into: Path) -> Path:
+    """Собрать части одного прогона (одинаковые настройки) в папку into и построить отчёт."""
+    configs = [json.loads((p / "run.json").read_text(encoding="utf-8")) for p in parts]
+    keys = ("llm", "judge", "dictionary_url", "language", "dataset_sha256", "variants", "judge_version")
+    for p, c in zip(parts[1:], configs[1:]):
+        changed = [k for k in keys if c.get(k) != configs[0].get(k)]
+        if changed:
+            raise ConfigMismatch(f"{p} прогнан с другими настройками ({', '.join(changed)}), чем {parts[0]}")
+    into.mkdir(parents=True, exist_ok=True)
+    (into / "run.json").write_text(json.dumps(configs[0], ensure_ascii=False, indent=2), encoding="utf-8")
+    for name in ("answers.jsonl", "judgments.jsonl"):
+        records: dict[tuple[str, str], dict] = {}
+        for p in parts:
+            records.update(read_jsonl(p / name))
+        with open(into / name, "w", encoding="utf-8") as f:
+            for rec in records.values():
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    return write_report(items, into, configs[0])
 
 
 def write_report(items: list[Item], out_dir: Path, public: dict | None = None,
