@@ -1,0 +1,11 @@
+runner: Linux ubuntu24 20261026.354.1
+cpu: 4 x AMD EPYC 7763 64-Core Processor
+memory: 15 GiB
+python: Python 3.12.3
+ollama: ollama version is 0.40.14
+models:
+  NAME           ID              SIZE      MODIFIED      
+  llama3.1:8b    46e0c10c039e    4.9 GB    6 minutes ago    
+  qwen2.5:7b     845dbda0ea48    4.7 GB    6 minutes ago    
+git: 8d92f460c009f63a0fd021fe811df2b2e9057428 (run/eval), run 41856668673 attempt 1
+date: 2026-11-04 15:29 UTC

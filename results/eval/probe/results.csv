@@ -1,0 +1,26 @@
+id,category,phrase,line,variant,answer,judge_choice,verdict,correct_meaning,manual_ok
+s001,slang,salty,He's still salty about losing to a rookie.,dictionary,Tasting of salt.,солёный на вкус,distractor,"обиженный, раздражённый (из-за проигрыша)",
+s001,slang,salty,He's still salty about losing to a rookie.,llm_plain,"Перевод: соленый
+Смысл: Слово используется для описания человека, который часто говорит грубые или оскорбительные вещи.","обиженный, раздражённый (из-за проигрыша)",correct,"обиженный, раздражённый (из-за проигрыша)",
+s001,slang,salty,He's still salty about losing to a rookie.,llm_context,"Перевод: Горит от злости
+Смысл: Он все еще生气未消，因为输给一个新手而感到不满。","обиженный, раздражённый (из-за проигрыша)",correct,"обиженный, раздражённый (из-за проигрыша)",
+s002,slang,no cap,"No cap, I didn't even drink coffee.",dictionary,"cap: A close-fitting hat, either brimless or peaked.","без вранья, честно",correct,"без вранья, честно",
+s002,slang,no cap,"No cap, I didn't even drink coffee.",llm_plain,"Перевод: ничего личного
+Смысл: это значит, что говорящий хочет показать, что его слова не являются преувеличением или ложью","без вранья, честно",correct,"без вранья, честно",
+s002,slang,no cap,"No cap, I didn't even drink coffee.",llm_context,"Перевод: не шути
+Смысл: Don't exaggerate, I didn't even drink coffee.","без вранья, честно",correct,"без вранья, честно",
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",dictionary,To haunt; to appear to in the form of an apparition.,внезапно перестал выходить на связь без объяснений,correct,внезапно перестал выходить на связь без объяснений,
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",llm_plain,"Перевод: отверг, бросил
+Смысл: отверг его без объяснений, прекратил связь без объяснений",внезапно перестал выходить на связь без объяснений,correct,внезапно перестал выходить на связь без объяснений,
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",llm_context,"Перевод: отluent
+Смысл: Он перестал общаться со мной, не отправляя ни одного сообщения с пятницы.",внезапно перестал выходить на связь без объяснений,correct,внезапно перестал выходить на связь без объяснений,
+s004,slang,lowkey,Lowkey I just want to stay in and sleep.,dictionary,"Restrained, subtle, not trying to attract attention.","вообще-то, если честно (признание, которое не афишируют)",correct,"вообще-то, если честно (признание, которое не афишируют)",
+s004,slang,lowkey,Lowkey I just want to stay in and sleep.,llm_plain,"Перевод: намекну
+Смысл: слегка, незначительно","вообще-то, если честно (признание, которое не афишируют)",correct,"вообще-то, если честно (признание, которое не афишируют)",
+s004,slang,lowkey,Lowkey I just want to stay in and sleep.,llm_context,"Перевод: почти скрытно
+Смысл: Маркус говорит почти тихо, что он просто хочет остаться дома и поспать.","вообще-то, если честно (признание, которое не афишируют)",correct,"вообще-то, если честно (признание, которое не афишируют)",
+s005,slang,sus,"And Dorsey was awake at 3 a.m. Pretty sus, if you ask me.",dictionary,"Suspicious; raising suspicions, causing people to have suspicions.",подозрительно,correct,подозрительно,
+s005,slang,sus,"And Dorsey was awake at 3 a.m. Pretty sus, if you ask me.",llm_plain,"Перевод: подозрение
+Смысл: подозрение или сомнение",подозрительно,correct,подозрительно,
+s005,slang,sus,"And Dorsey was awake at 3 a.m. Pretty sus, if you ask me.",llm_context,"Перевод: подозрительно
+Смысл: Дорси был пробужден в три часа ночи, это довольно подозрительно, по моему мнению.",подозрительно,correct,подозрительно,

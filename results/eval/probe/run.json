@@ -1,0 +1,27 @@
+{
+  "llm": {
+    "base_url": "http://127.0.0.1:11434/v1",
+    "api_key": "",
+    "model": "qwen2.5:7b",
+    "json_mode": true,
+    "temperature": 0.2,
+    "seed": null
+  },
+  "judge": {
+    "base_url": "http://127.0.0.1:11434/v1",
+    "api_key": "",
+    "model": "llama3.1:8b",
+    "json_mode": true,
+    "temperature": 0.2,
+    "seed": null
+  },
+  "variants": [
+    "dictionary",
+    "llm_plain",
+    "llm_context"
+  ],
+  "dictionary_url": "https://api.dictionaryapi.dev/api/v2/entries/en/",
+  "language": "Russian",
+  "dataset": "phrases.jsonl",
+  "dataset_sha256": "97de3f5368c34fd2"
+}
