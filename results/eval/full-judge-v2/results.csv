@@ -1,0 +1,742 @@
+id,category,phrase,line,variant,answer,judge_choice,verdict,correct_meaning,manual_ok
+s001,slang,salty,He's still salty about losing to a rookie.,dictionary,Tasting of salt.,солёный на вкус,distractor,"обиженный, раздражённый (из-за проигрыша)",
+s001,slang,salty,He's still salty about losing to a rookie.,llm_plain,"Перевод: соленый
+Смысл: сarcasm or frustration, often used to describe someone who is being overly critical or negative","обиженный, раздражённый (из-за проигрыша)",correct,"обиженный, раздражённый (из-за проигрыша)",
+s001,slang,salty,He's still salty about losing to a rookie.,llm_context,"Перевод: злой из-за проигрыша
+Смысл: он все еще生气是因为输给了一个新手。","обиженный, раздражённый (из-за проигрыша)",correct,"обиженный, раздражённый (из-за проигрыша)",
+s002,slang,no cap,"No cap, I didn't even drink coffee.",dictionary,"cap: A close-fitting hat, either brimless or peaked.",без головного убора,distractor,"без вранья, честно",
+s002,slang,no cap,"No cap, I didn't even drink coffee.",llm_plain,"Перевод: ничего личного
+Смысл: это значит, что говорящий хочет показать, что его слова не являются обвинением или личным замечанием","без вранья, честно",correct,"без вранья, честно",
+s002,slang,no cap,"No cap, I didn't even drink coffee.",llm_context,"Перевод: не шути
+Смысл: Не шути, я даже кофе не пил.","без вранья, честно",correct,"без вранья, честно",
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",dictionary,To haunt; to appear to in the form of an apparition.,"напугал, как привидение",distractor,внезапно перестал выходить на связь без объяснений,
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",llm_plain,"Перевод: отверг, игнорирует
+Смысл: отверг его, не ответил и больше не общается",внезапно перестал выходить на связь без объяснений,correct,внезапно перестал выходить на связь без объяснений,
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",llm_context,"Перевод: отluent
+Смысл: Он перестал общаться со мной, не отправил ни одного сообщения с пятницы.",внезапно перестал выходить на связь без объяснений,correct,внезапно перестал выходить на связь без объяснений,
+s004,slang,lowkey,Lowkey I just want to stay in and sleep.,dictionary,"Restrained, subtle, not trying to attract attention.","вообще-то, если честно (признание, которое не афишируют)",correct,"вообще-то, если честно (признание, которое не афишируют)",
+s004,slang,lowkey,Lowkey I just want to stay in and sleep.,llm_plain,"Перевод: слегка, незначительно
+Смысл: незначительный или скромный","вообще-то, если честно (признание, которое не афишируют)",correct,"вообще-то, если честно (признание, которое не афишируют)",
+s004,slang,lowkey,Lowkey I just want to stay in and sleep.,llm_context,"Перевод: почти наверное я просто хочу остаться дома и поспать
+Смысл: basically, I just want to stay home and sleep","вообще-то, если честно (признание, которое не афишируют)",correct,"вообще-то, если честно (признание, которое не афишируют)",
+s005,slang,sus,"And Dorsey was awake at 3 a.m. Pretty sus, if you ask me.",dictionary,"Suspicious; raising suspicions, causing people to have suspicions.",подозрительно,correct,подозрительно,
+s005,slang,sus,"And Dorsey was awake at 3 a.m. Pretty sus, if you ask me.",llm_plain,"Перевод: подозрение
+Смысл: подозрение или подозрительность",подозрительно,correct,подозрительно,
+s005,slang,sus,"And Dorsey was awake at 3 a.m. Pretty sus, if you ask me.",llm_context,"Перевод: подозрительно
+Смысл: Дорси был thứcон в три часа ночи, это подозрительно, на мой взгляд.",подозрительно,correct,подозрительно,
+s006,slang,the GOAT,At this point she's simply the GOAT of street racing.,dictionary,"the: With a comparative, and often with for it, indicates a result more like said comparative. This can be negated with none. See none the.",величайшая за всё время (Greatest Of All Time),correct,величайшая за всё время (Greatest Of All Time),
+s006,slang,the GOAT,At this point she's simply the GOAT of street racing.,llm_plain,"Перевод: самый лучший
+Смысл: самый лучший игрок или человек в своем деле",величайшая за всё время (Greatest Of All Time),correct,величайшая за всё время (Greatest Of All Time),
+s006,slang,the GOAT,At this point she's simply the GOAT of street racing.,llm_context,"Перевод: наилучший в автоспорте
+Смысл: в этот момент она просто лучшая в уличном ралли",величайшая за всё время (Greatest Of All Time),correct,величайшая за всё время (Greatest Of All Time),
+s007,slang,spill the tea,"Okay, close the door and spill the tea.",dictionary,spill: A fall or stumble.,пролей чай,distractor,"выкладывай сплетни, рассказывай подробности",
+s007,slang,spill the tea,"Okay, close the door and spill the tea.",llm_plain,"Перевод: рассказать все подробности
+Смысл: рассказать все подробности, особенно неприятные или скрытые факты","выкладывай сплетни, рассказывай подробности",correct,"выкладывай сплетни, рассказывай подробности",
+s007,slang,spill the tea,"Okay, close the door and spill the tea.",llm_context,"Перевод: закрой дверь и расскажи все
+Смысл: скажи все, что знаешь","выкладывай сплетни, рассказывай подробности",correct,"выкладывай сплетни, рассказывай подробности",
+s008,slang,Bet,Bet. See you at the tower.,dictionary,"A wager, an agreement between two parties that a stake (usually money) will be paid by the loser to the winner (the winner being the one who correctly forecast the outcome of an event).","держу пари, спорим",distractor,"договорились, хорошо",
+s008,slang,Bet,Bet. See you at the tower.,llm_plain,"Перевод: Ставка
+Смысл: Сделать ставку или поставить на что-то.","держу пари, спорим",distractor,"договорились, хорошо",
+s008,slang,Bet,Bet. See you at the tower.,llm_context,"Перевод: Сделка. Свидимся на телетрансформаторе.
+Смысл: A deal. See you at the tower.","договорились, хорошо",correct,"договорились, хорошо",
+s009,slang,flex,"It's a flex, he wants everyone to see it.",dictionary,"Flexibility, pliancy.","гибкость, растяжка",distractor,"хвастовство, демонстрация своего статуса",
+s009,slang,flex,"It's a flex, he wants everyone to see it.",llm_plain,"Перевод: показать себя / продемонстрировать
+Смысл: показать свои способности или силу","хвастовство, демонстрация своего статуса",correct,"хвастовство, демонстрация своего статуса",
+s009,slang,flex,"It's a flex, he wants everyone to see it.",llm_context,"Перевод: показать себя
+Смысл: он хочет, чтобы все видели это","хвастовство, демонстрация своего статуса",correct,"хвастовство, демонстрация своего статуса",
+s010,slang,cringe,It was so cringe I had to close my laptop.,dictionary,A posture or gesture of shrinking or recoiling.,"неловко, стыдно смотреть (испанский стыд)",correct,"неловко, стыдно смотреть (испанский стыд)",
+s010,slang,cringe,It was so cringe I had to close my laptop.,llm_plain,"Перевод: стыдно
+Смысл: чувство неловкости или смущения при виде чего-то нелепого или неудачного","неловко, стыдно смотреть (испанский стыд)",correct,"неловко, стыдно смотреть (испанский стыд)",
+s010,slang,cringe,It was so cringe I had to close my laptop.,llm_context,"Перевод: было так смешно, что я закрыл ноутбук
+Смысл: было так неловко, что мне пришлось закрыть ноутбук","неловко, стыдно смотреть (испанский стыд)",correct,"неловко, стыдно смотреть (испанский стыд)",
+s011,slang,mid,"Honestly, the dish is mid.",dictionary,Denoting the middle part.,"в середине, наполовину готово",distractor,"посредственно, так себе",
+s011,slang,mid,"Honestly, the dish is mid.",llm_plain,"Перевод: средний
+Смысл: средний, находящийся в середине","в середине, наполовину готово",distractor,"посредственно, так себе",
+s011,slang,mid,"Honestly, the dish is mid.",llm_context,"Перевод: честно говоря, блюдо среднего качества
+Смысл: честно говоря, блюдо просто так себе","посредственно, так себе",correct,"посредственно, так себе",
+s012,slang,rizz,The man has unbelievable rizz.,dictionary,,"Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"обаяние, умение флиртовать",
+s012,slang,rizz,The man has unbelievable rizz.,llm_plain,"Перевод: риз
+Смысл: стиль, элегантность","обаяние, умение флиртовать",correct,"обаяние, умение флиртовать",
+s012,slang,rizz,The man has unbelievable rizz.,llm_context,"Перевод: мужчина обладает невероятным ризом
+Смысл: мужчина обладает невероятной привлекательностью или стильной уверенностью","обаяние, умение флиртовать",correct,"обаяние, умение флиртовать",
+s013,slang,slaps,This track absolutely slaps.,dictionary,"A blow, especially one given with the open hand, or with something broad and flat.","звучит отлично, качает",correct,"звучит отлично, качает",
+s013,slang,slaps,This track absolutely slaps.,llm_plain,"Перевод: ударяет ладонью
+Смысл: ударяет кулаком",бьёт по лицу,distractor,"звучит отлично, качает",
+s013,slang,slaps,This track absolutely slaps.,llm_context,"Перевод: ударяет ладонью
+Смысл: Эта композиция действительно звучит отлично.","звучит отлично, качает",correct,"звучит отлично, качает",
+s014,slang,it's giving,It's giving nightclub owner from 1985.,dictionary,"giving: (ditransitive) To move, shift, provide something abstract or concrete to someone or something or somewhere.","он дарит, отдаёт",distractor,"производит впечатление, похоже на (такой-то образ)",
+s014,slang,it's giving,It's giving nightclub owner from 1985.,llm_plain,"Перевод: это уже идет
+Смысл: это начало приносить результаты","производит впечатление, похоже на (такой-то образ)",correct,"производит впечатление, похоже на (такой-то образ)",
+s014,slang,it's giving,It's giving nightclub owner from 1985.,llm_context,"Перевод: это начинает выдавать
+Смысл: это начинает выдавать его происхождение из夜醒梦回，继续前行。","производит впечатление, похоже на (такой-то образ)",correct,"производит впечатление, похоже на (такой-то образ)",
+s015,slang,caught in 4K,He got caught in 4K holding a hot dog.,dictionary,"caught: (heading) To capture, overtake.",застрял в пробке на трассе 4K,distractor,попался с неопровержимыми доказательствами,
+s015,slang,caught in 4K,He got caught in 4K holding a hot dog.,llm_plain,"Перевод: пойманный в 4К
+Смысл: находящийся в качестве 4K, с высоким разрешением",попался с неопровержимыми доказательствами,correct,попался с неопровержимыми доказательствами,
+s015,slang,caught in 4K,He got caught in 4K holding a hot dog.,llm_context,"Перевод: запечатлен в четвертой квантовой космологии
+Смысл: его поймали на четверке",попался с неопровержимыми доказательствами,correct,попался с неопровержимыми доказательствами,
+s016,slang,touch grass,"Dude, log off and touch grass.",dictionary,"grass: Any plant of the family Poaceae, characterized by leaves that arise from nodes in the stem and leaf bases that wrap around the stem, especially those grown as ground cover rather than for grain.",займись садом,distractor,"выйди из сети, отвлекись на реальную жизнь",
+s016,slang,touch grass,"Dude, log off and touch grass.",llm_plain,"Перевод: каснись травы
+Смысл: перевыпей, чтобы умереть","Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"выйди из сети, отвлекись на реальную жизнь",
+s016,slang,touch grass,"Dude, log off and touch grass.",llm_context,"Перевод: отойди подальше
+Смысл: Пришли в реальность и занялся чем-нибудь другим.","выйди из сети, отвлекись на реальную жизнь",correct,"выйди из сети, отвлекись на реальную жизнь",
+s017,slang,main character energy,That's main character energy right there.,dictionary,"main: To mainly play a specific character, or side, during a game.",энергия главного персонажа в игре (шкала),distractor,"поведение человека, который ведёт себя как главный герой, в центре внимания",
+s017,slang,main character energy,That's main character energy right there.,llm_plain,"Перевод: энергия главного героя
+Смысл: это выражение описывает уровень энергии или активности главного героя",энергия главного персонажа в игре (шкала),distractor,"поведение человека, который ведёт себя как главный герой, в центре внимания",
+s017,slang,main character energy,That's main character energy right there.,llm_context,"Перевод: это энергия главного героя
+Смысл: это энергия, которую проявляет главный герой",энергия главного персонажа в игре (шкала),distractor,"поведение человека, который ведёт себя как главный герой, в центре внимания",
+s018,slang,hits different,Coffee at six in the morning just hits different.,dictionary,different: The different ideal.,"ощущается по-особенному, сильнее обычного",correct,"ощущается по-особенному, сильнее обычного",
+s018,slang,hits different,Coffee at six in the morning just hits different.,llm_plain,"Перевод: попадает по-разному
+Смысл: действует по-разному на разных людей",бьёт по-разному,distractor,"ощущается по-особенному, сильнее обычного",
+s018,slang,hits different,Coffee at six in the morning just hits different.,llm_context,"Перевод: кофе утром в шесть часов как-то по-другому действует
+Смысл: Coffee at six in the morning just hits different means that the coffee at that time of morning has a different effect or taste.",бьёт по-разному,distractor,"ощущается по-особенному, сильнее обычного",
+s019,slang,down bad,My guy is down bad.,dictionary,down: A negative aspect; a downer.,тяжело болен,distractor,"отчаянно влюблён, готов на всё ради симпатии",
+s019,slang,down bad,My guy is down bad.,llm_plain,"Перевод: плохо
+Смысл: очень плохо",тяжело болен,distractor,"отчаянно влюблён, готов на всё ради симпатии",
+s019,slang,down bad,My guy is down bad.,llm_context,"Перевод: Мой парень очень сильно влюблен.
+Смысл: He is really into her.","отчаянно влюблён, готов на всё ради симпатии",correct,"отчаянно влюблён, готов на всё ради симпатии",
+s020,slang,bussin,"Chef, this is bussin.",dictionary,,"Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,очень вкусно,
+s020,slang,bussin,"Chef, this is bussin.",llm_plain,"Перевод: бизнес, работа
+Смысл: работа идет хорошо, все отлично","занято, хлопотно",distractor,очень вкусно,
+s020,slang,bussin,"Chef, this is bussin.",llm_context,"Перевод: бизнес
+Смысл: Это очень хорошо, отличная работа.","занято, хлопотно",distractor,очень вкусно,
+s021,slang,ate,She ate and left no crumbs.,dictionary,To ingest; to be ingested.,съела всё до последней крошки,distractor,"справилась блестяще, безупречно",
+s021,slang,ate,She ate and left no crumbs.,llm_plain,"Перевод: кушал
+Смысл: едел",съела всё до последней крошки,distractor,"справилась блестяще, безупречно",
+s021,slang,ate,She ate and left no crumbs.,llm_context,"Перевод: съела и не оставила ни крошки
+Смысл: она полностью съела это, не оставив ничего",съела всё до последней крошки,distractor,"справилась блестяще, безупречно",
+s022,slang,take the L,We take the L and focus on Sunday.,dictionary,take: The or an act of taking.,взять большой размер,distractor,смириться с поражением,
+s022,slang,take the L,We take the L and focus on Sunday.,llm_plain,"Перевод: принять Л
+Смысл: принять поражение",смириться с поражением,correct,смириться с поражением,
+s022,slang,take the L,We take the L and focus on Sunday.,llm_context,"Перевод: принимаем поражение и сосредоточимся на воскресенье
+Смысл: мы принимаем поражение и сконцентрируемся на следующем этапе.",смириться с поражением,correct,смириться с поражением,
+s023,slang,that's cap,That's cap and you know it.,dictionary,"cap: A close-fitting hat, either brimless or peaked.",это кепка,distractor,это враньё,
+s023,slang,that's cap,That's cap and you know it.,llm_plain,"Перевод: это лимит
+Смысл: это максимальное значение","это предел, потолок",distractor,это враньё,
+s023,slang,that's cap,That's cap and you know it.,llm_context,"Перевод: это верно
+Смысл: это правда, и ты это знаешь",это враньё,correct,это враньё,
+s024,slang,deadass,"Deadass, there was nothing on that deck.",dictionary,,"Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"серьёзно, на полном серьёзе",
+s024,slang,deadass,"Deadass, there was nothing on that deck.",llm_plain,"Перевод: прямым текстом
+Смысл: очень точно; без прикрас","Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"серьёзно, на полном серьёзе",
+s024,slang,deadass,"Deadass, there was nothing on that deck.",llm_context,"Перевод: совершенно точно, на палубе ничего не было
+Смысл: absolutely, without a doubt, there was nothing on the deck","Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"серьёзно, на полном серьёзе",
+s025,slang,bounce,"Grab the drive, we bounce now.",dictionary,A change of direction of motion after hitting the ground or an obstacle.,отскакиваем,distractor,"сматываемся, уходим",
+s025,slang,bounce,"Grab the drive, we bounce now.",llm_plain,"Перевод: отскакивать
+Смысл: отскакивать, прыгать",прыгаем на месте,distractor,"сматываемся, уходим",
+s025,slang,bounce,"Grab the drive, we bounce now.",llm_context,"Перевод: поймем, что делать
+Смысл: Пора уходить, покинуть место преступления.","сматываемся, уходим",correct,"сматываемся, уходим",
+s026,slang,crash,Can I crash on your couch tonight?,dictionary,"A sudden, intense, loud sound, as made for example by cymbals.","разбиться, попасть в аварию",distractor,переночевать,
+s026,slang,crash,Can I crash on your couch tonight?,llm_plain,"Перевод: сломаться
+Смысл: сломаться, лопнуть","разбиться, попасть в аварию",distractor,переночевать,
+s026,slang,crash,Can I crash on your couch tonight?,llm_context,"Перевод: пожить у тебя на диване на ночь
+Смысл: можно ли у вас на диване переночевать",переночевать,correct,переночевать,
+s027,slang,beef,They've had beef since the fire in '09.,dictionary,"The meat from a cow, bull or other bovine.",говядина,distractor,"вражда, конфликт",
+s027,slang,beef,They've had beef since the fire in '09.,llm_plain,"Перевод: мясо
+Смысл: быть в споре или спорить о чем-то","вражда, конфликт",correct,"вражда, конфликт",
+s027,slang,beef,They've had beef since the fire in '09.,llm_context,"Перевод: быть в конфликте
+Смысл: у них были конфликты с тех пор как произошло пожар в 2009 году","вражда, конфликт",correct,"вражда, конфликт",
+s028,slang,throwing shade,Is she throwing shade at me in my own hall?,dictionary,"shade: Darkness where light, particularly sunlight, is blocked.",отбрасывает тень,distractor,"язвит, завуалированно оскорбляет",
+s028,slang,throwing shade,Is she throwing shade at me in my own hall?,llm_plain,"Перевод: бросать тень
+Смысл: недружелюбно косвенно критиковать или оскорблять кого-то","язвит, завуалированно оскорбляет",correct,"язвит, завуалированно оскорбляет",
+s028,slang,throwing shade,Is she throwing shade at me in my own hall?,llm_context,"Перевод: бросать тень
+Смысл: она намекает на меня в моем собственном зале","язвит, завуалированно оскорбляет",correct,"язвит, завуалированно оскорбляет",
+s029,slang,lit,Last night was lit.,dictionary,To set fire to; to set burning.,было подожжено,distractor,"было круто, весело",
+s029,slang,lit,Last night was lit.,llm_plain,"Перевод: настоящий, классный
+Смысл: очень круто, отличный","было круто, весело",correct,"было круто, весело",
+s029,slang,lit,Last night was lit.,llm_context,"Перевод: ночное мероприятие было отличным
+Смысл: Ночная вечеринка была отличной.","было круто, весело",correct,"было круто, весело",
+s030,slang,noob,Classic noob move.,dictionary,"(often pejorative) A newb or newbie; refers to the idea that someone is new to a game, concept, or idea; implying a lack of experience. Also, in some areas the word noob can mean someone is obsessed with things.","новичок, неумеха",correct,"новичок, неумеха",
+s030,slang,noob,Classic noob move.,llm_plain,"Перевод: новичок
+Смысл: недопытанный игрок или человек, который только начинает играть в игру или общаться в сообществе","новичок, неумеха",correct,"новичок, неумеха",
+s030,slang,noob,Classic noob move.,llm_context,"Перевод: новичок
+Смысл: Классический поступок новичка.","новичок, неумеха",correct,"новичок, неумеха",
+s031,slang,nerfed,They nerfed it in the last patch.,dictionary,"To cripple or weaken an element of a video game during its development (such as a character, a weapon, a spell, etc.).",ослабили (в обновлении игры),correct,ослабили (в обновлении игры),
+s031,slang,nerfed,They nerfed it in the last patch.,llm_plain,"Перевод: резиновый
+Смысл: значение фразеологизма зависит от контекста, но часто оно означает что-то было урезано или уменьшено в силе или эффективности",ослабили (в обновлении игры),correct,ослабили (в обновлении игры),
+s031,slang,nerfed,They nerfed it in the last patch.,llm_context,"Перевод: изменены в худшую сторону
+Смысл: Это значит, что что-то было изменено в худшую сторону, ухудшено.",ослабили (в обновлении игры),correct,ослабили (в обновлении игры),
+s032,slang,OP,That hammer is so OP it's not even funny.,dictionary,An operation.,"слишком сильный, имбалансный (overpowered)",correct,"слишком сильный, имбалансный (overpowered)",
+s032,slang,OP,That hammer is so OP it's not even funny.,llm_plain,"Перевод: ОП
+Смысл: ОП — это сокращение от Overpowered, что означает слишком мощное или слишком эффективное.","слишком сильный, имбалансный (overpowered)",correct,"слишком сильный, имбалансный (overpowered)",
+s032,slang,OP,That hammer is so OP it's not even funny.,llm_context,"Перевод: Такой молот просто невероятный, что это уже не смешно.
+Смысл: Этот молот настолько мощный, что это уже не забавно.","слишком сильный, имбалансный (overpowered)",correct,"слишком сильный, имбалансный (overpowered)",
+s033,slang,grind,"Ugh, that's a serious grind.",dictionary,To shape with the force of friction.,"помол, перемалывание",distractor,"долгое однообразное занятие ради награды (гринд, фарм)",
+s033,slang,grind,"Ugh, that's a serious grind.",llm_plain,"Перевод: драть
+Смысл: выполнять рутинную работу или заниматься чем-то утомительным","долгое однообразное занятие ради награды (гринд, фарм)",correct,"долгое однообразное занятие ради награды (гринд, фарм)",
+s033,slang,grind,"Ugh, that's a serious grind.",llm_context,"Перевод: Это серьезная работа.
+Смысл: Это серьезная и трудоемкая задача.","долгое однообразное занятие ради награды (гринд, фарм)",correct,"долгое однообразное занятие ради награды (гринд, фарм)",
+s034,slang,carried,"Honestly, Mila carried us today.",dictionary,"To transfer from one place (such as a country, book, or column) to another.",отвезла нас на машине,distractor,"вытянула команду, обеспечила победу почти в одиночку",
+s034,slang,carried,"Honestly, Mila carried us today.",llm_plain,"Перевод: перенесен
+Смысл: перенесен в другое место",отвезла нас на машине,distractor,"вытянула команду, обеспечила победу почти в одиночку",
+s034,slang,carried,"Honestly, Mila carried us today.",llm_context,"Перевод: Искренне говоря, Мила сегодня нас поддержала.
+Смысл: Honestly, Mila carried us today means that Mila performed exceptionally well and helped the team succeed despite the speaker's poor performance.","вытянула команду, обеспечила победу почти в одиночку",correct,"вытянула команду, обеспечила победу почти в одиночку",
+s035,slang,smurf,"That's a smurf, no doubt about it.",dictionary,,"Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"опытный игрок на новом аккаунте, который играет против новичков",
+s035,slang,smurf,"That's a smurf, no doubt about it.",llm_plain,"Перевод: смurf
+Смысл: смurf — это персонаж мультфильма, который выглядит как маленький голубой человек.",маленький синий персонаж мультфильма,distractor,"опытный игрок на новом аккаунте, который играет против новичков",
+s035,slang,smurf,"That's a smurf, no doubt about it.",llm_context,"Перевод: фейк аккаунт
+Смысл: Это явно фейк аккаунт.","бот, программа",distractor,"опытный игрок на новом аккаунте, который играет против новичков",
+s036,slang,tilted,"He's completely tilted, bring him in.",dictionary,To slope or incline (something); to slant.,"наклонён, стоит под углом",distractor,"выбит из колеи эмоциями после неудач, играет хуже",
+s036,slang,tilted,"He's completely tilted, bring him in.",llm_plain,"Перевод: наклоненный
+Смысл: некорректный или несправедливый","выбит из колеи эмоциями после неудач, играет хуже",correct,"выбит из колеи эмоциями после неудач, играет хуже",
+s036,slang,tilted,"He's completely tilted, bring him in.",llm_context,"Перевод: полностью сбит с толку, приводите его
+Смысл: он полностью сбит с толку, сильно расстроен","выбит из колеи эмоциями после неудач, играет хуже",correct,"выбит из колеи эмоциями после неудач, играет хуже",
+s037,slang,clutch,That was the most clutch play I've ever seen.,dictionary,"To seize, as though with claws.","крепко сжатый, схваченный",distractor,"решающий, сыгранный в критический момент",
+s037,slang,clutch,That was the most clutch play I've ever seen.,llm_plain,"Перевод: схватить
+Смысл: успеть сделать что-то критически важное в последний момент","решающий, сыгранный в критический момент",correct,"решающий, сыгранный в критический момент",
+s037,slang,clutch,That was the most clutch play I've ever seen.,llm_context,"Перевод: это была самая спасительная игра, которую я когда-либо видел
+Смысл: Это была самая важная и удачная игра, которую я когда-либо видел.","решающий, сыгранный в критический момент",correct,"решающий, сыгранный в критический момент",
+s038,slang,camping,Someone is camping behind the generator.,dictionary,"The recreational activity of temporarily living in a tent or similar accommodation, usually in the wilderness.",отдыхает в походе с палаткой,distractor,"сидит в засаде на одном месте, поджидая противников",
+s038,slang,camping,Someone is camping behind the generator.,llm_plain,"Перевод: каемпинг
+Смысл: походы на природу, проводимые на露营",отдыхает в походе с палаткой,distractor,"сидит в засаде на одном месте, поджидая противников",
+s038,slang,camping,Someone is camping behind the generator.,llm_context,"Перевод: кемпинг
+Смысл: кто-то спит или находится в засаде возле генератора","сидит в засаде на одном месте, поджидая противников",correct,"сидит в засаде на одном месте, поджидая противников",
+s039,slang,feeding,Stop feeding the enemy team.,dictionary,(ditransitive) To give (someone or something) food to eat.,кормить,distractor,постоянно погибать и тем самым усиливать соперников,
+s039,slang,feeding,Stop feeding the enemy team.,llm_plain,"Перевод: кормить
+Смысл: наполнять или поддерживать что-то",кормить,distractor,постоянно погибать и тем самым усиливать соперников,
+s039,slang,feeding,Stop feeding the enemy team.,llm_context,"Перевод: Прекрати помогать врагу
+Смысл: Stop giving the enemy an advantage.",снабжать информацией (шпионить),distractor,постоянно погибать и тем самым усиливать соперников,
+s040,slang,cheese,We can cheese the fight without taking a hit.,dictionary,Any particular variety of cheese.,сфотографироваться (сказать cheese),distractor,"пройти бой дешёвым приёмом, используя слабость механики",
+s040,slang,cheese,We can cheese the fight without taking a hit.,llm_plain,"Перевод: сыр
+Смысл: сыр, который часто используется в шутках или как простое слово",сфотографироваться (сказать cheese),distractor,"пройти бой дешёвым приёмом, используя слабость механики",
+s040,slang,cheese,We can cheese the fight without taking a hit.,llm_context,"Перевод: мы сможем пройти через бой, не принимая урона","пройти бой дешёвым приёмом, используя слабость механики",correct,"пройти бой дешёвым приёмом, используя слабость механики",
+s041,slang,aggro,"I'll pull aggro, everyone else hit it from behind.",dictionary,"ОШИБКА: https://api.dictionaryapi.dev/api/v2/entries/en/aggro ответил кодом 502: {""type"":""https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-502/"",""title"":""Error 502: Bad gateway"",""status"":502,""detail"":""The origin web server returned an invalid or incomplete response to Cloudflare. This typically indicates the origin is overlo",,,"внимание монстра, на кого он нападает",
+s041,slang,aggro,"I'll pull aggro, everyone else hit it from behind.",llm_plain,"Перевод: злость, агрессия
+Смысл: агрессия или желание драться","агрессивное настроение, злость",distractor,"внимание монстра, на кого он нападает",
+s041,slang,aggro,"I'll pull aggro, everyone else hit it from behind.",llm_context,"Перевод: я заберу удары, а вы атакуйте его сзади
+Смысл: я возьму на себя агрессию, чтобы вы могли атаковать его сзади","агрессивное настроение, злость",distractor,"внимание монстра, на кого он нападает",
+s042,slang,kite,Kite it around the lake and keep shooting.,dictionary,,"Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"водить противника за собой на расстоянии, атакуя на ходу",
+s042,slang,kite,Kite it around the lake and keep shooting.,llm_plain,"Перевод: модель самолета для игры
+Смысл: маленький самолетик для игры","водить противника за собой на расстоянии, атакуя на ходу",correct,"водить противника за собой на расстоянии, атакуя на ходу",
+s042,slang,kite,Kite it around the lake and keep shooting.,llm_context,"Перевод: Лети вокруг озера и продолжай стрелять.
+Смысл: Летать вокруг озера и продолжать стрелять.","водить противника за собой на расстоянии, атакуя на ходу",correct,"водить противника за собой на расстоянии, атакуя на ходу",
+s043,slang,dip,I'm gonna dip before the Q&A starts.,dictionary,A lower section of a road or geological feature.,обмакнуть (в соус),distractor,"тихо уйти, смыться",
+s043,slang,dip,I'm gonna dip before the Q&A starts.,llm_plain,"Перевод: погружение
+Смысл: употребление чего-либо в нечто, обычно с негативным смыслом",обмакнуть (в соус),distractor,"тихо уйти, смыться",
+s043,slang,dip,I'm gonna dip before the Q&A starts.,llm_context,"Перевод: поговорю на минутку
+Смысл: Тео собирается поговорить кратко перед началом вопросов и ответов.","тихо уйти, смыться",correct,"тихо уйти, смыться",
+s044,slang,shook,"I'm still shook, my hands won't stop shaking.",dictionary,"To pack (staves, etc.) in a shook.","потрясла, встряхнула (что-то)",distractor,"в шоке, потрясена",
+s044,slang,shook,"I'm still shook, my hands won't stop shaking.",llm_plain,"Перевод: поколебал
+Смысл: поколебал веру или уверенность","потрясла, встряхнула (что-то)",distractor,"в шоке, потрясена",
+s044,slang,shook,"I'm still shook, my hands won't stop shaking.",llm_context,"Перевод: Мне все еще тяжело, руки不住地颤抖。
+Смысл: Она все еще сильно переживает из-за услышанного на радио.","в шоке, потрясена",correct,"в шоке, потрясена",
+s045,slang,extra,Isn't that a little extra?,dictionary,To an extraordinary degree.,"чересчур, перебор, слишком вычурно",correct,"чересчур, перебор, слишком вычурно",
+s045,slang,extra,Isn't that a little extra?,llm_plain,"Перевод: дополнительный
+Смысл: дополнительный или необязательный элемент","дополнительный, запасной",distractor,"чересчур, перебор, слишком вычурно",
+s045,slang,extra,Isn't that a little extra?,llm_context,"Перевод: лишнее
+Смысл: Не это ли有些多余？","чересчур, перебор, слишком вычурно",correct,"чересчур, перебор, слишком вычурно",
+s046,slang,basic,"You're so basic, and I love it.",dictionary,"A necessary commodity, a staple requirement.","основной, базовый",distractor,"банальный, предсказуемый, как все",
+s046,slang,basic,"You're so basic, and I love it.",llm_plain,"Перевод: базовый
+Смысл: простой, основной","основной, базовый",distractor,"банальный, предсказуемый, как все",
+s046,slang,basic,"You're so basic, and I love it.",llm_context,"Перевод: ты такой базовый, и мне это нравится
+Смысл: ты такой простой, и это мне нравится","банальный, предсказуемый, как все",correct,"банальный, предсказуемый, как все",
+s047,slang,savage,That was savage.,dictionary,"ОШИБКА: https://api.dictionaryapi.dev/api/v2/entries/en/savage ответил кодом 502: {""type"":""https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-502/"",""title"":""Error 502: Bad gateway"",""status"":502,""detail"":""The origin web server returned an invalid or incomplete response to Cloudflare. This typically indicates the origin is overlo",,,"жёстко, беспощадно (о дерзкой честности)",
+s047,slang,savage,That was savage.,llm_plain,"Перевод: дикарь, жестокий человек
+Смысл: жестокий, жестокий по отношению к другим","жёстко, беспощадно (о дерзкой честности)",correct,"жёстко, беспощадно (о дерзкой честности)",
+s047,slang,savage,That was savage.,llm_context,"Перевод: жестокий
+Смысл: Она сказала очень жесткую и обидную вещь.","жёстко, беспощадно (о дерзкой честности)",correct,"жёстко, беспощадно (о дерзкой честности)",
+s048,slang,stans,Somebody out there really stans Hollow Pines.,dictionary,"One of the stans; any of the ex-Soviet countries and their neighbours whose name ends with ""-stan"" such as Turkmenistan, Uzbekistan, and Kazakhstan.",стоит рядом,distractor,"фанатеет, страстно обожает",
+s048,slang,stans,Somebody out there really stans Hollow Pines.,llm_plain,"Перевод: станы
+Смысл: группы фанатов или поклонников, поддерживаемые в социальных сетях","фанатеет, страстно обожает",correct,"фанатеет, страстно обожает",
+s048,slang,stans,Somebody out there really stans Hollow Pines.,llm_context,"Перевод: кто-то из них действительно очень любит группу Hollow Pines
+Смысл: someone really loves the band Hollow Pines","фанатеет, страстно обожает",correct,"фанатеет, страстно обожает",
+s049,slang,receipts,Good thing I kept the receipts.,dictionary,"The act of receiving, or the fact of having been received.",квитанции об оплате,distractor,"доказательства (скриншоты, переписка)",
+s049,slang,receipts,Good thing I kept the receipts.,llm_plain,"Перевод: чеки
+Смысл: документы, подтверждающие покупку",квитанции об оплате,distractor,"доказательства (скриншоты, переписка)",
+s049,slang,receipts,Good thing I kept the receipts.,llm_context,"Перевод: Слава Богу, я сохранила квитанции.
+Смысл: Good thing I kept the receipts means that the speaker is relieved because they have proof of their expenses.",квитанции об оплате,distractor,"доказательства (скриншоты, переписка)",
+s050,slang,fire,Track three is pure fire.,dictionary,"An instance of this chemical reaction, especially when intentionally created and maintained in a specific location to a useful end (such as a campfire or a hearth fire).","огонь, пожар",distractor,"отличный, крутой",
+s050,slang,fire,Track three is pure fire.,llm_plain,"Перевод: огонь
+Смысл: выстрелить, начать атаку","выстрел, стрельба",distractor,"отличный, крутой",
+s050,slang,fire,Track three is pure fire.,llm_context,"Перевод: огонь
+Смысл: трек три просто отличный","отличный, крутой",correct,"отличный, крутой",
+s051,slang,sick,That move was sick!,dictionary,Sick people in general as a group.,"тошнотворный, противный",distractor,"потрясающий, крутой",
+s051,slang,sick,That move was sick!,llm_plain,"Перевод: заболел
+Смысл: плохой, отличный, неприятный","потрясающий, крутой",correct,"потрясающий, крутой",
+s051,slang,sick,That move was sick!,llm_context,"Перевод: круто
+Смысл: Это движение было крутым","потрясающий, крутой",correct,"потрясающий, крутой",
+s052,slang,bailed,"Great, our driver bailed on us.",dictionary,To release a person under such guarantee.,внёс за нас залог,distractor,"бросил, не явился, подвёл",
+s052,slang,bailed,"Great, our driver bailed on us.",llm_plain,"Перевод: вышел из ситуации
+Смысл: вышел из ситуации, не неся ответственности","бросил, не явился, подвёл",correct,"бросил, не явился, подвёл",
+s052,slang,bailed,"Great, our driver bailed on us.",llm_context,"Перевод: Отлично, наш водитель нас бросил.
+Смысл: Отлично, наш водитель нас бросил. (Great, our driver bailed on us.)","бросил, не явился, подвёл",correct,"бросил, не явился, подвёл",
+s053,slang,busted,"Sorry, my mic is busted.",dictionary,(often used in combination with an adjective) Having a certain type of bust (breasts; cleavage).,сломан,correct,сломан,
+s053,slang,busted,"Sorry, my mic is busted.",llm_plain,"Перевод: пойманный
+Смысл: пойманный на месте преступления","арестован, пойман",distractor,сломан,
+s053,slang,busted,"Sorry, my mic is busted.",llm_context,"Перевод: покалеченный
+Смысл: Микрофон сломался.",сломан,correct,сломан,
+s054,slang,loaded,"The guy is loaded, and nobody knows where from.",dictionary,To place in or on a conveyance or a place of storage.,"загружен, нагружен",distractor,очень богат,
+s054,slang,loaded,"The guy is loaded, and nobody knows where from.",llm_plain,"Перевод: нагруженный
+Смысл: нагруженный или богатый","загружен, нагружен",distractor,очень богат,
+s054,slang,loaded,"The guy is loaded, and nobody knows where from.",llm_context,"Перевод: Человек很有钱，但没人知道他从哪里来的钱。
+Смысл: Человек очень богат, но никто не знает откуда у него такие деньги.",очень богат,correct,очень богат,
+s055,slang,hammered,He was completely hammered at the party.,dictionary,"To strike repeatedly with a hammer, some other implement, the fist, etc.",забит молотком,distractor,сильно пьян,
+s055,slang,hammered,He was completely hammered at the party.,llm_plain,"Перевод: перепуганный, в отчаянии
+Смысл: выпивший, опьяненный",сильно пьян,correct,сильно пьян,
+s055,slang,hammered,He was completely hammered at the party.,llm_context,"Перевод: перепившийся
+Смысл: он был полностью пьян на вечеринке",сильно пьян,correct,сильно пьян,
+s056,slang,copped,But I copped a pair before they were gone.,dictionary,"To obtain, to purchase (as in drugs), to get hold of, to take.","урвал, купил",correct,"урвал, купил",
+s056,slang,copped,But I copped a pair before they were gone.,llm_plain,"Перевод: захватил
+Смысл: захватил или взял на себя",скопировал,distractor,"урвал, купил",
+s056,slang,copped,But I copped a pair before they were gone.,llm_context,"Перевод: забрал
+Смысл: получил пару кроссовок, когда они еще были доступны","урвал, купил",correct,"урвал, купил",
+s057,slang,drip,Look at the drip on this guy.,dictionary,To fall one drop at a time.,"капля, капание",distractor,"стильный, броский прикид",
+s057,slang,drip,Look at the drip on this guy.,llm_plain,"Перевод: струйка
+Смысл: непрерывное медленное течение или вытекание","Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"стильный, броский прикид",
+s057,slang,drip,Look at the drip on this guy.,llm_context,"Перевод: смотрите на этого дрипа
+Смысл: 观察这个装模作样的人","стильный, броский прикид",correct,"стильный, броский прикид",
+s058,slang,glow up,He had a massive glow up in college.,dictionary,glow: The state of a glowing object.,начал светиться в темноте,distractor,"сильно похорошел, преобразился внешне",
+s058,slang,glow up,He had a massive glow up in college.,llm_plain,"Перевод: осветлеть, улучшить свой внешний вид
+Смысл: украситься, улучшить свой внешний вид","сильно похорошел, преобразился внешне",correct,"сильно похорошел, преобразился внешне",
+s058,slang,glow up,He had a massive glow up in college.,llm_context,"Перевод: превратиться в кого-то другого
+Смысл: Он значительно изменился к лучшему в колледже.","сильно похорошел, преобразился внешне",correct,"сильно похорошел, преобразился внешне",
+s059,slang,simp,He's such a simp.,dictionary,A simple person lacking common sense; a fool or simpleton.,"простак, дурачок",distractor,"человек, который чрезмерно угождает объекту симпатии",
+s059,slang,simp,He's such a simp.,llm_plain,"Перевод: симп
+Смысл: сленговое выражение, означающее человека, который слишком просто воспринимает сложные ситуации или всегда винит других в своих проблемах","простак, дурачок",distractor,"человек, который чрезмерно угождает объекту симпатии",
+s059,slang,simp,He's such a simp.,llm_context,"Перевод: он такой дурачок
+Смысл: Он такой простак, который легко обманывается или влюбляется.","простак, дурачок",distractor,"человек, который чрезмерно угождает объекту симпатии",
+s060,slang,big yikes,Big yikes.,dictionary,yikes: Expression of shock and alarm.,большой страх перед монстром,distractor,"очень неловко, вот это провал",
+s060,slang,big yikes,Big yikes.,llm_plain,"Перевод: большие ох уж эти
+Смысл: выражение изумления или удивления","очень неловко, вот это провал",correct,"очень неловко, вот это провал",
+s060,slang,big yikes,Big yikes.,llm_context,"Перевод: большие беды
+Смысл: Ого, это серьезно.",большой страх перед монстром,distractor,"очень неловко, вот это провал",
+s061,slang,throw hands,I was ready to throw hands right there.,dictionary,"hands: The part of the forelimb below the forearm or wrist in a human, and the corresponding part in many other animals.",помахать руками,distractor,подраться,
+s061,slang,throw hands,I was ready to throw hands right there.,llm_plain,"Перевод: бросить руки
+Смысл: отказаться от борьбы или сдаться","поднять руки, сдаться",distractor,подраться,
+s061,slang,throw hands,I was ready to throw hands right there.,llm_context,"Перевод: бросить вызов
+Смысл: Он был готов драться с ним прямо там.",подраться,correct,подраться,
+s062,slang,rent-free,It's living in my head rent-free.,dictionary,On which no rent is payable.,"живёт бесплатно, без арендной платы",distractor,"не выходит из головы, постоянно о нём думаю",
+s062,slang,rent-free,It's living in my head rent-free.,llm_plain,"Перевод: без оплаты аренды
+Смысл: бесплатно, без оплаты","живёт бесплатно, без арендной платы",distractor,"не выходит из головы, постоянно о нём думаю",
+s062,slang,rent-free,It's living in my head rent-free.,llm_context,"Перевод: бесплатно
+Смысл: Это как будто住在我的脑海里，不用付房租。","живёт бесплатно, без арендной платы",distractor,"не выходит из головы, постоянно о нём думаю",
+s063,slang,hard pass,Hard pass.,dictionary,"An enduring (non-temporary) clearance to enter the West Wing of the White House, signified by a laminated card.","сложный пароль, пропуск",distractor,"решительно нет, ни за что",
+s063,slang,hard pass,Hard pass.,llm_plain,"Перевод: пропуск
+Смысл: отказаться от чего-то или пропустить ситуацию","решительно нет, ни за что",correct,"решительно нет, ни за что",
+s063,slang,hard pass,Hard pass.,llm_context,"Перевод: пропуск
+Смысл: Тепло Dana отвергает предложение Theo.","решительно нет, ни за что",correct,"решительно нет, ни за что",
+s064,slang,jacked,That guy is absolutely jacked.,dictionary,To raise using a jack.,подключён к сети через разъём,distractor,"очень накачанный, мускулистый",
+s064,slang,jacked,That guy is absolutely jacked.,llm_plain,"Перевод: загнанный, перегруженный
+Смысл: перегруженный, загруженный работой или обязательствами",подключён к сети через разъём,distractor,"очень накачанный, мускулистый",
+s064,slang,jacked,That guy is absolutely jacked.,llm_context,Перевод: Этот парень абсолютно хорошо сложен.,"очень накачанный, мускулистый",correct,"очень накачанный, мускулистый",
+s065,slang,Shotgun,Shotgun!,dictionary,"The front passenger seat in a vehicle, next to the driver; so called because the position of the shotgun-armed guard on a horse-drawn stage-coach, wagon train, or gold transport was next to the driver on a forward-mounted bench seat.","чур, я сижу впереди, рядом с водителем",correct,"чур, я сижу впереди, рядом с водителем",
+s065,slang,Shotgun,Shotgun!,llm_plain,"Перевод: Автомат
+Смысл: Это выражение может относиться как к оружию, так и к метафоре для обозначения первого выбора или возможности.","ружьё, дробовик",distractor,"чур, я сижу впереди, рядом с водителем",
+s065,slang,Shotgun,Shotgun!,llm_context,"Перевод: Беру шотган!
+Смысл: Я беру место рядом с водителем.","чур, я сижу впереди, рядом с водителем",correct,"чур, я сижу впереди, рядом с водителем",
+s066,slang,the ick,I instantly got the ick.,dictionary,"the: With a comparative or with more and a verb phrase, establishes a correlation with one or more other such comparatives.","внезапное отвращение к человеку, который нравился",correct,"внезапное отвращение к человеку, который нравился",
+s066,slang,the ick,I instantly got the ick.,llm_plain,"Перевод: нечистоты
+Смысл: неприятное ощущение или воспоминание","внезапное отвращение к человеку, который нравился",correct,"внезапное отвращение к человеку, который нравился",
+s066,slang,the ick,I instantly got the ick.,llm_context,"Перевод: неприятное ощущение
+Смысл: у меня сразу возникло неприятное ощущение","внезапное отвращение к человеку, который нравился",correct,"внезапное отвращение к человеку, который нравился",
+s067,slang,hangry,He gets really hangry around two.,dictionary,"Hungry and angry, especially when the anger is induced by the hunger.",злой из-за голода,correct,злой из-за голода,
+s067,slang,hangry,He gets really hangry around two.,llm_plain,"Перевод: голодный и злой
+Смысл: чувство гнева из-за голода",злой из-за голода,correct,злой из-за голода,
+s067,slang,hangry,He gets really hangry around two.,llm_context,"Перевод: голодный и злой
+Смысл: Он становится очень раздражительным и голодным около двух часов.",злой из-за голода,correct,злой из-за голода,
+s068,slang,FOMO,"The FOMO is real, man.",dictionary,"ОШИБКА: https://api.dictionaryapi.dev/api/v2/entries/en/FOMO ответил кодом 502: {""type"":""https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-502/"",""title"":""Error 502: Bad gateway"",""status"":502,""detail"":""The origin web server returned an invalid or incomplete response to Cloudflare. This typically indicates the origin is overlo",,,страх пропустить что-то интересное (fear of missing out),
+s068,slang,FOMO,"The FOMO is real, man.",llm_plain,"Перевод: ФОМО
+Смысл: Страх пропустить что-то важное.",страх пропустить что-то интересное (fear of missing out),correct,страх пропустить что-то интересное (fear of missing out),
+s068,slang,FOMO,"The FOMO is real, man.",llm_context,"Перевод: Страх пропустить что-то важное, man
+Смысл: Ощущение, что пропускаешь что-то важное или популярное, man",страх пропустить что-то интересное (fear of missing out),correct,страх пропустить что-то интересное (fear of missing out),
+s069,slang,vibe check,"Quick vibe check, is he friendly?",dictionary,check: An inspection or examination.,проверка вибраций у механизма,distractor,"быстрая оценка настроения, атмосферы или человека",
+s069,slang,vibe check,"Quick vibe check, is he friendly?",llm_plain,"Перевод: проверка настроения
+Смысл: проверка атмосферы или настроения группы","быстрая оценка настроения, атмосферы или человека",correct,"быстрая оценка настроения, атмосферы или человека",
+s069,slang,vibe check,"Quick vibe check, is he friendly?",llm_context,"Перевод: проверка атмосферы
+Смысл: Проверка, насколько человек дружелюбен.","быстрая оценка настроения, атмосферы или человека",correct,"быстрая оценка настроения, атмосферы или человека",
+s070,slang,catch these hands,Say that again and you'll catch these hands.,dictionary,catch: The act of seizing or capturing.,"получишь по морде, я тебе врежу",correct,"получишь по морде, я тебе врежу",
+s070,slang,catch these hands,Say that again and you'll catch these hands.,llm_plain,"Перевод: поймать эти руки
+Смысл: ловить эти руки","получишь по морде, я тебе врежу",correct,"получишь по морде, я тебе врежу",
+s070,slang,catch these hands,Say that again and you'll catch these hands.,llm_context,"Перевод: повесь эти руки
+Смысл: повтори это снова, и я схватлю твои руки","получишь по морде, я тебе врежу",correct,"получишь по морде, я тебе врежу",
+p001,polysemy,bank,Climb up the far bank and wait behind the pines.,dictionary,"To deal with a bank or financial institution, or for an institution to provide financial services to a client.",банк (финансовая организация),distractor,берег реки,
+p001,polysemy,bank,Climb up the far bank and wait behind the pines.,llm_plain,Перевод: банк,банк (финансовая организация),distractor,берег реки,
+p001,polysemy,bank,Climb up the far bank and wait behind the pines.,llm_context,"Перевод: берег
+Смысл: Поднимитесь на противоположный берег и ждите за ели.",берег реки,correct,берег реки,
+p002,polysemy,pitch,So your pitch has to be perfect.,dictionary,"A sticky, gummy substance secreted by trees; sap.","презентация идеи, коммерческое предложение",correct,"презентация идеи, коммерческое предложение",
+p002,polysemy,pitch,So your pitch has to be perfect.,llm_plain,"Перевод: предложить / представить
+Смысл: предложить идею или проект","презентация идеи, коммерческое предложение",correct,"презентация идеи, коммерческое предложение",
+p002,polysemy,pitch,So your pitch has to be perfect.,llm_context,"Перевод: так что ваша презентация должна быть идеальной
+Смысл: значит, ваша презентация должна быть безупречной","презентация идеи, коммерческое предложение",correct,"презентация идеи, коммерческое предложение",
+p003,polysemy,draw,"It's a draw, the first in the history of the cup!",dictionary,The result of a contest that neither side has won; a tie.,ничья,correct,ничья,
+p003,polysemy,draw,"It's a draw, the first in the history of the cup!",llm_plain,"Перевод: нанести удар
+Смысл: нанести удар или извлечь что-то",рисунок,distractor,ничья,
+p003,polysemy,draw,"It's a draw, the first in the history of the cup!",llm_context,"Перевод: ничья
+Смысл: Это ничья, первая в истории кубка!",ничья,correct,ничья,
+p004,polysemy,fair,Are you taking the princess to the fair tomorrow?,dictionary,Something which is fair (in various senses of the adjective).,"светловолосый, светлокожий",distractor,ярмарка,
+p004,polysemy,fair,Are you taking the princess to the fair tomorrow?,llm_plain,"Перевод: справедливый
+Смысл: справедливый, честный","справедливый, честный",distractor,ярмарка,
+p004,polysemy,fair,Are you taking the princess to the fair tomorrow?,llm_context,"Перевод: ярмарка
+Смысл: Вы приносите принцессу на ярмарку завтра?",ярмарка,correct,ярмарка,
+p005,polysemy,bark,"Peel the bark off that birch, it burns even when wet.",dictionary,To strip the bark from; to peel.,кора дерева,correct,кора дерева,
+p005,polysemy,bark,"Peel the bark off that birch, it burns even when wet.",llm_plain,"Перевод: гавкать
+Смысл: ласкать собаку",собачий лай,distractor,кора дерева,
+p005,polysemy,bark,"Peel the bark off that birch, it burns even when wet.",llm_context,"Перевод: достать кору с бука, она даже влажная горит
+Смысл: нам нужно снять кору с березы, она горит даже когда влажная",кора дерева,correct,кора дерева,
+p006,polysemy,bats,"It's just bats, they sleep up there during the day.",dictionary,"Any of the flying mammals of the order Chiroptera, usually small and nocturnal, insectivorous or frugivorous.",летучие мыши,correct,летучие мыши,
+p006,polysemy,bats,"It's just bats, they sleep up there during the day.",llm_plain,"Перевод: прыгучие летучие мыши
+Смысл: летучие мыши",летучие мыши,correct,летучие мыши,
+p006,polysemy,bats,"It's just bats, they sleep up there during the day.",llm_context,"Перевод: птицы
+Смысл: Это просто птицы, они спят там днем.",летучие мыши,correct,летучие мыши,
+p007,polysemy,spring,"There's a hot spring under that cliff, we can refill there.",dictionary,"The season of the year in temperate regions in which plants spring from the ground and into bloom and dormant animals spring to life, variously reckoned as",весна,distractor,"источник, родник",
+p007,polysemy,spring,"There's a hot spring under that cliff, we can refill there.",llm_plain,"Перевод: весна
+Смысл: весна, время года между зимой и летом",весна,distractor,"источник, родник",
+p007,polysemy,spring,"There's a hot spring under that cliff, we can refill there.",llm_context,"Перевод: источник теплой воды под этим обрывом, мы можем там пополнить запасы воды
+Смысл: Под этим обрывом есть источник горячей воды, мы можем там пополнить запасы воды.","источник, родник",correct,"источник, родник",
+p008,polysemy,match,Does anyone have a match?,dictionary,"A competitive sporting event such as a boxing meet, a baseball game, or a cricket match.","матч, игра",distractor,спичка,
+p008,polysemy,match,Does anyone have a match?,llm_plain,"Перевод: совпадение
+Смысл: соответствие или совпадение в каком-либо аспекте","пара, подходящий партнёр",distractor,спичка,
+p008,polysemy,match,Does anyone have a match?,llm_context,"Перевод: Есть кто-нибудь с фитилеком?
+Смысл: Is anyone here with a match?",спичка,correct,спичка,
+p009,polysemy,charge,The DA wants to bring a murder charge.,dictionary,To assign (a debit) to an account,"плата, сбор",distractor,обвинение,
+p009,polysemy,charge,The DA wants to bring a murder charge.,llm_plain,"Перевод: зарядить
+Смысл: запустить или активировать что-то, например, устройство или способность",заряд (батареи),distractor,обвинение,
+p009,polysemy,charge,The DA wants to bring a murder charge.,llm_context,"Перевод: ДА хочет предъявить обвинение в убийстве.
+Смысл: ДА wants to file a charge of murder.",обвинение,correct,обвинение,
+p010,polysemy,runs,But his mother runs it.,dictionary,"Act or instance of running, of moving rapidly using the feet.",бегает,distractor,"управляет, заведует",
+p010,polysemy,runs,But his mother runs it.,llm_plain,Перевод: бегает,бегает,distractor,"управляет, заведует",
+p010,polysemy,runs,But his mother runs it.,llm_context,"Перевод: руководит
+Смысл: Она управляет пекарней, хотя на бумаге кто-то другой является владельцем.","управляет, заведует",correct,"управляет, заведует",
+p011,polysemy,bill,It dropped the ring from its bill right into the queen's cup.,dictionary,"To dig, chop, etc., with a bill.",клюв,correct,клюв,
+p011,polysemy,bill,It dropped the ring from its bill right into the queen's cup.,llm_plain,"Перевод: чек
+Смысл: счет за услуги или покупки",счёт (за оплату),distractor,клюв,
+p011,polysemy,bill,It dropped the ring from its bill right into the queen's cup.,llm_context,"Перевод: нос
+Смысл: Клюв.",клюв,correct,клюв,
+p012,polysemy,fine,That's a two-hundred-dollar fine.,dictionary,Fine champagne; French brandy.,"хороший, в порядке",distractor,штраф,
+p012,polysemy,fine,That's a two-hundred-dollar fine.,llm_plain,"Перевод: хорошо
+Смысл: все в порядке, все хорошо","хороший, в порядке",distractor,штраф,
+p012,polysemy,fine,That's a two-hundred-dollar fine.,llm_context,"Перевод: штраф в двести долларов
+Смысл: это штраф в двести долларов",штраф,correct,штраф,
+p013,polysemy,book,Can you book a table for four at eight?,dictionary,"To write down, to register or record in a book or as in a book.",книга,distractor,забронировать,
+p013,polysemy,book,Can you book a table for four at eight?,llm_plain,"Перевод: забронировать
+Смысл: запланировать и забронировать место или время",забронировать,correct,забронировать,
+p013,polysemy,book,Can you book a table for four at eight?,llm_context,"Перевод: забронировать стол
+Смысл: забронировать стол на четверых в восемь часов",забронировать,correct,забронировать,
+p014,polysemy,ring,"If anything happens, give me a ring.",dictionary,"An algebraic structure as above, but only required to be a semigroup under the multiplicative operation, that is, there need not be a multiplicative identity element.",кольцо,distractor,звонок по телефону,
+p014,polysemy,ring,"If anything happens, give me a ring.",llm_plain,"Перевод: звонок
+Смысл: звонок или сигнал",кольцо,distractor,звонок по телефону,
+p014,polysemy,ring,"If anything happens, give me a ring.",llm_context,"Перевод: позвони мне, если что-то произойдет",звонок по телефону,correct,звонок по телефону,
+p015,polysemy,fired,They fired him this morning.,dictionary,"To set (something, often a building) on fire.",подожгли,distractor,уволили,
+p015,polysemy,fired,They fired him this morning.,llm_plain,"Перевод: уволен
+Смысл: уволен с работы",уволили,correct,уволили,
+p015,polysemy,fired,They fired him this morning.,llm_context,"Перевод: уволили его сегодня утром
+Смысл: он был уволен сегодня утром",уволили,correct,уволили,
+p016,polysemy,light,"Pack light, leave the spare armour here.",dictionary,"Visible electromagnetic radiation. The human eye can typically detect radiation (light) in the wavelength range of about 400 to 750 nanometers. Nearby shorter and longer wavelength ranges, although not visible, are commonly called ultraviolet and infrared light.","свет, освещение",distractor,"налегке, с небольшим весом",
+p016,polysemy,light,"Pack light, leave the spare armour here.",llm_plain,"Перевод: слабый
+Смысл: слабый свет","свет, освещение",distractor,"налегке, с небольшим весом",
+p016,polysemy,light,"Pack light, leave the spare armour here.",llm_context,"Перевод: Пакуй легче, оставь запасное бронирование здесь.
+Смысл: Упакуй вещи так, чтобы не таскать лишнее, оставь запасную броню здесь.","налегке, с небольшим весом",correct,"налегке, с небольшим весом",
+p017,polysemy,dates,Is that from the dates you roasted?,dictionary,"The fruit of the date palm, Phoenix dactylifera, somewhat in the shape of an olive, containing a soft, sweet pulp and enclosing a hard kernel.",финики,correct,финики,
+p017,polysemy,dates,Is that from the dates you roasted?,llm_plain,"Перевод: даты
+Смысл: периоды времени, встречи",свидания,distractor,финики,
+p017,polysemy,dates,Is that from the dates you roasted?,llm_context,"Перевод: это от дат, которые вы запекли?
+Смысл: Это вопрос о том,是不是那些烤过的枣子？",финики,correct,финики,
+p018,polysemy,seal,"And look, the seal is broken and pressed again.",dictionary,"A pinniped (Pinnipedia), particularly an earless seal (true seal) or eared seal.",тюлень,distractor,печать (восковая),
+p018,polysemy,seal,"And look, the seal is broken and pressed again.",llm_plain,Перевод: заключить сделку; утвердить,печать (восковая),correct,печать (восковая),
+p018,polysemy,seal,"And look, the seal is broken and pressed again.",llm_context,"Перевод: посмотри, печать сломана и снова нажата
+Смысл: посмотри, печать была сломана и снова наклеена",печать (восковая),correct,печать (восковая),
+p019,polysemy,deck,"If he says it again, I'll deck him.",dictionary,"The floorlike covering of the horizontal sections, or compartments, of a ship. Small vessels have only one deck; larger ships have two or three decks.",палуба,distractor,"ударить так, чтобы сбить с ног",
+p019,polysemy,deck,"If he says it again, I'll deck him.",llm_plain,"Перевод: палуба
+Смысл: мостик или палуба на корабле",палуба,distractor,"ударить так, чтобы сбить с ног",
+p019,polysemy,deck,"If he says it again, I'll deck him.",llm_context,"Перевод: отправлю его в нокаут
+Смысл: Он нанесет ему такой удар, что тот упадет без сознания.","ударить так, чтобы сбить с ног",correct,"ударить так, чтобы сбить с ног",
+p020,polysemy,scale,We scale the wall at midnight.,dictionary,"An ordered, usually numerical sequence used for measurement, means of assigning a magnitude.",масштаб,distractor,"взобраться, перелезть",
+p020,polysemy,scale,We scale the wall at midnight.,llm_plain,"Перевод: шкала
+Смысл: шкала измерений или диапазон значений",масштаб,distractor,"взобраться, перелезть",
+p020,polysemy,scale,We scale the wall at midnight.,llm_context,"Перевод: мы карабкаемся по стене в полночь
+Смысл: мы взберёмся на стену в полночь","взобраться, перелезть",correct,"взобраться, перелезть",
+p021,polysemy,cell,Put him back in the cell until the lawyer shows up.,dictionary,To place or enclose in a cell.,камера (тюремная),correct,камера (тюремная),
+p021,polysemy,cell,Put him back in the cell until the lawyer shows up.,llm_plain,"Перевод: комната
+Смысл: комната для заключенных",камера (тюремная),correct,камера (тюремная),
+p021,polysemy,cell,Put him back in the cell until the lawyer shows up.,llm_context,"Перевод: поставь его обратно в камеру до прихода адвоката
+Смысл: Поставь его в тюрьму до прибытия адвоката",камера (тюремная),correct,камера (тюремная),
+p022,polysemy,pound,Let's adopt one from the pound.,dictionary,"A unit of mass equal to 16 avoirdupois ounces (= 453.592 37 g). Today this value is the most common meaning of ""pound"" as a unit of weight.",фунт (мера веса или валюта),distractor,приют для бездомных животных,
+p022,polysemy,pound,Let's adopt one from the pound.,llm_plain,"Перевод: фунт
+Смысл: монета; единица измерения веса",фунт (мера веса или валюта),distractor,приют для бездомных животных,
+p022,polysemy,pound,Let's adopt one from the pound.,llm_context,"Перевод: приют для животных
+Смысл: Приют для бездомных животных, где можно взять собаку для усыновления.",приют для бездомных животных,correct,приют для бездомных животных,
+p023,polysemy,strike,The dock workers are on strike.,dictionary,"A status resulting from a batter swinging and missing a pitch, or not swinging at a pitch when the ball goes in the strike zone, or hitting a foul ball that is not caught.",страйк (в боулинге),distractor,забастовка,
+p023,polysemy,strike,The dock workers are on strike.,llm_plain,"Перевод: ударить
+Смысл: нанести удар",удар,distractor,забастовка,
+p023,polysemy,strike,The dock workers are on strike.,llm_context,"Перевод: действующие на забастовку
+Смысл: действующие на забастовку рабочие отказались работать",забастовка,correct,забастовка,
+p024,polysemy,crane,"A single crane, the sacred bird of the old kings.",dictionary,"Any bird of the family Gruidae, large birds with long legs and a long neck which is extended during flight.",журавль,correct,журавль,
+p024,polysemy,crane,"A single crane, the sacred bird of the old kings.",llm_plain,"Перевод: кран
+Смысл: погрузчик, используемый для подъема и перемещения грузов",подъёмный кран,distractor,журавль,
+p024,polysemy,crane,"A single crane, the sacred bird of the old kings.",llm_context,"Перевод: гребень
+Смысл: это сокращенное название для стервятника, который является священной птицей у старых королей",журавль,correct,журавль,
+p025,polysemy,bolted,Instead he bolted for the exit.,dictionary,To connect or assemble pieces using a bolt.,прикрутил болтами,distractor,"бросился бежать, рванул",
+p025,polysemy,bolted,Instead he bolted for the exit.,llm_plain,"Перевод: убежал
+Смысл: убежал, быстро ушел","бросился бежать, рванул",correct,"бросился бежать, рванул",
+p025,polysemy,bolted,Instead he bolted for the exit.,llm_context,"Перевод: убежал
+Смысл: он быстро убежал","бросился бежать, рванул",correct,"бросился бежать, рванул",
+p026,polysemy,sound,"Physically, the captain is perfectly sound.",dictionary,Healthy.,"здоровый, в полном порядке",correct,"здоровый, в полном порядке",
+p026,polysemy,sound,"Physically, the captain is perfectly sound.",llm_plain,"Перевод: звук
+Смысл: голос, шум",звук,distractor,"здоровый, в полном порядке",
+p026,polysemy,sound,"Physically, the captain is perfectly sound.",llm_context,"Перевод: звук
+Смысл: Физически капитан абсолютно здоров.","здоровый, в полном порядке",correct,"здоровый, в полном порядке",
+p027,polysemy,mean,He's too mean to leave a tip.,dictionary,"Of a common or low origin, grade, or quality; common; humble.","злой, грубый",distractor,"скупой, жадный",
+p027,polysemy,mean,He's too mean to leave a tip.,llm_plain,"Перевод: злоупотреблять
+Смысл: значить быть жестоким или несправедливым","злой, грубый",distractor,"скупой, жадный",
+p027,polysemy,mean,He's too mean to leave a tip.,llm_context,"Перевод: он слишком жадный, чтобы оставить чаевые
+Смысл: Он слишком экономит, чтобы оставить чаевые.","скупой, жадный",correct,"скупой, жадный",
+p028,polysemy,fan,The cooling fan stopped spinning an hour ago.,dictionary,"An electrical or mechanical device for moving air, used for cooling people, machinery, etc.",вентилятор,correct,вентилятор,
+p028,polysemy,fan,The cooling fan stopped spinning an hour ago.,llm_plain,"Перевод: фан
+Смысл: поклонник","поклонник, фанат",distractor,вентилятор,
+p028,polysemy,fan,The cooling fan stopped spinning an hour ago.,llm_context,"Перевод: вентилятор
+Смысл: Это вентилятор, который перестал работать час назад.",вентилятор,correct,вентилятор,
+p029,polysemy,trunk,"Put it in the trunk, wrapped in the blanket.",dictionary,"To extract (ores) from the slimes in which they are contained, by means of a trunk.",ствол дерева,distractor,багажник машины,
+p029,polysemy,trunk,"Put it in the trunk, wrapped in the blanket.",llm_plain,"Перевод: багажник
+Смысл: точка крепления для багажа в автомобиле",багажник машины,correct,багажник машины,
+p029,polysemy,trunk,"Put it in the trunk, wrapped in the blanket.",llm_context,"Перевод: Клади в багажник, завернутым в одеяло.
+Смысл: Поместите картину в багажник, укутанную в одеяло.",багажник машины,correct,багажник машины,
+p030,polysemy,chest,The chest is locked with three keys.,dictionary,"A box, now usually a large strong box with a secure convex lid.",сундук,correct,сундук,
+p030,polysemy,chest,The chest is locked with three keys.,llm_plain,"Перевод: грудь
+Смысл: часть тела между шеей и животом","грудь, грудная клетка",distractor,сундук,
+p030,polysemy,chest,The chest is locked with three keys.,llm_context,"Перевод: ящик
+Смысл: Это сундук, закрепленный на трех ключах.",сундук,correct,сундук,
+p031,polysemy,organ,So who is playing the organ?,dictionary,To supply with an organ or organs; to fit with organs.,орган тела,distractor,орган (музыкальный инструмент),
+p031,polysemy,organ,So who is playing the organ?,llm_plain,"Перевод: орган
+Смысл: орган, как музыкальный инструмент",орган (музыкальный инструмент),correct,орган (музыкальный инструмент),
+p031,polysemy,organ,So who is playing the organ?,llm_context,"Перевод: И кто играет на органе?
+Смысл: Кто играет на органе?",орган (музыкальный инструмент),correct,орган (музыкальный инструмент),
+p032,polysemy,novel,It's a completely novel strain.,dictionary,"Newly made, formed or evolved; having no precedent; of recent origin; new.","новый, ранее неизвестный",correct,"новый, ранее неизвестный",
+p032,polysemy,novel,It's a completely novel strain.,llm_plain,"Перевод: новелла
+Смысл: новая история или идея","новый, ранее неизвестный",correct,"новый, ранее неизвестный",
+p032,polysemy,novel,It's a completely novel strain.,llm_context,"Перевод: это совершенно новая штамм
+Смысл: Это означает, что вирус является совершенно новым и неизвестным ранее типом.","новый, ранее неизвестный",correct,"новый, ранее неизвестный",
+p033,polysemy,rare,"I asked for medium, and this is rare.",dictionary,Very uncommon; scarce.,редкий,distractor,"с кровью, слабой прожарки",
+p033,polysemy,rare,"I asked for medium, and this is rare.",llm_plain,"Перевод: редкий
+Смысл: не часто встречающийся или происходящий",редкий,distractor,"с кровью, слабой прожарки",
+p033,polysemy,rare,"I asked for medium, and this is rare.",llm_context,"Перевод: редкий
+Смысл: Это очень редко, так как я просил среднюю прожарку.",редкий,distractor,"с кровью, слабой прожарки",
+p034,polysemy,cast,She'll be in a cast for six weeks.,dictionary,An act of throwing.,"бросок, заброс удочки",distractor,гипс,
+p034,polysemy,cast,She'll be in a cast for six weeks.,llm_plain,"Перевод: выпустить / запустить
+Смысл: выпустить / запустить (в производство или в эфир)","бросок, заброс удочки",distractor,гипс,
+p034,polysemy,cast,She'll be in a cast for six weeks.,llm_context,"Перевод: она будет на гипсе на шесть недель
+Смысл: Она будет носить гипс на шесть недель.",гипс,correct,гипс,
+p035,polysemy,tip,One tip: never talk before she finishes her coffee.,dictionary,To provide with a tip; to cover the tip of.,кончик,distractor,совет,
+p035,polysemy,tip,One tip: never talk before she finishes her coffee.,llm_plain,"Перевод: тipped
+Смысл: наводка, подсказка",совет,correct,совет,
+p035,polysemy,tip,One tip: never talk before she finishes her coffee.,llm_context,"Перевод: подсказка
+Смысл: Подсказка о том, что лучше не начинать разговор до тех пор, пока она не выпьет свою кофе.",совет,correct,совет,
+p036,polysemy,spot,Can you spot me?,dictionary,To loan a small amount of money to someone.,подстраховать (при подходе со штангой),correct,подстраховать (при подходе со штангой),
+p036,polysemy,spot,Can you spot me?,llm_plain,"Перевод: заметить
+Смысл: обнаружить или заметить что-то","заметить, увидеть",distractor,подстраховать (при подходе со штангой),
+p036,polysemy,spot,Can you spot me?,llm_context,"Перевод: поймай меня
+Смысл: Помоги мне поднять вес, следя за тем, чтобы он не упал на мое лицо.",подстраховать (при подходе со штангой),correct,подстраховать (при подходе со штангой),
+p037,polysemy,picked up,I picked up a few words around the fire.,dictionary,picked: To grasp and pull with the fingers or fingernails.,подобрал с земли,distractor,"нахватался, выучил между делом",
+p037,polysemy,picked up,I picked up a few words around the fire.,llm_plain,"Перевод: схватил
+Смысл: забрал, взял с собой","забрал, подвёз",distractor,"нахватался, выучил между делом",
+p037,polysemy,picked up,I picked up a few words around the fire.,llm_context,"Перевод: выучил несколько слов у костра
+Смысл: учил несколько слов около костра","нахватался, выучил между делом",correct,"нахватался, выучил между делом",
+p038,polysemy,figure,The final figure is just over two million.,dictionary,"The representation of any form, as by drawing, painting, modelling, carving, embroidering, etc.; especially, a representation of the human body.","фигура, телосложение",distractor,"сумма, число",
+p038,polysemy,figure,The final figure is just over two million.,llm_plain,"Перевод: понять, выяснить
+Смысл: определить, понять что-то","персонаж, деятель",distractor,"сумма, число",
+p038,polysemy,figure,The final figure is just over two million.,llm_context,"Перевод: окончательная сумма
+Смысл: Это окончательная сумма, которая превышает два миллиона.","сумма, число",correct,"сумма, число",
+p039,polysemy,address,The director will address the team at noon.,dictionary,Direction.,"выступит перед, обратится к",correct,"выступит перед, обратится к",
+p039,polysemy,address,The director will address the team at noon.,llm_plain,"Перевод: адресовать
+Смысл: обратиться к (теме), упомянуть (в документе)","выступит перед, обратится к",correct,"выступит перед, обратится к",
+p039,polysemy,address,The director will address the team at noon.,llm_context,"Перевод: адресоваться
+Смысл: Директор будет говорить с командой в полдень.","выступит перед, обратится к",correct,"выступит перед, обратится к",
+p040,polysemy,sentence,The judge hands down the sentence on Friday.,dictionary,The decision or judgement of a jury or court; a verdict.,приговор,correct,приговор,
+p040,polysemy,sentence,The judge hands down the sentence on Friday.,llm_plain,"Перевод: предложение
+Смысл: последовательность слов, образующих полный мысль",предложение (в грамматике),distractor,приговор,
+p040,polysemy,sentence,The judge hands down the sentence on Friday.,llm_context,"Перевод: приговор
+Смысл: Суд выносит приговор.",приговор,correct,приговор,
+p041,polysemy,mole,There's a mole in this crew.,dictionary,Any of the burrowing rodents also called mole rats.,крот (животное),distractor,"крот, внедрённый информатор",
+p041,polysemy,mole,There's a mole in this crew.,llm_plain,"Перевод: мул
+Смысл: мышь",крот (животное),distractor,"крот, внедрённый информатор",
+p041,polysemy,mole,There's a mole in this crew.,llm_context,"Перевод: есть шпион в этой команде
+Смысл: в команде есть человек, который работает против нас","крот, внедрённый информатор",correct,"крот, внедрённый информатор",
+p042,polysemy,current,But the current will drag you under the ice.,dictionary,"The part of a fluid that moves continuously in a certain direction, especially short for ocean current.",течение,correct,течение,
+p042,polysemy,current,But the current will drag you under the ice.,llm_plain,"Перевод: текущий
+Смысл: текущий, действующий в данный момент","текущий, нынешний",distractor,течение,
+p042,polysemy,current,But the current will drag you under the ice.,llm_context,"Перевод: текущий
+Смысл: Течение будет затягивать вас под лед.","текущий, нынешний",distractor,течение,
+p043,polysemy,interest,Now he owes twenty with interest.,dictionary,"The price paid for obtaining, or price received for providing, money or goods in a credit transaction, calculated as a fraction of the amount or value of what was borrowed.",проценты (по долгу),correct,проценты (по долгу),
+p043,polysemy,interest,Now he owes twenty with interest.,llm_plain,"Перевод: интерес
+Смысл: то, что привлекает внимание или вызывает интерес","интерес, увлечение",distractor,проценты (по долгу),
+p043,polysemy,interest,Now he owes twenty with interest.,llm_context,"Перевод: проценты
+Смысл: Это о том, что Nico должен двадцать тысяч с процентами.",проценты (по долгу),correct,проценты (по долгу),
+p044,polysemy,capital,We need more capital before we expand.,dictionary,"Already-produced durable goods available for use as a factor of production, such as steam shovels (equipment) and office buildings (structures).","капитал, деньги для вложений",correct,"капитал, деньги для вложений",
+p044,polysemy,capital,We need more capital before we expand.,llm_plain,"Перевод: головная боль
+Смысл: основная причина проблем или расходов","капитал, деньги для вложений",correct,"капитал, деньги для вложений",
+p044,polysemy,capital,We need more capital before we expand.,llm_context,"Перевод: нам нужна больше капитала перед расширением
+Смысл: мы нуждаемся в большем финансировании перед расширением бизнеса","капитал, деньги для вложений",correct,"капитал, деньги для вложений",
+p045,polysemy,stern,Hanging off the stern of the fishing boat.,dictionary,Having a hardness and severity of nature or manner.,"строгий, суровый",distractor,корма судна,
+p045,polysemy,stern,Hanging off the stern of the fishing boat.,llm_plain,"Перевод: строгий
+Смысл: строгий, суровый","строгий, суровый",distractor,корма судна,
+p045,polysemy,stern,Hanging off the stern of the fishing boat.,llm_context,"Перевод: на корме рыболовного судна
+Смысл: находился на корме рыбацкого корабля",корма судна,correct,корма судна,
+p046,polysemy,jam,I was stuck in a jam for ninety minutes.,dictionary,To get something stuck in a confined space.,пробка (на дороге),correct,пробка (на дороге),
+p046,polysemy,jam,I was stuck in a jam for ninety minutes.,llm_plain,"Перевод: мазать, наносить
+Смысл: заполнить или насытить чем-то",джем-сейшн,distractor,пробка (на дороге),
+p046,polysemy,jam,I was stuck in a jam for ninety minutes.,llm_context,"Перевод: заблокирован
+Смысл: Он говорил, что был зажат в пробке на девяносто минут.",пробка (на дороге),correct,пробка (на дороге),
+p047,polysemy,tank,"Kova, you tank, we'll do the damage.",dictionary,A closed container for liquids or gases.,быть танком — принимать на себя урон в бою,correct,быть танком — принимать на себя урон в бою,
+p047,polysemy,tank,"Kova, you tank, we'll do the damage.",llm_plain,Перевод: танк,танк (боевая машина),distractor,быть танком — принимать на себя урон в бою,
+p047,polysemy,tank,"Kova, you tank, we'll do the damage.",llm_context,"Перевод: танк
+Смысл: Ты будешь выступать в роли танка, мы будем наносить урон.",быть танком — принимать на себя урон в бою,correct,быть танком — принимать на себя урон в бою,
+p048,polysemy,lap,There was a black cat asleep on her lap.,dictionary,The loose part of a coat; the lower part of a garment that plays loosely; a skirt; an apron.,круг (на трассе),distractor,колени (сидя),
+p048,polysemy,lap,There was a black cat asleep on her lap.,llm_plain,"Перевод: нагнуть
+Смысл: нагнуть, то есть прижать к себе, удержать",колени (сидя),correct,колени (сидя),
+p048,polysemy,lap,There was a black cat asleep on her lap.,llm_context,"Перевод: на ее коленях
+Смысл: она спала на коленях старухи",колени (сидя),correct,колени (сидя),
+p049,polysemy,pupils,His pupils don't react at all.,dictionary,"The hole in the middle of the iris of the eye, through which light passes to be focused on the retina.",зрачки,correct,зрачки,
+p049,polysemy,pupils,His pupils don't react at all.,llm_plain,"Перевод: ученики
+Смысл: ученики или студенты, с которыми кто-то работает или имеет дело",ученики,distractor,зрачки,
+p049,polysemy,pupils,His pupils don't react at all.,llm_context,"Перевод: Пupилы совсем не реагируют.
+Смысл: Его пupилы не реагируют ни на что.","подопечные, воспитанники",distractor,зрачки,
+p050,polysemy,foot the bill,Who's going to foot the bill?,dictionary,To pay for something,оплатить счёт,correct,оплатить счёт,
+p050,polysemy,foot the bill,Who's going to foot the bill?,llm_plain,"Перевод: оплатить счет
+Смысл: направить расходы, оплатить счет",оплатить счёт,correct,оплатить счёт,
+p050,polysemy,foot the bill,Who's going to foot the bill?,llm_context,"Перевод: кто будет платить за всё
+Смысл: кто будет оплачивать счет",оплатить счёт,correct,оплатить счёт,
+p051,polysemy,temple,A single blow to the left temple.,dictionary,To build a temple for; to appropriate a temple to; to temple a god,храм,distractor,висок,
+p051,polysemy,temple,A single blow to the left temple.,llm_plain,"Перевод: храм
+Смысл: здание, посвященное религиозным целям, обычно построено в честь определенного божества или святого",храм,distractor,висок,
+p051,polysemy,temple,A single blow to the left temple.,llm_context,"Перевод: храм
+Смысл: Это место на голове, которое было ударили.",висок,correct,висок,
+p052,polysemy,train,I'll train them myself every morning.,dictionary,To teach and form (someone) by practice; to educate (someone).,"тренировать, обучать",correct,"тренировать, обучать",
+p052,polysemy,train,I'll train them myself every morning.,llm_plain,"Перевод: поезд
+Смысл: поезд или обучение, завися от контекста",поезд,distractor,"тренировать, обучать",
+p052,polysemy,train,I'll train them myself every morning.,llm_context,"Перевод: обучу их сам каждый утро
+Смысл: Я сам буду их тренировать каждое утро.","тренировать, обучать",correct,"тренировать, обучать",
+p053,polysemy,rock,And the cradle started to rock on its own.,dictionary,To move gently back and forth.,качаться,correct,качаться,
+p053,polysemy,rock,And the cradle started to rock on its own.,llm_plain,Перевод: камень,"камень, скала",distractor,качаться,
+p053,polysemy,rock,And the cradle started to rock on its own.,llm_context,"Перевод: начало колыбели двигаться самотеком
+Смысл: колыбель начала двигаться сама по себе",качаться,correct,качаться,
+p054,polysemy,break,How do I break the news gently?,dictionary,A physical space that opens up in something or between two things.,перерыв,distractor,сообщить (плохую новость),
+p054,polysemy,break,How do I break the news gently?,llm_plain,"Перевод: сломать
+Смысл: разбить; нарушить",сломать,distractor,сообщить (плохую новость),
+p054,polysemy,break,How do I break the news gently?,llm_context,"Перевод: как я могу деликатно донести эту новость
+Смысл: how to deliver the news in a gentle or delicate way",сообщить (плохую новость),correct,сообщить (плохую новость),
+p055,polysemy,present,"May I present Her Majesty, Queen Isolde.",dictionary,The present tense.,настоящее время,distractor,представить (человека),
+p055,polysemy,present,"May I present Her Majesty, Queen Isolde.",llm_plain,"Перевод: предложить
+Смысл: предложить что-то на рассмотрение",представить (человека),correct,представить (человека),
+p055,polysemy,present,"May I present Her Majesty, Queen Isolde.",llm_context,"Перевод: представляю ваше величество, королева Изолда
+Смысл: представляю королеву Изолду",представить (человека),correct,представить (человека),
+c001,control,salty,"It's far too salty, I need a glass of water.",dictionary,Tasting of salt.,солёный на вкус (пересолен),correct,солёный на вкус (пересолен),
+c001,control,salty,"It's far too salty, I need a glass of water.",llm_plain,"Перевод: соленый
+Смысл: саркастический или недовольный","обиженный, раздражённый",distractor,солёный на вкус (пересолен),
+c001,control,salty,"It's far too salty, I need a glass of water.",llm_context,"Перевод: слишком соленое
+Смысл: слишком соленое блюдо",солёный на вкус (пересолен),correct,солёный на вкус (пересолен),
+c002,control,fire,There's a fire in the cargo bay!,dictionary,"To heat as with fire, but without setting on fire, as ceramic, metal objects, etc.","пожар, огонь",correct,"пожар, огонь",
+c002,control,fire,There's a fire in the cargo bay!,llm_plain,"Перевод: огонь
+Смысл: выстрелить, начать атаку","пожар, огонь",correct,"пожар, огонь",
+c002,control,fire,There's a fire in the cargo bay!,llm_context,"Перевод: пожар в грузовом отсеке!
+Смысл: В грузовом отсеке произошел пожар!","пожар, огонь",correct,"пожар, огонь",
+c003,control,sick,"He's sick, he caught the flu from his kid.",dictionary,Sick people in general as a group.,"сыт по горло, надоело",distractor,болен,
+c003,control,sick,"He's sick, he caught the flu from his kid.",llm_plain,"Перевод: заболел
+Смысл: плохой, отвратительный",болен,correct,болен,
+c003,control,sick,"He's sick, he caught the flu from his kid.",llm_context,"Перевод: болен
+Смысл: Тео болен, он подхватил грипп от своего ребенка.",болен,correct,болен,
+c004,control,lit,So why are all the candles lit again?,dictionary,To start (a fire).,"зажжены, горят",correct,"зажжены, горят",
+c004,control,lit,So why are all the candles lit again?,llm_plain,"Перевод: настоящий, классный
+Смысл: очень круто, отличный","весело, круто",distractor,"зажжены, горят",
+c004,control,lit,So why are all the candles lit again?,llm_context,"Перевод: сгорбленный
+Смысл: такое состояние, когда свечи горят ярко и ярко освещают помещение","зажжены, горят",correct,"зажжены, горят",
+c005,control,ghost,"I'm telling you, it was a ghost.",dictionary,The disembodied soul; the soul or spirit of a deceased person; a spirit appearing after death,"привидение, призрак",correct,"привидение, призрак",
+c005,control,ghost,"I'm telling you, it was a ghost.",llm_plain,"Перевод: призрак
+Смысл: предатель, кто-то, кто исчез или внезапно исчезает","человек, который пропал без объяснений",distractor,"привидение, призрак",
+c005,control,ghost,"I'm telling you, it was a ghost.",llm_context,"Перевод: дух
+Смысл: она говорит о призраке, который она видела","привидение, призрак",correct,"привидение, призрак",
+c006,control,cheese,Grate some of the hard cheese over it.,dictionary,Any particular variety of cheese.,сыр,correct,сыр,
+c006,control,cheese,Grate some of the hard cheese over it.,llm_plain,"Перевод: сыр
+Смысл: сыр, который часто используется в пицце",сыр,correct,сыр,
+c006,control,cheese,Grate some of the hard cheese over it.,llm_context,"Перевод: сыр
+Смысл: Сыр добавляет нужный вкус к пасте.",сыр,correct,сыр,
+c007,control,camping,"We're going camping in the mountains, tents and everything.",dictionary,To live in a tent or similar temporary accommodation.,поход с ночёвкой в палатке,correct,поход с ночёвкой в палатке,
+c007,control,camping,"We're going camping in the mountains, tents and everything.",llm_plain,"Перевод: каемпинг
+Смысл: туризм, связанный с ночевкой под открытым небом",поход с ночёвкой в палатке,correct,поход с ночёвкой в палатке,
+c007,control,camping,"We're going camping in the mountains, tents and everything.",llm_context,"Перевод: посещение палаточного лагеря
+Смысл: Мы пойдем на палаточный лагерь в горы, с палатками и всем необходимым.",поход с ночёвкой в палатке,correct,поход с ночёвкой в палатке,
+c008,control,crash,"What a terrible crash, the safety car is out.",dictionary,"A sudden, intense, loud sound, as made for example by cymbals.","авария, столкновение",correct,"авария, столкновение",
+c008,control,crash,"What a terrible crash, the safety car is out.",llm_plain,"Перевод: сломаться
+Смысл: сломаться, лопнуть",сбой программы,distractor,"авария, столкновение",
+c008,control,crash,"What a terrible crash, the safety car is out.",llm_context,"Перевод: катастрофа
+Смысл: Это был серьезный аварийный выезд на пит-лейн.","авария, столкновение",correct,"авария, столкновение",
+c009,control,bounce,The car starts to bounce over the kerbs.,dictionary,A change of direction of motion after hitting the ground or an obstacle.,подпрыгивать,correct,подпрыгивать,
+c009,control,bounce,The car starts to bounce over the kerbs.,llm_plain,"Перевод: отскакивать
+Смысл: отскакивать, прыгать",подпрыгивать,correct,подпрыгивать,
+c009,control,bounce,The car starts to bounce over the kerbs.,llm_context,"Перевод: прыгать
+Смысл: машина начинает прыгать по бордюрам",подпрыгивать,correct,подпрыгивать,
+c010,control,beef,The beef has to fall apart under a spoon.,dictionary,"The meat from a cow, bull or other bovine.",говядина,correct,говядина,
+c010,control,beef,The beef has to fall apart under a spoon.,llm_plain,"Перевод: мясо
+Смысл: Это выражение обычно означает ‘мясо’, но может использоваться и как обобщенное обозначение споров или конфликтов.","вражда, конфликт",distractor,говядина,
+c010,control,beef,The beef has to fall apart under a spoon.,llm_context,"Перевод: мясо должно разваливаться ложкой
+Смысл: мясо должно быть очень мягким, чтобы разваливалось ложкой",говядина,correct,говядина,
+c011,control,spilled the tea,"Sorry, I spilled the tea on your desk.",dictionary,spilled: To drop something so that it spreads out or makes a mess; to accidentally pour.,пролил чай (буквально),correct,пролил чай (буквально),
+c011,control,spilled the tea,"Sorry, I spilled the tea on your desk.",llm_plain,"Перевод: раскрыл секрет
+Смысл: рассказал сплетню",разболтал сплетни,distractor,пролил чай (буквально),
+c011,control,spilled the tea,"Sorry, I spilled the tea on your desk.",llm_context,"Перевод: излил чай
+Смысл: я рассказал все, что знал.","проговорился, выдал секрет",distractor,пролил чай (буквально),
+c012,control,loaded,It was loaded with crates of stolen engines.,dictionary,To place in or on a conveyance or a place of storage.,загружен,correct,загружен,
+c012,control,loaded,It was loaded with crates of stolen engines.,llm_plain,"Перевод: нагруженный
+Смысл: нагруженный или обеспеченный деньгами",загружен,correct,загружен,
+c012,control,loaded,It was loaded with crates of stolen engines.,llm_context,"Перевод: загруженный
+Смысл: грузился ящиками украденных двигателей",загружен,correct,загружен,
+c013,control,grind,Grind the peppercorns right before you serve.,dictionary,"Something that has been reduced to powder, something that has been ground.","молоть, измельчать",correct,"молоть, измельчать",
+c013,control,grind,Grind the peppercorns right before you serve.,llm_plain,"Перевод: дрочить
+Смысл: выполнять рутинные задачи, чтобы продвинуться в игре",долго однообразно фармить,distractor,"молоть, измельчать",
+c013,control,grind,Grind the peppercorns right before you serve.,llm_context,"Перевод: молоть
+Смысл: молоть перчик перед подачей на стол","молоть, измельчать",correct,"молоть, измельчать",
+c014,control,feed,Can you feed the cat twice a day?,dictionary,Food given to (especially herbivorous) animals.,кормить,correct,кормить,
+c014,control,feed,Can you feed the cat twice a day?,llm_plain,"Перевод: наполнить, подкармливать
+Смысл: наполнить или подкармливать, обычно в контексте питания или информации",кормить,correct,кормить,
+c014,control,feed,Can you feed the cat twice a day?,llm_context,"Перевод: кормить
+Смысл: Можешь кормить кота дважды в день?",кормить,correct,кормить,
+c015,control,carry,We'll have to carry them up the stairs.,dictionary,A manner of transporting or lifting something; the grip or position in which something is carried.,"нести, тащить",correct,"нести, тащить",
+c015,control,carry,We'll have to carry them up the stairs.,llm_plain,"Перевод: носить
+Смысл: нессти что-то в руках","нести, тащить",correct,"нести, тащить",
+c015,control,carry,We'll have to carry them up the stairs.,llm_context,"Перевод: нам придется нести их по лестнице
+Смысл: Мы будем нести их по лестнице.","нести, тащить",correct,"нести, тащить",
+c016,control,bet,My uncle placed a bet on me anyway.,dictionary,"A wager, an agreement between two parties that a stake (usually money) will be paid by the loser to the winner (the winner being the one who correctly forecast the outcome of an event).","ставка, пари",correct,"ставка, пари",
+c016,control,bet,My uncle placed a bet on me anyway.,llm_plain,"Перевод: ставка
+Смысл: делать ставку","ставка, пари",correct,"ставка, пари",
+c016,control,bet,My uncle placed a bet on me anyway.,llm_context,"Перевод: моё дядя поставил на меня ставку в любом случае
+Смысл: Мой дядя сделал ставку на то, что я закончу в пьедестале, несмотря на все прогнозы.","ставка, пари",correct,"ставка, пари",
+c017,control,drip,"I can hear the tap drip, drip, drip.",dictionary,To fall one drop at a time.,капать,correct,капать,
+c017,control,drip,"I can hear the tap drip, drip, drip.",llm_plain,"Перевод: струйка
+Смысл: непрерывный течь или поток",капать,correct,капать,
+c017,control,drip,"I can hear the tap drip, drip, drip.",llm_context,"Перевод: слышу, как струйка воды капает, капает, капает
+Смысл: я слышу, как кран капает, капает, капает",капать,correct,капать,
+c018,control,flex,Try to flex your knee slowly.,dictionary,"Flexibility, pliancy.",согнуть,correct,согнуть,
+c018,control,flex,Try to flex your knee slowly.,llm_plain,"Перевод: показать себя
+Смысл: показать свои способности или силу",похвастаться,distractor,согнуть,
+c018,control,flex,Try to flex your knee slowly.,llm_context,"Перевод: разогнуть колено
+Смысл: попробуй медленно согнуть колено",согнуть,correct,согнуть,
+c019,control,shade,Stay in the shade of the rocks until sunset.,dictionary,"Darkness where light, particularly sunlight, is blocked.",тень,correct,тень,
+c019,control,shade,Stay in the shade of the rocks until sunset.,llm_plain,"Перевод: тень
+Смысл: небольшая разница в качестве или цене",тень,correct,тень,
+c019,control,shade,Stay in the shade of the rocks until sunset.,llm_context,"Перевод: останьтесь в тени камней до заката
+Смысл: останьтесь в прохладе до заката, чтобы избежать жары",тень,correct,тень,
+c020,control,extra,Bring an extra blanket for everyone.,dictionary,"Beyond what is due, usual, expected, or necessary; extraneous; additional; supernumerary.","дополнительный, запасной",correct,"дополнительный, запасной",
+c020,control,extra,Bring an extra blanket for everyone.,llm_plain,"Перевод: дополнительный
+Смысл: дополнительный или необязательный элемент","дополнительный, запасной",correct,"дополнительный, запасной",
+c020,control,extra,Bring an extra blanket for everyone.,llm_context,"Перевод: дополнительный
+Смысл: принеси дополнительное одеяло для всех","дополнительный, запасной",correct,"дополнительный, запасной",
+c021,control,kite,Let's fly the red kite from the tower.,dictionary,"ОШИБКА: https://api.dictionaryapi.dev/api/v2/entries/en/kite ответил кодом 502: {""type"":""https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-502/"",""title"":""Error 502: Bad gateway"",""status"":502,""detail"":""The origin web server returned an invalid or incomplete response to Cloudflare. This typically indicates the origin is overlo",,,воздушный змей,
+c021,control,kite,Let's fly the red kite from the tower.,llm_plain,Перевод: модель парашюта,воздушный змей,correct,воздушный змей,
+c021,control,kite,Let's fly the red kite from the tower.,llm_context,"Перевод: лесенка
+Смысл: Давайте поднимем красную лесенку с башни.","Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,воздушный змей,
+c022,control,hammered,She hammered the steel until it rang like a bell.,dictionary,"To strike repeatedly with a hammer, some other implement, the fist, etc.","ковала, била молотом",correct,"ковала, била молотом",
+c022,control,hammered,She hammered the steel until it rang like a bell.,llm_plain,"Перевод: перепуганный
+Смысл: озлобленный, сильно пьяный","Ни один из перечисленных смыслов (объяснение пустое, неверное или не выбирает смысл)",none,"ковала, била молотом",
+c022,control,hammered,She hammered the steel until it rang like a bell.,llm_context,"Перевод: бившая вдребезги
+Смысл: она стучала по стали до тех пор, пока она не зазвенела, как колокол","ковала, била молотом",correct,"ковала, била молотом",
+c023,control,shotgun,There's an old shotgun above the fireplace.,dictionary,"A gun which fires loads typically consisting of small metal balls, called shot, from a cartridge.","дробовик, ружьё",correct,"дробовик, ружьё",
+c023,control,shotgun,There's an old shotgun above the fireplace.,llm_plain,"Перевод: пистолет
+Смысл: пушка (в переносном смысле)","дробовик, ружьё",correct,"дробовик, ружьё",
+c023,control,shotgun,There's an old shotgun above the fireplace.,llm_context,"Перевод: пушка
+Смысл: Это старая пушка, висящая над камином.","дробовик, ружьё",correct,"дробовик, ружьё",
+c024,control,cap,Put on a wool cap before we go outside.,dictionary,"A close-fitting hat, either brimless or peaked.","шапка, головной убор",correct,"шапка, головной убор",
+c024,control,cap,Put on a wool cap before we go outside.,llm_plain,"Перевод: лимит
+Смысл: ограничение, лимит","предел, лимит",distractor,"шапка, головной убор",
+c024,control,cap,Put on a wool cap before we go outside.,llm_context,"Перевод: надень шапку из волокон до того, как мы выйдем наружу
+Смысл: Надень шапку перед выходом на улицу.","шапка, головной убор",correct,"шапка, головной убор",
+c025,control,touch grass,Don't touch grass on the quad until tomorrow.,dictionary,"grass: Any plant of the family Poaceae, characterized by leaves that arise from nodes in the stem and leaf bases that wrap around the stem, especially those grown as ground cover rather than for grain.","не трогайте траву (буквально, газон обработан)",correct,"не трогайте траву (буквально, газон обработан)",
+c025,control,touch grass,Don't touch grass on the quad until tomorrow.,llm_plain,"Перевод: каснись травы
+Смысл: согласись с тем, что я говорю","не трогайте траву (буквально, газон обработан)",correct,"не трогайте траву (буквально, газон обработан)",
+c025,control,touch grass,Don't touch grass on the quad until tomorrow.,llm_context,"Перевод: не трогай траву на кваде до завтра
+Смысл: не трогай траву на территории до завтрашнего дня","не трогайте траву (буквально, газон обработан)",correct,"не трогайте траву (буквально, газон обработан)",
