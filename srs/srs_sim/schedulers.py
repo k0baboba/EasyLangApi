@@ -66,6 +66,8 @@ class AdaptiveScheduler:
     """
 
     FEATURE_NAMES = ("bias", "sqrt_correct", "sqrt_wrong", "last_wrong")
+    MIN_LOG2_HALF_LIFE = -4.0   # h >= 1/16 дня
+    MAX_LOG2_HALF_LIFE = 12.0   # h <= 4096 дней
 
     def __init__(
         self,
@@ -107,7 +109,7 @@ class AdaptiveScheduler:
         x = self.features(history)
         log2_h = sum(w * xi for w, xi in zip(self.weights, x))
         # Ограничиваем, чтобы ранний шум в весах не дал h = 0 или бесконечность.
-        log2_h = max(-4.0, min(log2_h, math.log2(self.max_interval * 4)))
+        log2_h = max(self.MIN_LOG2_HALF_LIFE, min(log2_h, self.MAX_LOG2_HALF_LIFE))
         return 2.0 ** log2_h
 
     def recall_probability(self, history: Sequence[ReviewEvent], elapsed_days: float) -> float:
