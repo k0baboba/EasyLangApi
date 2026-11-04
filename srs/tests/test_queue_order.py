@@ -12,7 +12,7 @@ class FakeRiskScheduler:
         self.risk = risk
         self.calls = []
 
-    def forgetting_many(self, entries):
+    def forgetting_many(self, day, entries):
         self.calls.append([i for i, _, _ in entries])
         return [self.risk[i] for i, _, _ in entries]
 
@@ -43,7 +43,7 @@ class OrderQueueTests(unittest.TestCase):
     def test_adaptive_forgetting_many_matches_single_calls(self):
         s = AdaptiveScheduler(initial_weights=[2.0, 0.5, -0.3, 0.1])
         h = [ReviewEvent(1, 3, 3, True), ReviewEvent(1, 5, 2, False)]
-        self.assertEqual(s.forgetting_many([(1, h, 4), (2, [], 1)]),
+        self.assertEqual(s.forgetting_many(9, [(1, h, 4), (2, [], 1)]),
                          [s.forgetting_probability(h, 4), s.forgetting_probability([], 1)])
 
 

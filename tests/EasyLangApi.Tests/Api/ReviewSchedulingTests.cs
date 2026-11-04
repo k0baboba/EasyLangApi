@@ -88,6 +88,8 @@ public class ReviewSchedulingTests
 
         public double? ForgettingProbability(
             KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime at) => null;
+
+        public IForgettingEstimator? CreateEstimator(IReadOnlyList<UserAnswer> userAnswers) => null;
     }
 
     [Fact]

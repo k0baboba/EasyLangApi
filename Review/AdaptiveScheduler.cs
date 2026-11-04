@@ -29,11 +29,21 @@ public sealed class AdaptiveScheduler(IOptions<ReviewOptions> options) : IReview
     }
 
     public double? ForgettingProbability(
-        KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime at)
+        KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime at) =>
+        CreateEstimator(userAnswers).ForgettingProbability(item, itemHistory, at);
+
+    /// <summary>Обучить модель один раз и оценивать ею сколько угодно элементов.</summary>
+    public IForgettingEstimator CreateEstimator(IReadOnlyList<UserAnswer> userAnswers) => new Estimator(Train(userAnswers));
+
+    IForgettingEstimator? IReviewScheduler.CreateEstimator(IReadOnlyList<UserAnswer> userAnswers) => CreateEstimator(userAnswers);
+
+    private sealed class Estimator(HalfLifeRegression model) : IForgettingEstimator
     {
-        var model = Train(userAnswers);
-        var elapsedDays = Math.Max(0, (at - LastContact(item, itemHistory)).TotalDays);
-        return 1 - model.RecallProbability(StatsOf(itemHistory), elapsedDays);
+        public double ForgettingProbability(KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, DateTime at)
+        {
+            var elapsedDays = Math.Max(0, (at - LastContact(item, itemHistory)).TotalDays);
+            return 1 - model.RecallProbability(StatsOf(itemHistory), elapsedDays);
+        }
     }
 
     /// <summary>Онлайн-обучение по ответам пользователя в порядке их поступления.</summary>

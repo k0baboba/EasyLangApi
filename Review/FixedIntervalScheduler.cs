@@ -19,4 +19,6 @@ public sealed class FixedIntervalScheduler(IOptions<ReviewOptions> options) : IR
 
     public double? ForgettingProbability(
         KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime at) => null;
+
+    public IForgettingEstimator? CreateEstimator(IReadOnlyList<UserAnswer> userAnswers) => null;
 }

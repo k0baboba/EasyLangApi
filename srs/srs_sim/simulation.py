@@ -128,7 +128,7 @@ def order_queue(scheduler: Scheduler, queue_order: str, day: int, due_today: lis
     if queue_order != "forgetting":
         raise ValueError(f"unknown queue_order {queue_order!r}")
     entries = [(i, history[i], day - last_contact[i]) for _, i in due_today]
-    probabilities = scheduler.forgetting_many(entries)
+    probabilities = scheduler.forgetting_many(day, entries)
     ranked = sorted(zip(probabilities, due_today), key=lambda t: (-t[0], t[1]))
     return [entry for _, entry in ranked]
 

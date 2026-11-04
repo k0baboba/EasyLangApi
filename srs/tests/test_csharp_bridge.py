@@ -31,6 +31,10 @@ class CSharpSchedulerMatchesPython(unittest.TestCase):
     def test_unlimited(self):
         self.check(Scenario("a", "A", SimConfig(days=60, intro_days=30, new_items_per_day=5)), 0.8, 7)
 
+    def test_with_budget_and_forgetting_order(self):
+        self.check(Scenario("c", "C", SimConfig(days=60, intro_days=30, new_items_per_day=5, daily_budget=20,
+                                                queue_order="forgetting")), 0.85, 9)
+
     def test_with_daily_budget(self):
         self.check(Scenario("b", "B", SimConfig(days=60, intro_days=30, new_items_per_day=5, daily_budget=20)), 0.9, 8)
 

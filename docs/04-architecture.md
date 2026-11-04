@@ -301,9 +301,10 @@ sequenceDiagram
 
     U->>API: GET /review/next
     API->>RV: NextAsync
-    RV->>DB: самый просроченный KnowledgeItem
+    RV->>RS: CreateEstimator (ответы пользователя)
+    RV->>DB: элементы со сроком и их история
+    RV->>RV: самый рискованный (адаптивный) или самый просроченный (фиксированный)
     RV->>DB: реплики с фразой, невыученные элементы
-    RV->>RS: ForgettingProbability (история, ответы пользователя)
     RV->>DB: ReviewEvent (ShownAt)
     API-->>U: reviewId, фраза, реплика «i + 1», forgettingProbability
     U->>API: POST /review/{reviewId} {wasCorrect}

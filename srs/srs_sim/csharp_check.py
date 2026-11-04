@@ -81,6 +81,12 @@ class CSharpAdaptiveScheduler:
         self.predictions.append((1.0 - r["forgetting"], event.was_correct))
         self._pending = (event.item_id, int(r["interval"]))
 
+    def forgetting_many(self, day: int, entries: Sequence[tuple[int, Sequence[ReviewEvent], float]]) -> list[float]:
+        """Порядок очереди по вероятности забыть: считает C# одним оценщиком на весь список."""
+        r = self._call({"op": "forgetting_many", "day": day,
+                        "items": [{"item": i, "elapsed": int(t)} for i, _, t in entries]})
+        return r["forgetting"]
+
     def brier_score(self) -> float | None:
         if not self.predictions:
             return None
@@ -208,6 +214,14 @@ def render(results: list[RunComparison], scenarios: Sequence[Scenario], targets:
     return "\n".join(lines)
 
 
+def check_scenarios() -> list[Scenario]:
+    """Сценарии отчёта плюс B с очередью по вероятности забыть (раздел «Очередь по вероятности забыть»)."""
+    budget = SCENARIOS[1]
+    by_risk = Scenario("budget60-forgetting", f"{budget.title}, очередь по вероятности забыть",
+                       replace(budget.config, queue_order="forgetting"))
+    return [*SCENARIOS, by_risk]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="C#-планировщик приложения на тех же условиях, что и Python")
     parser.add_argument("--quick", action="store_true", help="2 seed'а, 60 дней, без записи в REPORT.md")
@@ -216,10 +230,10 @@ def main() -> None:
 
     bridge_cmd = build_bridge()
     if args.quick:
-        scenarios = [replace(sc, config=replace(sc.config, days=60, intro_days=30)) for sc in SCENARIOS]
+        scenarios = [replace(sc, config=replace(sc.config, days=60, intro_days=30)) for sc in check_scenarios()]
         seed_list, targets = seeds(n=2), (0.75, 0.9)
     else:
-        scenarios, seed_list, targets = list(SCENARIOS), seeds(), ADAPTIVE_TARGETS
+        scenarios, seed_list, targets = check_scenarios(), seeds(), ADAPTIVE_TARGETS
 
     results = run_check(scenarios, targets, seed_list, bridge_cmd, args.workers)
     text = render(results, scenarios, targets, seed_list)
