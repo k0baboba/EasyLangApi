@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import time
 import urllib.parse
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from .dataset import Item, tokenize
 from .http_client import HttpClient, ServiceError, join_url
@@ -118,9 +118,17 @@ class DictionaryExplainer:
     def __init__(self, http: HttpClient, base_url: str = "https://api.dictionaryapi.dev/api/v2/entries/en/") -> None:
         self.http, self.base_url = http, base_url
 
-    def fetch(self, term: str) -> list | None:
+    def fetch(self, term: str, server_error_means_not_found: bool = False) -> list | None:
+        """None — словарь не знает слова (404, а при server_error_means_not_found — и 5xx)."""
         url = join_url(self.base_url, urllib.parse.quote(term, safe=""))
-        resp = self.http.request("GET", url)
+        try:
+            # 5xx на выражение — ответ по существу, а не сбой: повторять его незачем.
+            http = replace(self.http, retries=0) if server_error_means_not_found else self.http
+            resp = http.request("GET", url)
+        except ServiceError as e:
+            if server_error_means_not_found and e.status is not None and e.status >= 500:
+                return None
+            raise
         if resp.status == 404:
             return None
         try:
@@ -158,13 +166,16 @@ class DictionaryExplainer:
 
     def explain(self, item: Item) -> Answer:
         start = time.monotonic()
+        words = list(dict.fromkeys(tokenize(item.phrase)))
+        is_multi_word = len(words) > 1
         try:
-            entries = self.fetch(item.phrase)
+            # Как в приложении (3f81371): на выражение из нескольких слов словарь иногда
+            # отвечает 5xx — это значит то же, что 404, переходим к отдельным словам.
+            entries = self.fetch(item.phrase, server_error_means_not_found=is_multi_word)
             senses = self.to_senses(item.phrase, entries) if entries else []
             found_as_whole = bool(senses)
             if not found_as_whole:
-                words = list(dict.fromkeys(tokenize(item.phrase)))
-                if len(words) > 1:
+                if is_multi_word:
                     for w in [w for w in words if len(w) > 2][: self.MAX_WORDS_IN_FALLBACK]:
                         we = self.fetch(w)
                         if we:

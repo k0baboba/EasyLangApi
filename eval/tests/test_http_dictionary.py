@@ -76,6 +76,20 @@ class DictionaryLogicTests(unittest.TestCase):
         self.assertTrue(a.ok and a.found)
         self.assertEqual(a.text, "солёный на вкус (пересолен)")
 
+    def test_5xx_on_multiword_phrase_means_not_found(self):
+        server, state = mock_server.start(dictionary_5xx_for_phrases=True)
+        self.addCleanup(server.server_close)
+        self.addCleanup(server.shutdown)
+        host, port = server.server_address
+        d = DictionaryExplainer(HttpClient(retries=3, backoff=0), f"http://{host}:{port}/api/v2/entries/en/")
+        a = d.explain(item("spill the tea", "Spill the tea now."))
+        self.assertTrue(a.ok)
+        self.assertFalse(a.found)
+        # На выражение — один запрос без повторов, дальше по словам длиннее двух букв (как в C#: Length > 2).
+        paths = [r["path"] for r in state.requests]
+        self.assertEqual(paths, ["/api/v2/entries/en/spill%20the%20tea", "/api/v2/entries/en/spill",
+                                 "/api/v2/entries/en/the", "/api/v2/entries/en/tea"])
+
 
 if __name__ == "__main__":
     unittest.main()

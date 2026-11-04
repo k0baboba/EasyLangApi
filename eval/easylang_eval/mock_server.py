@@ -33,8 +33,9 @@ DICT_PREFIX = "/api/v2/entries/en/"
 
 class MockState:
     def __init__(self, items: list[Item], api_key: str | None = None, reject_json_mode: bool = False,
-                 fail_every: int = 0) -> None:
+                 fail_every: int = 0, dictionary_5xx_for_phrases: bool = False) -> None:
         self.items = items
+        self.dictionary_5xx_for_phrases = dictionary_5xx_for_phrases
         self.api_key = api_key
         self.reject_json_mode = reject_json_mode
         self.fail_every = fail_every
@@ -111,6 +112,9 @@ def make_handler(state: MockState):
                 return self.send_json(404, {"error": "not found"})
             word = unquote(self.path[len(DICT_PREFIX):])
             state.requests.append({"method": "GET", "path": self.path})
+            if state.dictionary_5xx_for_phrases and len(tokenize(word)) > 1:
+                # Так иногда отвечает настоящий dictionaryapi.dev на выражения.
+                return self.send_json(502, {"error": "bad gateway"})
             senses = state.dictionary_senses(word)
             if senses is None:
                 return self.send_json(404, {"title": "No Definitions Found"})

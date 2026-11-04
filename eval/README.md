@@ -15,7 +15,7 @@
 
 | Вариант | Что делает | Откуда логика |
 |---|---|---|
-| `dictionary` | dictionaryapi.dev. Если выражение не найдено целиком, ищет отдельные слова; значения сортируются по общим словам с контекстом. Оценивается первое значение | `Explaining/DictionaryExplainer.cs` |
+| `dictionary` | dictionaryapi.dev. Если выражение не найдено целиком (404, а для выражения из нескольких слов и 5xx), ищет отдельные слова; значения сортируются по общим словам с контекстом. Оценивается первое значение | `Explaining/DictionaryExplainer.cs` (сверено с prototype 3f81371) |
 | `llm_plain` | LLM с промптом приложения, но без контекста: только фраза и «No context is available» | `Explaining/PromptBuilder.cs` с `PhraseContext.Empty` |
 | `llm_context` | LLM с контекстом, как в приложении: название, говорящий, две реплики до, сама реплика, две после | `Explaining/PromptBuilder.cs`, `Lookups/LookupService.cs` |
 
@@ -196,7 +196,7 @@ python3 -m easylang_eval report --out out/qwen2.5_7b
 а не измерение.
 
 Проверено:
-- **Тесты.** `python3 -m unittest discover -s tests -t .` — 42 теста, все проходят. Они покрывают:
+- **Тесты.** `python3 -m unittest discover -s tests -t .` — 43 теста, все проходят. Они покрывают:
   - набор фраз;
   - промпт: сверка с C# и случаи из `PromptBuilderTests.cs`;
   - разбор «грязного» JSON;
