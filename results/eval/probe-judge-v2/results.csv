@@ -1,0 +1,30 @@
+id,category,phrase,line,variant,answer,judge_choice,verdict,correct_meaning,manual_ok
+s002,slang,no cap,"No cap, I didn't even drink coffee.",dictionary,"cap: A close-fitting hat, either brimless or peaked.",без головного убора,distractor,"без вранья, честно",
+s002,slang,no cap,"No cap, I didn't even drink coffee.",llm_plain,"Перевод: ничего личного
+Смысл: это значит, что говорящий хочет уточнить или отрицает предположение","без вранья, честно",correct,"без вранья, честно",
+s002,slang,no cap,"No cap, I didn't even drink coffee.",llm_context,"Перевод: не преувеличивай
+Смысл: Не преувеличивай, я даже кофе не пил.","без вранья, честно",correct,"без вранья, честно",
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",dictionary,To haunt; to appear to in the form of an apparition.,"напугал, как привидение",distractor,внезапно перестал выходить на связь без объяснений,
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",llm_plain,"Перевод: пропал без следа
+Смысл: отверг без объяснений",внезапно перестал выходить на связь без объяснений,correct,внезапно перестал выходить на связь без объяснений,
+s003,slang,ghosted,"Then he ghosted me, not a single text since Friday.",llm_context,"Перевод: отluent
+Смысл: Он перестал общаться со мной, не отправив ни одного сообщения с пятницы.",внезапно перестал выходить на связь без объяснений,correct,внезапно перестал выходить на связь без объяснений,
+p001,polysemy,bank,Climb up the far bank and wait behind the pines.,dictionary,"To deal with a bank or financial institution, or for an institution to provide financial services to a client.",банк (финансовая организация),distractor,берег реки,
+p001,polysemy,bank,Climb up the far bank and wait behind the pines.,llm_plain,Перевод: банк,банк (финансовая организация),distractor,берег реки,
+p001,polysemy,bank,Climb up the far bank and wait behind the pines.,llm_context,"Перевод: берег
+Смысл: Поднимитесь на противоположный берег и ждите за ельником.",берег реки,correct,берег реки,
+p033,polysemy,rare,"I asked for medium, and this is rare.",dictionary,Very uncommon; scarce.,редкий,distractor,"с кровью, слабой прожарки",
+p033,polysemy,rare,"I asked for medium, and this is rare.",llm_plain,"Перевод: редкий
+Смысл: немного встречающийся, нечастый",редкий,distractor,"с кровью, слабой прожарки",
+p033,polysemy,rare,"I asked for medium, and this is rare.",llm_context,"Перевод: редкое
+Смысл: Это мясо слишком生僻，不符合常规。",редкий,distractor,"с кровью, слабой прожарки",
+c001,control,salty,"It's far too salty, I need a glass of water.",dictionary,Tasting of salt.,солёный на вкус (пересолен),correct,солёный на вкус (пересолен),
+c001,control,salty,"It's far too salty, I need a glass of water.",llm_plain,"Перевод: соленый
+Смысл: сarcasm for someone who says something that is perceived as rude or inappropriate","грубый, неприличный",distractor,солёный на вкус (пересолен),
+c001,control,salty,"It's far too salty, I need a glass of water.",llm_context,"Перевод: слишком соленое
+Смысл: слишком соленое блюдо",солёный на вкус (пересолен),correct,солёный на вкус (пересолен),
+c011,control,spilled the tea,"Sorry, I spilled the tea on your desk.",dictionary,spilled: To drop something so that it spreads out or makes a mess; to accidentally pour.,пролил чай (буквально),correct,пролил чай (буквально),
+c011,control,spilled the tea,"Sorry, I spilled the tea on your desk.",llm_plain,"Перевод: рассказал все секреты
+Смысл: рассказал все секреты или сплетни",разболтал сплетни,distractor,пролил чай (буквально),
+c011,control,spilled the tea,"Sorry, I spilled the tea on your desk.",llm_context,"Перевод: излил чай
+Смысл: я рассказал всё, что знал.","проговорился, выдал секрет",distractor,пролил чай (буквально),
