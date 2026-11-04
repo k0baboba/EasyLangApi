@@ -22,11 +22,9 @@
 
 ## Ветка и публикация
 
-- Работа ведётся в локальной ветке **`prototype`**.
-- `git push` в `prototype` и в ветку сессии `claude/wizardly-edison-or311v` отклонён
-  GitHub с кодом 403 («Claude doesn't have GitHub access to k0baboba/EasyLangApi»);
-  создать ветку через GitHub API тоже нельзя (403 «Resource not accessible by integration»).
-  Коммиты есть только локально, пока владелец не даст приложению Claude права на запись.
+- Работа ведётся в ветке **`prototype`**, она запушена в `origin/prototype`.
+- Сначала `git push` отклонялся с 403 (у приложения Claude не было доступа к репозиторию),
+  поэтому версии V1–V7 коммитились локально. После того как владелец дал доступ, ветка запушена целиком.
 
 ## Окружение сессии
 
