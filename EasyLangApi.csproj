@@ -13,10 +13,10 @@
     в основное приложение они попадать не должны.
   -->
   <ItemGroup>
-    <Compile Remove="tests/**;client/**;srs/**;eval/**;docs/**" />
-    <Content Remove="tests/**;client/**;srs/**;eval/**;docs/**" />
-    <None Remove="tests/**;client/**;srs/**;eval/**;docs/**" />
-    <EmbeddedResource Remove="tests/**;client/**;srs/**;eval/**;docs/**" />
+    <Compile Remove="tests/**;client/**;srs/**;eval/**;docs/**;exercises/**" />
+    <Content Remove="tests/**;client/**;srs/**;eval/**;docs/**;exercises/**" />
+    <None Remove="tests/**;client/**;srs/**;eval/**;docs/**;exercises/**" />
+    <EmbeddedResource Remove="tests/**;client/**;srs/**;eval/**;docs/**;exercises/**" />
   </ItemGroup>
 
   <ItemGroup>

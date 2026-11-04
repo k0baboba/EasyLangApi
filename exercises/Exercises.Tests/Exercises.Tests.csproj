@@ -1,0 +1,44 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Тесты тренажёра. Каждый шаг — папка StepNN, тесты в пространстве имён Exercises.StepNN.
+    Пока шаг не сделан, его тесты красные. Порядок и условия шагов — в ../steps/.
+    Общая инфраструктура (ApiFactory и т.п.) берётся из основных тестов ссылками на файлы,
+    чтобы не держать две копии.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>Exercises</RootNamespace>
+    <NoWarn>$(NoWarn);xUnit1051</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../EasyLangApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Compile Include="../../tests/EasyLangApi.Tests/Infrastructure/ApiFactory.cs" Link="Infrastructure/Shared/ApiFactory.cs" />
+    <Compile Include="../../tests/EasyLangApi.Tests/Infrastructure/ApiClientExtensions.cs" Link="Infrastructure/Shared/ApiClientExtensions.cs" />
+    <Compile Include="../../tests/EasyLangApi.Tests/Infrastructure/FakeExplainer.cs" Link="Infrastructure/Shared/FakeExplainer.cs" />
+    <Compile Include="../../tests/EasyLangApi.Tests/Infrastructure/StubHttpHandler.cs" Link="Infrastructure/Shared/StubHttpHandler.cs" />
+    <None Include="../../sample.srt" Link="sample.srt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

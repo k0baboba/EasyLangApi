@@ -1,0 +1,57 @@
+name: Тренажёр
+
+# Только для веток тренажёра. На exercises каждый шаг должен быть красным
+# (тесты действительно что-то проверяют), на exercises-solutions — все зелёными.
+on:
+  push:
+    branches: [exercises, exercises-solutions]
+
+permissions:
+  contents: read
+
+env:
+  EXPECT: ${{ github.ref_name == 'exercises-solutions' && 'AllGreen' || 'AllRed' }}
+
+jobs:
+  linux:
+    name: Шаги и основные тесты (Linux)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Установить Tesseract
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng
+      - name: Основные тесты остаются зелёными
+        run: dotnet test tests/EasyLangApi.Tests
+      - name: Шаги тренажёра (${{ env.EXPECT }})
+        shell: pwsh
+        run: ./exercises/next.ps1 -Expect $env:EXPECT
+
+  windows:
+    name: next.ps1 в Windows PowerShell 5.1
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+      - name: Версия PowerShell
+        shell: powershell
+        run: $PSVersionTable.PSVersion
+      - name: Шаги тренажёра (${{ env.EXPECT }})
+        shell: powershell
+        run: .\exercises\next.ps1 -Expect $env:EXPECT
+      - name: Обычный запуск next.ps1
+        shell: powershell
+        run: .\exercises\next.ps1
+      - name: Подсказка и список
+        shell: powershell
+        run: |
+          .\exercises\next.ps1 -Step 9 -Hint 3
+          .\exercises\next.ps1 -List
