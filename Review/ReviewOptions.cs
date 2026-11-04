@@ -6,11 +6,34 @@ public enum SchedulerKind
     Adaptive,
 }
 
+/// <summary>В каком порядке /review/next выбирает элемент среди тех, у которых подошёл срок.</summary>
+public enum QueueOrder
+{
+    /// <summary>Сначала самый просроченный.</summary>
+    DueDate,
+
+    /// <summary>
+    /// Сначала тот, кого планировщик считает вероятнее всего забытым. Работает только у планировщика
+    /// с прогнозами (адаптивного); у фиксированного — как DueDate.
+    /// </summary>
+    ForgettingProbability,
+}
+
 public sealed class ReviewOptions
 {
     public const string SectionName = "Review";
 
     public SchedulerKind Scheduler { get; set; } = SchedulerKind.Fixed;
+
+    /// <summary>
+    /// Порядок очереди. null — по планировщику: у адаптивного ForgettingProbability, у фиксированного DueDate.
+    /// Почему так — srs/REPORT.md, раздел «Очередь по вероятности забыть»: при лимите повторений и целях
+    /// 0.8–0.9 этот порядок даёт заметно больше выученных слов, без лимита — почти то же самое.
+    /// </summary>
+    public QueueOrder? QueueOrder { get; set; }
+
+    public QueueOrder EffectiveQueueOrder =>
+        QueueOrder ?? (Scheduler == SchedulerKind.Adaptive ? Review.QueueOrder.ForgettingProbability : Review.QueueOrder.DueDate);
 
     /// <summary>
     /// Ступеньки фиксированного планировщика в днях. null — 1, 3, 7, 14, 30, 60, 120.

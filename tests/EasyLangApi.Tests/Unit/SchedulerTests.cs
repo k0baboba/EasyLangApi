@@ -196,6 +196,32 @@ public class SchedulerTests
     }
 
     [Fact]
+    public void Estimator_trained_once_gives_the_same_numbers_as_single_calls()
+    {
+        var scheduler = Adaptive();
+        var a = Item(1);
+        var b = Item(2);
+        var historyA = History(1, (2, true), (5, false));
+        var historyB = History(2, (3, true));
+        var answers = Answers(a, historyA).Concat(Answers(b, historyB)).ToList();
+        var at = Start.AddDays(9);
+
+        var estimator = scheduler.CreateEstimator(answers);
+
+        Assert.Equal(scheduler.ForgettingProbability(a, historyA, answers, at), estimator.ForgettingProbability(a, historyA, at));
+        Assert.Equal(scheduler.ForgettingProbability(b, historyB, answers, at), estimator.ForgettingProbability(b, historyB, at));
+        Assert.Null(new FixedIntervalScheduler(Options.Create(new ReviewOptions())).CreateEstimator(answers));
+    }
+
+    [Theory]
+    [InlineData(SchedulerKind.Adaptive, null, QueueOrder.ForgettingProbability)]
+    [InlineData(SchedulerKind.Fixed, null, QueueOrder.DueDate)]
+    [InlineData(SchedulerKind.Adaptive, QueueOrder.DueDate, QueueOrder.DueDate)]
+    [InlineData(SchedulerKind.Fixed, QueueOrder.ForgettingProbability, QueueOrder.ForgettingProbability)]
+    public void Queue_order_defaults_to_forgetting_only_for_adaptive(SchedulerKind kind, QueueOrder? configured, QueueOrder expected) =>
+        Assert.Equal(expected, new ReviewOptions { Scheduler = kind, QueueOrder = configured }.EffectiveQueueOrder);
+
+    [Fact]
     public void Answers_are_learned_in_the_order_they_were_given()
     {
         var scheduler = Adaptive();

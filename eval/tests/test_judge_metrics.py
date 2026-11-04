@@ -1,7 +1,7 @@
 import unittest
 
 from easylang_eval.dataset import load
-from easylang_eval.judge import NONE_OPTION, build_judge_prompt, options_for, parse_choice
+from easylang_eval.judge import NONE_OPTION, build_judge_prompt, mask_phrase, options_for, parse_choice
 from easylang_eval.metrics import Row, mcnemar_exact, paired, variant_stats, wilson
 
 
@@ -22,10 +22,12 @@ class OptionsTests(unittest.TestCase):
         positions = {options_for(it).correct for it in self.items}
         self.assertGreater(len(positions), 1)   # правильный смысл не всегда под номером 1
 
-    def test_prompt_hides_context_and_numbers_from_one(self):
+    def test_prompt_hides_phrase_context_and_numbers_from_one(self):
         it = self.items[0]
-        p = build_judge_prompt(it, "Смысл: обиженный", options_for(it))
-        self.assertIn(f'Phrase: "{it.phrase}"', p)
+        p = build_judge_prompt(it, "Смысл: обиженный. Salty, he is SALTY.", options_for(it))
+        self.assertNotIn("Phrase:", p)
+        self.assertNotIn("salty", p.lower())
+        self.assertIn("Смысл: обиженный. […], he is […].", p)
         self.assertNotIn(it.line, p)
         self.assertNotIn(it.title, p)
         self.assertIn("1. ", p)
@@ -35,6 +37,14 @@ class OptionsTests(unittest.TestCase):
         wrong = next(i for i in range(len(o.texts)) if i not in (o.correct, o.none))
         self.assertEqual([o.kind(o.correct), o.kind(o.none), o.kind(wrong), o.kind(None)],
                          ["correct", "none", "distractor", "unparsed"])
+
+
+class MaskTests(unittest.TestCase):
+    def test_masks_phrase_and_its_words_but_not_parts_of_other_words(self):
+        self.assertEqual(mask_phrase("cap: A close-fitting hat. No cap!", "no cap"), "[…]: A close-fitting hat. […]!")
+        self.assertEqual(mask_phrase("captain of the team", "no cap"), "captain of the team")
+        self.assertEqual(mask_phrase("Don't spill the tea", "spill the tea"), "Don't […]")
+        self.assertEqual(mask_phrase("caught in 4K", "caught in 4K"), "[…]")
 
 
 class ParseChoiceTests(unittest.TestCase):
