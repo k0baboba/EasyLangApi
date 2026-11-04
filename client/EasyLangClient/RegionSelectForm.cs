@@ -17,6 +17,7 @@ internal sealed class RegionSelectForm : Form
     public RegionSelectForm(Bitmap screen)
     {
         _screen = screen;
+        Name = "EasyLangSelect";
         FormBorderStyle = FormBorderStyle.None;
         StartPosition = FormStartPosition.Manual;
         Bounds = SystemInformation.VirtualScreen;
