@@ -8,6 +8,7 @@ import re
 import sys
 from pathlib import Path
 
+from . import blind
 from .dataset import CATEGORIES, DEFAULT_PATH, DatasetError, load
 from .explainers import VARIANTS, LlmConfig
 from .runner import ConfigMismatch, RunConfig, merge_runs, run, write_report
@@ -61,6 +62,18 @@ def build_parser() -> argparse.ArgumentParser:
     m.add_argument("parts", type=Path, nargs="+")
     m.add_argument("--dataset", type=Path, default=DEFAULT_PATH)
 
+    b = sub.add_parser("blind", help="слепая проверка судьи человеком")
+    bsub = b.add_subparsers(dest="blind_command", required=True)
+    be = bsub.add_parser("export", help="выгрузить случайные ответы без варианта и вердикта")
+    be.add_argument("--run", type=Path, required=True, help="папка готового прогона")
+    be.add_argument("--out", type=Path, required=True, help="куда положить blind.csv и ключ")
+    be.add_argument("--n", type=int, default=60)
+    be.add_argument("--seed", type=int, default=2026)
+    be.add_argument("--dataset", type=Path, default=DEFAULT_PATH)
+    bs = bsub.add_parser("score", help="посчитать согласие человека с судьёй")
+    bs.add_argument("--dir", type=Path, required=True, help="папка с заполненным blind.csv и blind_key.json")
+    bs.add_argument("--dataset", type=Path, default=DEFAULT_PATH)
+
     rep = sub.add_parser("report", help="пересчитать results.md по готовым файлам прогона")
     rep.add_argument("--out", type=Path, required=True)
     rep.add_argument("--dataset", type=Path, default=DEFAULT_PATH)
@@ -98,6 +111,18 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "report":
         print(write_report(items, args.out))
+        return 0
+    if args.command == "blind":
+        if args.blind_command == "export":
+            try:
+                print(blind.export(items, args.run, args.out, n=args.n, seed=args.seed))
+            except (ValueError, OSError) as e:
+                print(e, file=sys.stderr)
+                return 2
+        else:
+            agreement = blind.score(args.dir)
+            (args.dir / "agreement.md").write_text(agreement.as_markdown(), encoding="utf-8")
+            print(agreement.as_markdown())
         return 0
     if args.command == "merge":
         try:
