@@ -18,14 +18,14 @@ env:
   EVAL_MODEL: qwen2.5:7b
   EVAL_JUDGE_BASE_URL: http://127.0.0.1:11434/v1
   EVAL_JUDGE_MODEL: llama3.1:8b
-  TARGET_SHARD_MINUTES: "240"
+  TARGET_SHARD_MINUTES: "90"
   MAX_SHARDS: "12"
   # Ответ на CPU идёт долго: таймаут запроса 15 минут, два повтора.
   RUN_ARGS: --timeout 900 --retries 2 --workers 1
 
 jobs:
   probe:
-    name: Проба на 5 фразах
+    name: Проба на 6 фразах
     runs-on: ubuntu-24.04
     timeout-minutes: 120
     permissions:
@@ -41,7 +41,7 @@ jobs:
 
       - name: Проба
         working-directory: eval
-        run: python3 -m easylang_eval run --limit 5 --out out/probe --fresh $RUN_ARGS
+        run: python3 -m easylang_eval run --ids s002,s003,p001,p033,c001,c011 --out out/probe --fresh $RUN_ARGS
 
       - name: Оценка полного прогона
         id: estimate
@@ -54,7 +54,7 @@ jobs:
 
       - name: Сохранить в results
         if: always()
-        run: bash eval/ci/save_results.sh eval/out/probe results/eval/probe "eval-live — проба, run ${{ github.run_id }}"
+        run: bash eval/ci/save_results.sh eval/out/probe results/eval/probe-judge-v2 "eval-live — проба, run ${{ github.run_id }}"
 
       - uses: actions/upload-artifact@v6
         if: always()
@@ -75,7 +75,7 @@ jobs:
         shard: ${{ fromJSON(needs.probe.outputs.shard_list) }}
     env:
       SHARDS: ${{ needs.probe.outputs.shards }}
-      DEST: results/eval/shards/${{ matrix.shard }}-of-${{ needs.probe.outputs.shards }}
+      DEST: results/eval/shards-judge-v2/${{ matrix.shard }}-of-${{ needs.probe.outputs.shards }}
     steps:
       - uses: actions/checkout@v5
 
@@ -122,15 +122,15 @@ jobs:
       - name: Собрать части
         run: |
           git fetch -q origin results
-          git archive FETCH_HEAD results/eval/shards | tar -x -C /tmp
-          parts=$(ls -d /tmp/results/eval/shards/*-of-$SHARDS)
+          git archive FETCH_HEAD results/eval/shards-judge-v2 | tar -x -C /tmp
+          parts=$(ls -d /tmp/results/eval/shards-judge-v2/*-of-$SHARDS)
           echo "части: $parts"
           cd eval && python3 -m easylang_eval merge --into out/full $parts
           cp out/full/results.md "$GITHUB_STEP_SUMMARY"
 
       - name: Сохранить в results
         if: always()
-        run: bash eval/ci/save_results.sh eval/out/full results/eval/full "eval-live — сводный отчёт, run ${{ github.run_id }}"
+        run: bash eval/ci/save_results.sh eval/out/full results/eval/full-judge-v2 "eval-live — сводный отчёт, run ${{ github.run_id }}"
 
       - uses: actions/upload-artifact@v6
         if: always()

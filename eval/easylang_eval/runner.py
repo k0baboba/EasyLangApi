@@ -27,7 +27,7 @@ from typing import Callable
 from .dataset import DEFAULT_PATH, Item
 from .explainers import VARIANTS, Answer, DictionaryExplainer, LlmConfig, LlmExplainer
 from .http_client import HttpClient
-from .judge import LlmJudge, options_for
+from .judge import JUDGE_VERSION, LlmJudge, options_for
 from .report import render_report
 from .metrics import Row
 
@@ -63,6 +63,7 @@ class RunConfig:
             "language": self.language,
             "dataset": str(self.dataset_path.name),
             "dataset_sha256": sha256(self.dataset_path),
+            "judge_version": JUDGE_VERSION,
         }
 
 
@@ -102,7 +103,7 @@ def _check_config(out_dir: Path, public: dict, fresh: bool) -> None:
             (out_dir / name).unlink(missing_ok=True)
     elif path.exists():
         old = json.loads(path.read_text(encoding="utf-8"))
-        keys = ("llm", "judge", "dictionary_url", "language", "dataset_sha256")
+        keys = ("llm", "judge", "dictionary_url", "language", "dataset_sha256", "judge_version")
         changed = [k for k in keys if old.get(k) != public.get(k)]
         if changed:
             raise ConfigMismatch(
@@ -183,7 +184,7 @@ def run(items: list[Item], cfg: RunConfig, fresh: bool = False, log: Callable[[s
 def merge_runs(items: list[Item], parts: list[Path], into: Path) -> Path:
     """Собрать части одного прогона (одинаковые настройки) в папку into и построить отчёт."""
     configs = [json.loads((p / "run.json").read_text(encoding="utf-8")) for p in parts]
-    keys = ("llm", "judge", "dictionary_url", "language", "dataset_sha256", "variants")
+    keys = ("llm", "judge", "dictionary_url", "language", "dataset_sha256", "variants", "judge_version")
     for p, c in zip(parts[1:], configs[1:]):
         changed = [k for k in keys if c.get(k) != configs[0].get(k)]
         if changed:
