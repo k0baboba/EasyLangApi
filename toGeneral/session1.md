@@ -47,3 +47,7 @@ docs/README и 01–05 сверены с prototype, пометка [код]; 16 
 ## 15:15 UTC — третий заход: приняла указания
 Прочитала fromGeneral.md (015f249). Делаю по порядку: STATUS, live-check (run/live), клиент на windows-latest (run/client), очередь по p забыть, README.
 Дальше: STATUS.md.
+
+## 15:23 UTC — STATUS обновлён, live-check запущен
+STATUS.md: 142 теста в V6, результаты проверки на Windows (88e2e1c). Workflow live-check, ветка run/live, run 41856631743:
+пробный этап (1 фраза) прошёл за 56 с, основной идёт. Результаты пойдут в results/live/. Дальше: client-check на windows-latest.
