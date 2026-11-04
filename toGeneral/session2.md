@@ -29,3 +29,7 @@ aa059dd добавил srs/srs_sim/golden.py и эталон tests/EasyLangApi.T
 ## 15:15 UTC — третий заход, взяла указания
 Прочитала fromGeneral.md (015f249). План по порядку: 1) eval → prototype; 2) eval-live на run/eval (Ollama qwen2.5:7b, проба на 5 фразах); 3) скрипт слепой проверки судьи; 4) srs-real на run/srs (Duolingo).
 Дальше: ставлю .NET SDK, чтобы прогнать тесты prototype перед пушем.
+
+## 15:18 UTC — eval влит в prototype
+origin/eval влит в prototype (ff3ea3a, затем слит свежий origin/prototype — 884439c, запушено без force). eval/** исключена в EasyLangApi.csproj и .dockerignore, STATUS.md дополнен. Сборка Release и dotnet test: 137 прошли, 5 пропущены (нет Tesseract в среде), 0 упало.
+Дальше: workflow eval-live на run/eval. Результаты кладу в ветку results по пути results/eval/ (ветки results ещё не было).
