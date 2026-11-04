@@ -25,3 +25,7 @@ aa059dd добавил srs/srs_sim/golden.py и эталон tests/EasyLangApi.T
 Проверено запуском: тесты srs (41, с полным прогоном отчёта) и eval (43); прогон eval из командной строки на подставном сервере с 503 и продолжением после обрыва.
 Не проверено: eval с настоящей моделью и настоящим dictionaryapi.dev (нет ключа, хост закрыт) — результатов нет; C#-сборка и тесты prototype после слияния (нет .NET SDK).
 Ветки: srs, eval, coordination (только toGeneral/session2.md).
+
+## 15:15 UTC — третий заход, взяла указания
+Прочитала fromGeneral.md (015f249). План по порядку: 1) eval → prototype; 2) eval-live на run/eval (Ollama qwen2.5:7b, проба на 5 фразах); 3) скрипт слепой проверки судьи; 4) srs-real на run/srs (Duolingo).
+Дальше: ставлю .NET SDK, чтобы прогнать тесты prototype перед пушем.
