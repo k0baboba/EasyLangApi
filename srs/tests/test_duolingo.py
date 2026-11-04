@@ -84,6 +84,31 @@ class LoadTests(unittest.TestCase):
         self.assertEqual([t.last_wrong[i] for i in order], [0, 0, 1])
 
 
+class LogisticTests(unittest.TestCase):
+    def test_solve(self):
+        self.assertEqual([round(v, 9) for v in d.solve([[2.0, 1.0], [1.0, 3.0]], [3.0, 5.0])], [0.8, 1.4])
+
+    def test_newton_recovers_known_weights(self):
+        # Доли верных порождены логистической моделью с известными весами — метод Ньютона должен их найти.
+        import math
+        true = [1.0, 0.3, -0.5, -0.4, -0.6]
+        rng = random.Random(5)
+        rows, ts = [], 1_000_000
+        for k in range(3000):
+            hc, hw, days = rng.randint(0, 25), rng.randint(0, 9), rng.randint(0, 40)
+            x = [1.0, math.sqrt(hc), math.sqrt(hw), 0.0, math.log1p(days)]
+            p = 1 / (1 + math.exp(-sum(a * b for a, b in zip(true, x))))
+            ts += 60
+            rows.append([p, ts, days * 86400, f"u{k}", "en", "ru", f"l{k}", "w", hc + hw, hc, 1, 1])
+        t = d.load(write_csv(rows))
+        d.derive_last_wrong(t, d.time_order(t))
+        m = d.LogisticModel(iterations=20)
+        m.fit(t, list(range(len(t))))
+        for got, want in zip(m.weights, true):
+            if want != true[3]:          # last_wrong везде 0 — его вес не определяется данными
+                self.assertAlmostEqual(got, want, places=3)
+
+
 class MetricTests(unittest.TestCase):
     def test_auc(self):
         self.assertEqual(d.weighted_auc([0.9, 0.1], [1, 0], [0, 1]), 1.0)
