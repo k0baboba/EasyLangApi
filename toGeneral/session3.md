@@ -40,3 +40,7 @@ guide: влит prototype e1e1cfa (d2bf4db), переписаны 3.14, вопр
 ## 15:30 UTC — тренажёр: ветка exercises запушена (2fe529c)
 20 шагов в 10 задачах (порядок тем по fromGeneral), тесты шагов + exercises/next.ps1 (UTF-8 BOM, PS 5.1). Локально: все 20 шагов красные (next.ps1 -Expect AllRed в pwsh 7), основные 142/142. CI: workflow «Тренажёр» (.github/workflows/exercises.yml), Windows-прогон ещё не смотрела.
 Решение: гонки (шаги 09, 13) воспроизводятся SaveChangesInterceptor-барьером в тестах. Шаги 13 и 16 — около 10 минут, а не меньше: проверка и запись атомарны, мельче не режется. Дальше: решения в exercises-solutions.
+
+## 15:39 UTC — решения exercises-solutions (4be03fa), найденная проблема в next.ps1
+Решения всех 20 шагов: локально 20/20 зелёные, основные 142/142. Первый CI на windows-latest нашёл ошибку: в PS 5.1 stderr dotnet при Stop прерывал скрипт — исправлено (exercises), повторный прогон CI идёт.
+В решениях две ловушки EF вошли в подсказки: IsModified=false возвращает старое значение; отсоединение элемента отсоединяет и наблюдение-«сироту». Дальше: docs/thesis в prototype.
