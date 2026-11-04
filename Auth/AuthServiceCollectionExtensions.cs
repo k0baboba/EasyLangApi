@@ -1,3 +1,4 @@
+using System.Text;
 using EasyLangApi.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,12 @@ public static class AuthServiceCollectionExtensions
 {
     public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+        services.AddOptions<JwtOptions>()
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .Validate(o => string.IsNullOrEmpty(o.SigningKey) || Encoding.UTF8.GetByteCount(o.SigningKey) >= SigningKeyProvider.MinKeyBytes,
+                $"Jwt:SigningKey должен быть не короче {SigningKeyProvider.MinKeyBytes} байт.")
+            .Validate(o => o.AccessTokenMinutes > 0 && o.RefreshTokenDays > 0, "Сроки жизни токенов должны быть положительными.")
+            .ValidateOnStart();
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUser, HttpCurrentUser>();
         services.AddSingleton<SigningKeyProvider>();

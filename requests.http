@@ -3,9 +3,42 @@
 # Сначала: dotnet run
 
 @host = http://localhost:5057
+# Вставьте accessToken из ответа на запрос 0a или 0b (живёт 15 минут, потом — 0c).
+@token = paste-access-token-here
+
+### 0a. Регистрация
+POST {{host}}/auth/register
+Content-Type: application/json
+
+{
+  "email": "maya@example.com",
+  "password": "night-shift-2026"
+}
+
+### 0b. Вход
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "maya@example.com",
+  "password": "night-shift-2026"
+}
+
+### 0c. Обновить токены (refreshToken из ответа 0a/0b; старый после этого недействителен)
+POST {{host}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "paste-refresh-token-here"
+}
+
+### 0d. Кто я
+GET {{host}}/auth/me
+Authorization: Bearer {{token}}
 
 ### 1. Загрузить субтитры (sample.srt из корня репозитория)
 POST {{host}}/episodes
+Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=EasyLangBoundary
 
 --EasyLangBoundary
@@ -21,24 +54,31 @@ Content-Type: application/x-subrip
 
 ### 2. Список эпизодов
 GET {{host}}/episodes
+Authorization: Bearer {{token}}
 
 ### 3. Реплики эпизода — отсюда берём id реплики
 GET {{host}}/episodes/1/lines
+Authorization: Bearer {{token}}
 
 ### 4. Разобрать фразу в контексте реплики 3 ("LEO: I'm beat. Double shift at the docks again.")
 GET {{host}}/lines/3/explain?phrase=beat
+Authorization: Bearer {{token}}
 
 ### 5. Выражение из нескольких слов (реплика 5)
 GET {{host}}/lines/5/explain?phrase=spill the beans
+Authorization: Bearer {{token}}
 
 ### 6. Словарь
 GET {{host}}/vocabulary
+Authorization: Bearer {{token}}
 
 ### 7. Следующий элемент на повторение. Запомните reviewId из ответа.
 GET {{host}}/review/next
+Authorization: Bearer {{token}}
 
 ### 8. Ответ на показ: помнил (true) / не помнил (false)
 POST {{host}}/review/1
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -47,6 +87,7 @@ Content-Type: application/json
 
 ### 9. Распознать текст со скриншота (нужен установленный tesseract)
 POST {{host}}/recognize
+Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=EasyLangBoundary
 
 --EasyLangBoundary
@@ -62,6 +103,7 @@ Content-Type: image/png
 
 ### 10. Дописать следующий скриншот в тот же эпизод (контекст продолжится)
 POST {{host}}/recognize
+Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=EasyLangBoundary
 
 --EasyLangBoundary

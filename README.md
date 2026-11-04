@@ -22,16 +22,25 @@ dotnet run
 
 Приложение слушает `http://localhost:5057`. Файл базы `easylang.db` появится рядом с проектом.
 
-Пройти весь поток можно запросами из [requests.http](requests.http) или через `curl`:
+Пройти весь поток можно запросами из [requests.http](requests.http) или через `curl`.
+Все эндпоинты, кроме `/auth/*`, требуют токен:
 
 ```bash
-curl -F "file=@sample.srt" -F "title=Night Shift S01E01" http://localhost:5057/episodes
-curl http://localhost:5057/episodes/1/lines
-curl "http://localhost:5057/lines/3/explain?phrase=beat"
-curl http://localhost:5057/vocabulary
-curl http://localhost:5057/review/next
-curl -X POST -H "Content-Type: application/json" -d '{"wasCorrect":true}' http://localhost:5057/review/1
+H=http://localhost:5057
+TOKEN=$(curl -s -H "Content-Type: application/json" \
+  -d '{"email":"maya@example.com","password":"night-shift-2026"}' $H/auth/register \
+  | python3 -c "import sys, json; print(json.load(sys.stdin)['accessToken'])")
+AUTH="Authorization: Bearer $TOKEN"
+
+curl -H "$AUTH" -F "file=@sample.srt" -F "title=Night Shift S01E01" $H/episodes
+curl -H "$AUTH" $H/episodes/1/lines
+curl -H "$AUTH" "$H/lines/3/explain?phrase=beat"
+curl -H "$AUTH" $H/vocabulary
+curl -H "$AUTH" $H/review/next
+curl -H "$AUTH" -H "Content-Type: application/json" -d '{"wasCorrect":true}' $H/review/1
 ```
+
+Если пользователь уже есть, вместо `/auth/register` — `/auth/login` с тем же телом.
 
 ## Тесты
 
@@ -46,6 +55,11 @@ dotnet test tests/EasyLangApi.Tests
 
 | Метод | Путь | Что делает |
 |---|---|---|
+| `POST` | `/auth/register` | `{"email", "password"}` (пароль от 8 символов) → пара токенов |
+| `POST` | `/auth/login` | `{"email", "password"}` → пара токенов |
+| `POST` | `/auth/refresh` | `{"refreshToken"}` → новая пара, старый refresh-токен отзывается |
+| `POST` | `/auth/logout` | `{"refreshToken"}` — отозвать |
+| `GET` | `/auth/me` | Текущий пользователь |
 | `POST` | `/episodes` | Форма `multipart/form-data`: `file` — файл `.srt`, `title` — название (необязательно). Разбирает на реплики с таймингами |
 | `GET` | `/episodes` | Список эпизодов |
 | `GET` | `/episodes/{id}/lines` | Реплики эпизода |
@@ -58,7 +72,22 @@ dotnet test tests/EasyLangApi.Tests
 
 Ошибки возвращаются в формате [ProblemDetails](https://www.rfc-editor.org/rfc/rfc9457):
 `400` — неверный запрос, `404` — нет такой реплики/показа, `409` — на показ уже ответили,
-`422` — Tesseract не смог прочитать изображение, `503` — внешний разборщик или Tesseract недоступен.
+`401` — нет или истёк токен, `422` — Tesseract не смог прочитать изображение,
+`429` — превышен лимит, `503` — внешний разборщик или Tesseract недоступен.
+
+## Пользователи и квоты
+
+- Access-токен — JWT (HMAC-SHA256) на 15 минут, refresh-токен — случайная строка на 30 дней,
+  в базе хранится только её SHA-256. При обновлении выдаётся новая пара, старый refresh-токен
+  отзывается; повторное использование отозванного отзывает все токены пользователя.
+- Пароли хешируются `PasswordHasher` из ASP.NET Core Identity (PBKDF2).
+- Данные разделены глобальными фильтрами EF Core (`HasQueryFilter`): запрос видит только
+  строки текущего пользователя, чужие id отвечают 404.
+- Дорогие эндпоинты (`/lines/{id}/explain`, `/recognize`) ограничены по числу запросов в минуту
+  на пользователя (`Quotas:ExpensiveRequestsPerMinute`), разборы — ещё и суточной квотой
+  (`Quotas:LookupsPerDay`).
+- Ключ подписи — `Jwt:SigningKey` (не короче 32 байт). Если не задан, генерируется при запуске:
+  удобно для разработки, но access-токены не переживут перезапуск.
 
 ## Планировщик повторений
 
@@ -88,6 +117,7 @@ dotnet test tests/EasyLangApi.Tests
 
 Фраза — единица показа, слово (выражение) — единица учёта.
 
+- `User`, `RefreshToken` — пользователи и их refresh-токены (хешами).
 - `Episode`, `Line` — источник текста и реплики с таймингами.
 - `Lookup` — наблюдение: какую фразу посмотрели, в какой реплике, что ответил разборщик.
 - `KnowledgeItem` — элемент учёта: нормализованная фраза, интервал, срок повторения.
@@ -131,6 +161,11 @@ Llm__ApiKey=ollama Llm__BaseUrl=http://localhost:11434/v1 Llm__Model=llama3.2 do
 | `Llm:Model` | `gpt-4o-mini` | Модель |
 | `Llm:ExplanationLanguage` | `Russian` | На каком языке объяснять |
 | `Llm:UseJsonMode` | `true` | Передавать `response_format: json_object` |
+| `Jwt:SigningKey` | пусто (случайный) | Секрет подписи JWT, ≥ 32 байт |
+| `Jwt:AccessTokenMinutes` | `15` | Срок жизни access-токена |
+| `Jwt:RefreshTokenDays` | `30` | Срок жизни refresh-токена |
+| `Quotas:ExpensiveRequestsPerMinute` | `30` | Лимит разборов и распознаваний в минуту |
+| `Quotas:LookupsPerDay` | `500` | Суточная квота разборов |
 | `Review:Scheduler` | `Fixed` | `Fixed` или `Adaptive` |
 | `Review:FixedIntervals` | `1,3,7,14,30,60,120` | Ступеньки фиксированного планировщика |
 | `Review:KnownAfterDays` | `21` | С какого интервала элемент считается выученным |
@@ -151,6 +186,8 @@ Lookups/       сценарий «разобрать фразу»
 Recognition/   распознавание текста (Tesseract), POST /recognize
 Vocabulary/    нормализация фраз, список словаря
 Review/        выдача на повторение, планировщики, отбор фраз «i + 1»
+Auth/          регистрация, вход, JWT и refresh-токены
+Quotas/        лимиты запросов и суточная квота
 Infrastructure/ обработка ожидаемых ошибок
 tests/         xUnit
 ```
