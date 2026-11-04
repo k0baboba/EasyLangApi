@@ -9,7 +9,8 @@ public class DueFilterTests
     [Fact]
     public async Task Due_true_shows_only_items_whose_time_has_come()
     {
-        await using var factory = new ApiFactory();
+        // Тест сдвигает часы на сутки — access-токен должен это пережить.
+        await using var factory = new ApiFactory().WithSetting("Jwt:AccessTokenMinutes", "2880");
         var client = await factory.CreateUserClientAsync();
         await Scenario.AddPhrasesAsync(factory, client, "alpha", "bravo");
 
