@@ -68,7 +68,8 @@ public sealed class ReviewService(
                    ?? new SelectedLine(lookup.LineId, lookup.LineText, lookup.EpisodeTitle, []);
 
         var history = await LoadHistoryAsync(item.Id, cancellationToken);
-        var forgetting = scheduler.ForgettingProbability(item, history, now);
+        var userAnswers = await LoadUserAnswersAsync(cancellationToken);
+        var forgetting = scheduler.ForgettingProbability(item, history, userAnswers, now);
 
         var shown = new ReviewEvent { KnowledgeItemId = item.Id, ShownAt = now };
         db.ReviewEvents.Add(shown);
@@ -101,12 +102,15 @@ public sealed class ReviewService(
 
         var now = time.GetUtcNow().UtcDateTime;
         var history = await LoadHistoryAsync(shown.KnowledgeItemId, cancellationToken);
+        // Ответы из базы — без текущего: он ещё не сохранён. Добавляем его сами.
+        var userAnswers = await LoadUserAnswersAsync(cancellationToken);
         // shown уже отслеживается контекстом, поэтому в history это тот же объект.
         shown.AnsweredAt = now;
         shown.WasCorrect = wasCorrect;
-
         var item = shown.KnowledgeItem;
-        var schedule = scheduler.Schedule(item, history, now);
+        userAnswers.Add(new UserAnswer(shown.Id, item.Id, item.FirstSeenAt, shown.ShownAt, now, wasCorrect));
+
+        var schedule = scheduler.Schedule(item, history, userAnswers, now);
         item.IntervalDays = schedule.IntervalDays;
         item.DueAt = schedule.DueAt;
         item.Ease = schedule.Ease;
@@ -116,6 +120,14 @@ public sealed class ReviewService(
             AnswerStatus.Accepted,
             new ReviewAnswer(shown.Id, item.Id, wasCorrect, item.IntervalDays, item.DueAt));
     }
+
+    /// <summary>Все ответы текущего пользователя (фильтр по владельцу добавит EF) — на них учится адаптивная модель.</summary>
+    private Task<List<UserAnswer>> LoadUserAnswersAsync(CancellationToken cancellationToken) =>
+        db.ReviewEvents
+            .Where(e => e.WasCorrect != null && e.AnsweredAt != null)
+            .Select(e => new UserAnswer(
+                e.Id, e.KnowledgeItemId, e.KnowledgeItem.FirstSeenAt, e.ShownAt, e.AnsweredAt!.Value, e.WasCorrect!.Value))
+            .ToListAsync(cancellationToken);
 
     private Task<List<ReviewEvent>> LoadHistoryAsync(int knowledgeItemId, CancellationToken cancellationToken) =>
         db.ReviewEvents

@@ -1,5 +1,8 @@
 using System.Net;
+using EasyLangApi.Data;
+using EasyLangApi.Review;
 using EasyLangApi.Tests.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EasyLangApi.Tests.Api;
 
@@ -30,10 +33,61 @@ public class ReviewSchedulingTests
         var card = await (await client.GetAsync("/review/next")).ReadJsonAsync();
         var answer = await (await client.AnswerAsync(card["reviewId"]!.GetValue<int>(), true)).ReadJsonAsync();
 
+        // Прогноз забывания есть только у адаптивного планировщика — значит, выбран он.
         Assert.NotNull(card["forgettingProbability"]);
-        var interval = answer["intervalDays"]!.GetValue<double>();
-        Assert.NotEqual(1, interval); // у лесенки было бы ровно 1
-        Assert.InRange(interval, 2, 6);
+        // Холодный старт: модель ещё ничему не научилась, интервал минимальный — 1 день.
+        Assert.Equal(1, answer["intervalDays"]!.GetValue<double>());
+    }
+
+    [Fact]
+    public async Task Scheduler_learns_only_from_current_users_answers()
+    {
+        var spy = new SpyScheduler();
+        await using var factory = new ApiFactory
+        {
+            ConfigureServices = services => services.AddSingleton<IReviewScheduler>(spy),
+        }.WithSetting("Jwt:AccessTokenMinutes", "100000"); // тест сдвигает часы на дни
+        var alice = await factory.CreateUserClientAsync();
+        var bob = await factory.CreateUserClientAsync();
+
+        // Алиса отвечает трижды, Боб — один раз
+        await ExplainAndAnswerAsync(alice, "beat", 3, factory);
+        await ExplainAndAnswerAsync(bob, "beat", 1, factory);
+
+        Assert.Equal([1, 2, 3, 1], spy.UserAnswerCounts);
+        Assert.All(spy.LastAnswers, a => Assert.Equal(spy.LastItemId, a.KnowledgeItemId));
+    }
+
+    private static async Task ExplainAndAnswerAsync(HttpClient client, string phrase, int times, ApiFactory factory)
+    {
+        var episodeId = await client.UploadSampleAsync();
+        await client.ExplainAsync(await client.GetLineIdAsync(episodeId, 2), phrase);
+        for (var i = 0; i < times; i++)
+        {
+            var card = await (await client.GetAsync("/review/next")).ReadJsonAsync();
+            Assert.Equal(HttpStatusCode.OK, (await client.AnswerAsync(card["reviewId"]!.GetValue<int>(), true)).StatusCode);
+            factory.Time.Advance(TimeSpan.FromDays(2));
+        }
+    }
+
+    /// <summary>Планировщик-шпион: запоминает, сколько ответов пользователя ему передали.</summary>
+    private sealed class SpyScheduler : IReviewScheduler
+    {
+        public List<int> UserAnswerCounts { get; } = [];
+        public IReadOnlyList<UserAnswer> LastAnswers { get; private set; } = [];
+        public int LastItemId { get; private set; }
+
+        public ReviewSchedule Schedule(
+            KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime now)
+        {
+            UserAnswerCounts.Add(userAnswers.Count);
+            LastAnswers = userAnswers;
+            LastItemId = item.Id;
+            return new ReviewSchedule(1, now.AddDays(1), item.Ease);
+        }
+
+        public double? ForgettingProbability(
+            KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime at) => null;
     }
 
     [Fact]

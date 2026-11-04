@@ -4,117 +4,76 @@ using Microsoft.Extensions.Options;
 namespace EasyLangApi.Review;
 
 /// <summary>
-/// Адаптивный планировщик на модели полураспада памяти (по мотивам half-life regression, Settles &amp; Meeder, 2016).
+/// Адаптивный планировщик на обучаемой модели <see cref="HalfLifeRegression"/> (перенос из srs/).
 ///
-/// 1. Память о фразе убывает экспоненциально: p(вспомнит через t) = 2^(-t/h), h — период полураспада в днях.
-/// 2. h растёт с числом верных ответов и падает с ошибками (веса из настроек — общая модель).
-/// 3. Для конкретного элемента по его ReviewEvent подбирается поправка сложности d:
-///    та, при которой модель лучше всего предсказывает уже случившиеся ответы
-///    (максимум правдоподобия с нормальным априорным распределением, поиск по сетке).
-///    Если фразу вспоминали после долгих перерывов, d растёт и интервалы удлиняются.
-/// 4. Следующий показ — момент, когда p(вспомнит) упадёт до TargetRetention.
+/// Веса модели нигде не хранятся: при каждом решении они заново обучаются прогоном по всем
+/// ответам пользователя в том порядке, в каком ответы были даны. Это тот же онлайн-градиентный
+/// спуск, что в srs/, только его состояние — функция таблицы ReviewEvent, а не отдельная таблица.
+/// Поэтому веса у каждого пользователя свои, переживают перезапуск и не расходятся с историей.
+/// Цена — O(число ответов) на решение; для одного человека это тысячи шагов, доли миллисекунды.
 ///
-/// В Ease сохраняется множитель периода полураспада 2^d: 1 — обычная фраза, больше — лёгкая.
+/// Следующий показ — когда предсказанная вероятность вспомнить опустится до TargetRetention:
+/// t = h · log2(1 / TargetRetention), с округлением до дней и ограничением [Min; Max], как в srs/.
+/// Ease этот планировщик не меняет: у модели нет отдельной сложности элемента.
 /// </summary>
 public sealed class AdaptiveScheduler(IOptions<ReviewOptions> options) : IReviewScheduler
 {
-    private const double GridMin = -3, GridMax = 3, GridStep = 0.05;
-
     private AdaptiveOptions Settings => options.Value.Adaptive;
 
-    public ReviewSchedule Schedule(KnowledgeItem item, IReadOnlyList<ReviewEvent> history, DateTime now)
+    public ReviewSchedule Schedule(
+        KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime now)
     {
-        var observations = Observe(item, history);
-        var difficulty = FitDifficulty(observations);
-        var (correct, wrong) = Count(history);
-
-        var halfLife = HalfLifeDays(correct, wrong, difficulty);
-        var interval = Math.Clamp(-halfLife * Math.Log2(Settings.TargetRetention), Settings.MinIntervalDays, Settings.MaxIntervalDays);
-        return new ReviewSchedule(interval, now.AddDays(interval), Math.Pow(2, difficulty));
+        var model = Train(userAnswers);
+        var interval = IntervalDays(model.HalfLifeDays(StatsOf(itemHistory)));
+        return new ReviewSchedule(interval, now.AddDays(interval), item.Ease);
     }
 
-    public double? ForgettingProbability(KnowledgeItem item, IReadOnlyList<ReviewEvent> history, DateTime at)
+    public double? ForgettingProbability(
+        KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime at)
     {
-        var difficulty = FitDifficulty(Observe(item, history));
-        var (correct, wrong) = Count(history);
-        var last = LastAnswerTime(item, history);
-        var elapsedDays = Math.Max(0, (at - last).TotalDays);
-        return 1 - RecallProbability(elapsedDays, HalfLifeDays(correct, wrong, difficulty));
+        var model = Train(userAnswers);
+        var elapsedDays = Math.Max(0, (at - LastContact(item, itemHistory)).TotalDays);
+        return 1 - model.RecallProbability(StatsOf(itemHistory), elapsedDays);
     }
 
-    internal double HalfLifeDays(int correct, int wrong, double difficulty) =>
-        Math.Pow(2, Settings.BaseLog2HalfLife
-                    + Settings.CorrectWeight * Math.Sqrt(correct)
-                    + Settings.WrongWeight * Math.Sqrt(wrong)
-                    + difficulty);
-
-    internal static double RecallProbability(double elapsedDays, double halfLifeDays) =>
-        Math.Pow(2, -elapsedDays / halfLifeDays);
-
-    /// <summary>Одно наблюдение: сколько дней прошло с прошлого ответа, что было известно до него и вспомнил ли.</summary>
-    internal sealed record Observation(double ElapsedDays, int CorrectBefore, int WrongBefore, bool Recalled);
-
-    internal static List<Observation> Observe(KnowledgeItem item, IReadOnlyList<ReviewEvent> history)
+    /// <summary>Онлайн-обучение по ответам пользователя в порядке их поступления.</summary>
+    public HalfLifeRegression Train(IReadOnlyList<UserAnswer> userAnswers)
     {
-        var result = new List<Observation>();
-        var previous = item.FirstSeenAt;
-        int correct = 0, wrong = 0;
-        foreach (var answer in Answered(history))
+        var settings = Settings;
+        var model = new HalfLifeRegression(settings.LearningRate, settings.L2, settings.InitialWeights);
+        var stats = new Dictionary<int, ItemStats>();
+        var lastContact = new Dictionary<int, DateTime>();
+
+        foreach (var answer in userAnswers.OrderBy(a => a.AnsweredAt).ThenBy(a => a.ReviewEventId))
         {
-            var elapsed = Math.Max(0, (answer.ShownAt - previous).TotalDays);
-            result.Add(new Observation(elapsed, correct, wrong, answer.WasCorrect!.Value));
-            if (answer.WasCorrect!.Value) correct++; else wrong++;
-            previous = answer.AnsweredAt ?? answer.ShownAt;
+            var before = stats.GetValueOrDefault(answer.KnowledgeItemId);
+            var previous = lastContact.TryGetValue(answer.KnowledgeItemId, out var seen) ? seen : answer.ItemFirstSeenAt;
+            var elapsedDays = Math.Max(0, (answer.ShownAt - previous).TotalDays);
+
+            model.Observe(before, elapsedDays, answer.WasCorrect);
+
+            stats[answer.KnowledgeItemId] = before.After(answer.WasCorrect);
+            lastContact[answer.KnowledgeItemId] = answer.AnsweredAt;
         }
 
-        return result;
+        return model;
     }
 
-    /// <summary>Поправка сложности с наибольшим апостериорным правдоподобием.</summary>
-    internal double FitDifficulty(IReadOnlyList<Observation> observations)
+    internal double IntervalDays(double halfLifeDays)
     {
-        if (observations.Count == 0)
-            return 0;
-
-        var bestDifficulty = 0.0;
-        var bestScore = double.NegativeInfinity;
-        for (var d = GridMin; d <= GridMax + 1e-9; d += GridStep)
-        {
-            var score = LogPosterior(observations, d);
-            if (score > bestScore)
-            {
-                bestScore = score;
-                bestDifficulty = d;
-            }
-        }
-
-        return Math.Round(bestDifficulty, 2);
+        var settings = Settings;
+        var interval = halfLifeDays * Math.Log2(1.0 / settings.TargetRetention);
+        if (settings.RoundToWholeDays)
+            interval = Math.Round(interval); // как round() в Python: половины к чётному
+        return Math.Max(settings.MinIntervalDays, Math.Min(settings.MaxIntervalDays, interval));
     }
 
-    private double LogPosterior(IReadOnlyList<Observation> observations, double difficulty)
-    {
-        var sigma = Settings.DifficultyPriorSigma;
-        var score = -(difficulty * difficulty) / (2 * sigma * sigma);
-        foreach (var o in observations)
-        {
-            // Ограничиваем p, чтобы ошибка сразу после показа не дала log(0).
-            var p = Math.Clamp(RecallProbability(o.ElapsedDays, HalfLifeDays(o.CorrectBefore, o.WrongBefore, difficulty)), 1e-3, 1 - 1e-3);
-            score += o.Recalled ? Math.Log(p) : Math.Log(1 - p);
-        }
+    private static ItemStats StatsOf(IReadOnlyList<ReviewEvent> itemHistory) =>
+        ItemStats.From(Answered(itemHistory).Select(e => e.WasCorrect!.Value));
 
-        return score;
-    }
+    private static DateTime LastContact(KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory) =>
+        Answered(itemHistory).Select(e => e.AnsweredAt ?? e.ShownAt).DefaultIfEmpty(item.FirstSeenAt).Max();
 
     private static IEnumerable<ReviewEvent> Answered(IReadOnlyList<ReviewEvent> history) =>
-        history.Where(e => e.WasCorrect is not null).OrderBy(e => e.ShownAt).ThenBy(e => e.Id);
-
-    private static (int Correct, int Wrong) Count(IReadOnlyList<ReviewEvent> history)
-    {
-        var answered = Answered(history).ToList();
-        var correct = answered.Count(e => e.WasCorrect == true);
-        return (correct, answered.Count - correct);
-    }
-
-    private static DateTime LastAnswerTime(KnowledgeItem item, IReadOnlyList<ReviewEvent> history) =>
-        Answered(history).Select(e => e.AnsweredAt ?? e.ShownAt).DefaultIfEmpty(item.FirstSeenAt).Max();
+        history.Where(e => e.WasCorrect is not null).OrderBy(e => e.AnsweredAt ?? e.ShownAt).ThenBy(e => e.Id);
 }
