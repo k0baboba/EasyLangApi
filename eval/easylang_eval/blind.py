@@ -21,6 +21,7 @@ from pathlib import Path
 
 from .dataset import Item
 from .judge import options_for
+from .metrics import wilson
 from .runner import read_jsonl
 
 CSV_NAME = "blind.csv"
@@ -87,7 +88,7 @@ class Agreement:
             return f"{k}/{self.n} ({100 * k / self.n:.0f} %)" if self.n else "—"
 
         lines = [
-            "# Согласие судьи с человеком",
+            "# Согласие судьи со слепым проверяющим",
             "",
             f"Оценено строк: {self.n}, пропущено: {self.skipped}.",
             "",
@@ -97,15 +98,25 @@ class Agreement:
             "",
             "| | судья: верно | судья: неверно |",
             "|---|---:|---:|",
-            f"| человек: верно | {self.confusion[(True, True)]} | {self.confusion[(True, False)]} |",
-            f"| человек: неверно | {self.confusion[(False, True)]} | {self.confusion[(False, False)]} |",
+            f"| проверяющий: верно | {self.confusion[(True, True)]} | {self.confusion[(True, False)]} |",
+            f"| проверяющий: неверно | {self.confusion[(False, True)]} | {self.confusion[(False, False)]} |",
             "",
-            "| Вариант | Строк | Тот же номер | То же «верно / неверно» |",
-            "|---|---:|---:|---:|",
+            "Точность вариантов на этой выборке: «слепая» — доля строк, где проверяющий выбрал правильный смысл;",
+            "«судья» — доля, где правильный смысл выбрал судья. В скобках 95 % интервал Уилсона.",
+            "",
+            "| Вариант | Строк | Слепая оценка: верно | Судья: верно | Тот же номер | То же «верно / неверно» |",
+            "|---|---:|---:|---:|---:|---:|",
         ]
-        for v, (n, ex, bi) in sorted(self.by_variant.items()):
-            lines.append(f"| {v} | {n} | {ex} | {bi} |")
+        for v, (n, ex, bi, hc, jc) in sorted(self.by_variant.items()):
+            lines.append(f"| {v} | {n} | {_acc(hc, n)} | {_acc(jc, n)} | {ex} | {bi} |")
         return "\n".join(lines) + "\n"
+
+
+def _acc(k: int, n: int) -> str:
+    if not n:
+        return "—"
+    lo, hi = wilson(k, n)
+    return f"{k} = {100 * k / n:.0f} % [{100 * lo:.0f}–{100 * hi:.0f}]"
 
 
 def cohen_kappa(pairs: list[tuple[bool, bool]]) -> float | None:
@@ -136,10 +147,12 @@ def score(blind_dir: Path) -> Agreement:
         same = human == k["judge_choice"]
         exact += same
         pairs.append((human_ok, judge_ok))
-        v = by_variant.setdefault(k["variant"], [0, 0, 0])
+        v = by_variant.setdefault(k["variant"], [0, 0, 0, 0, 0])
         v[0] += 1
         v[1] += same
         v[2] += human_ok == judge_ok
+        v[3] += human_ok
+        v[4] += judge_ok
     return Agreement(
         n=len(pairs), skipped=skipped, exact=exact, binary=sum(a == b for a, b in pairs),
         kappa=cohen_kappa(pairs), confusion=Counter(pairs),
