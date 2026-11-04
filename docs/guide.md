@@ -632,8 +632,10 @@ DueAt`. Индекс, начинающийся с `UserId`, сразу сужа�
 Через глобальные фильтры в `OnModelCreating`: EF добавляет `WHERE UserId =
 @current` к каждому запросу к `Episode` и `KnowledgeItem`, а к `Line`,
 `Lookup`, `ReviewEvent` — через навигацию (JOIN). Сломаться может:
-(а) при `IgnoreQueryFilters()`; (б) при сыром SQL (`FromSql`), к которому
-фильтры не применяются так же; (в) при записи — фильтр не мешает
+(а) при `IgnoreQueryFilters()`; (б) при SQL в обход LINQ —
+`ExecuteSql`/`ExecuteSqlRaw` или собственном соединении с базой: к ним
+фильтры не применяются (к `FromSql` EF фильтр добавляет, оборачивая
+запрос); (в) при записи — фильтр не мешает
 сохранить объект с чужим `UserId`, поэтому `EpisodeImporter` берёт `UserId`
 из `ICurrentUser`, а не из запроса.
 
