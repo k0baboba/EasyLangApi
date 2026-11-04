@@ -243,8 +243,9 @@ Step 'Запуск клиента и вход через окно входа' {
     $login = Find-Window 'EasyLangLogin' 40
     Note "  окно входа: «$($login.Current.Name)»"
     Shot 'login'
-    $password = Find-ById $login 'password'
-    $password.SetFocus()
+    # Не $password: переменные PowerShell не различают регистр, это затёрло бы параметр $Password.
+    $passwordBox = Find-ById $login 'password'
+    $passwordBox.SetFocus()
     Start-Sleep -Milliseconds 300
     $typed = [Desk]::TypeText($Password)
     Note "  пароль набран через SendInput: событий $typed из $($Password.Length * 2)"
