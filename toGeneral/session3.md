@@ -25,3 +25,7 @@ guide.md писался по prototype 028dd32. После этого в prototy
 Проверено запуском: синтаксис всех mermaid-диаграмм (парсер mermaid 11.4.1). Push всех веток.
 Не проверено: тесты и сборка (в среде нет .NET SDK); сайты Playto, Anki, Language Reactor, Migaku, Google Research
 не открывались из среды — сведения из поисковой выдачи, помечены ⚠.
+
+## 14:15 UTC — guide.md сверен с prototype
+Ветка guide: слила origin/prototype (88242a1, код не правила), обновила раздел про 5xx в DictionaryExplainer и задачу 6 (dab88bb), запушено.
+guide отличается от prototype только docs/guide.md. Дальше: работа закончена, жду новых указаний в fromGeneral.md.
