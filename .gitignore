@@ -480,3 +480,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# EasyLangApi: локальная база SQLite
+*.db
+*.db-shm
+*.db-wal

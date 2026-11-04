@@ -1,0 +1,57 @@
+1
+00:00:01,200 --> 00:00:03,400
+<i>Rain on the window. The diner is almost empty.</i>
+
+2
+00:00:04,000 --> 00:00:06,500
+MAYA: You look like you haven't slept in days.
+
+3
+00:00:06,800 --> 00:00:09,100
+LEO: I'm beat. Double shift
+at the docks again.
+
+4
+00:00:09,600 --> 00:00:12,300
+MAYA: Coffee's on the house tonight.
+Don't tell my boss.
+
+5
+00:00:12,900 --> 00:00:15,700
+LEO: Thanks. So, are you gonna
+spill the beans or what?
+
+6
+00:00:16,200 --> 00:00:18,900
+MAYA: About the guy in the grey coat?
+He's been casing the place all week.
+
+7
+00:00:19,400 --> 00:00:22,000
+LEO: Casing it? Come on,
+you're pulling my leg.
+
+8
+00:00:22,500 --> 00:00:25,600
+MAYA: No cap. He counts the register
+every time I turn around.
+
+9
+00:00:26,100 --> 00:00:28,400
+LEO: Then we call the cops
+before he makes a move.
+
+10
+00:00:28,900 --> 00:00:31,500
+MAYA: And say what? That a guy
+likes our pie a little too much?
+
+11
+00:00:32,000 --> 00:00:34,800
+LEO: Fair enough. Let's keep
+an eye on him and sleep on it.
+
+12
+00:00:35,300 --> 00:00:37,600
+MAYA: Deal. Now hit the road,
+you need some rest.

@@ -4,6 +4,27 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>EasyLangApi</RootNamespace>
   </PropertyGroup>
+
+  <!--
+    Проект лежит в корне репозитория, поэтому по умолчанию MSBuild собрал бы
+    все *.cs из подпапок. Тесты, клиент и чужие папки — отдельные проекты,
+    в основное приложение они попадать не должны.
+  -->
+  <ItemGroup>
+    <Compile Remove="tests/**;client/**;srs/**;docs/**" />
+    <Content Remove="tests/**;client/**;srs/**;docs/**" />
+    <None Remove="tests/**;client/**;srs/**;docs/**" />
+    <EmbeddedResource Remove="tests/**;client/**;srs/**;docs/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>
