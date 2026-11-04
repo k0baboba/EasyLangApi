@@ -1,0 +1,139 @@
+# Настоящий прогон eval/: словарь, LLM без контекста и LLM с контекстом на Ollama (CPU).
+# Запускается только пушем в ветку run/eval. Результаты — в ветку results (results/eval/) и в artifact.
+name: eval-live
+
+on:
+  push:
+    branches: [run/eval]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: eval-live
+  cancel-in-progress: false
+
+env:
+  EVAL_BASE_URL: http://127.0.0.1:11434/v1
+  EVAL_MODEL: qwen2.5:7b
+  EVAL_JUDGE_BASE_URL: http://127.0.0.1:11434/v1
+  EVAL_JUDGE_MODEL: llama3.1:8b
+  TARGET_SHARD_MINUTES: "240"
+  MAX_SHARDS: "12"
+  # Ответ на CPU идёт долго: таймаут запроса 15 минут, два повтора.
+  RUN_ARGS: --timeout 900 --retries 2 --workers 1
+
+jobs:
+  probe:
+    name: Проба на 5 фразах
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    permissions:
+      contents: write
+    outputs:
+      shards: ${{ steps.estimate.outputs.shards }}
+      shard_list: ${{ steps.estimate.outputs.shard_list }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Ollama и модели
+        run: bash eval/ci/start_ollama.sh
+
+      - name: Проба
+        working-directory: eval
+        run: python3 -m easylang_eval run --limit 5 --out out/probe --fresh $RUN_ARGS
+
+      - name: Оценка полного прогона
+        id: estimate
+        working-directory: eval
+        run: python3 ci/estimate.py out/probe >> "$GITHUB_OUTPUT"
+
+      - name: Окружение
+        if: always()
+        run: bash eval/ci/environment.sh eval/out/probe/environment.txt
+
+      - name: Сохранить в results
+        if: always()
+        run: bash eval/ci/save_results.sh eval/out/probe results/eval/probe "eval-live — проба, run ${{ github.run_id }}"
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: eval-probe
+          path: eval/out/probe
+
+  shard:
+    name: Часть ${{ matrix.shard }}
+    needs: probe
+    runs-on: ubuntu-24.04
+    timeout-minutes: 340
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.probe.outputs.shard_list) }}
+    env:
+      SHARDS: ${{ needs.probe.outputs.shards }}
+      DEST: results/eval/shards/${{ matrix.shard }}-of-${{ needs.probe.outputs.shards }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Ollama и модели
+        run: bash eval/ci/start_ollama.sh
+
+      - name: Продолжить сохранённое
+        run: bash eval/ci/restore_results.sh "$DEST" eval/out/shard
+
+      - name: Прогон части
+        working-directory: eval
+        # Внутренний предел 320 минут меньше лимита задачи, чтобы успели сохраниться результаты.
+        run: >
+          timeout --signal=INT 19200
+          python3 -m easylang_eval run --shard ${{ matrix.shard }}/$SHARDS --out out/shard $RUN_ARGS
+
+      - name: Окружение
+        if: always()
+        run: bash eval/ci/environment.sh eval/out/shard/environment.txt
+
+      - name: Сохранить в results
+        if: always()
+        run: bash eval/ci/save_results.sh eval/out/shard "$DEST" "eval-live — часть ${{ matrix.shard }}/$SHARDS, run ${{ github.run_id }}"
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: eval-shard-${{ matrix.shard }}
+          path: eval/out/shard
+
+  report:
+    name: Сводный отчёт
+    needs: [probe, shard]
+    if: always() && needs.probe.result == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    env:
+      SHARDS: ${{ needs.probe.outputs.shards }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Собрать части
+        run: |
+          git fetch -q origin results
+          git archive FETCH_HEAD results/eval/shards | tar -x -C /tmp
+          parts=$(ls -d /tmp/results/eval/shards/*-of-$SHARDS)
+          echo "части: $parts"
+          cd eval && python3 -m easylang_eval merge --into out/full $parts
+          cp out/full/results.md "$GITHUB_STEP_SUMMARY"
+
+      - name: Сохранить в results
+        if: always()
+        run: bash eval/ci/save_results.sh eval/out/full results/eval/full "eval-live — сводный отчёт, run ${{ github.run_id }}"
+
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: eval-full
+          path: eval/out/full

@@ -17,6 +17,7 @@ import csv
 import hashlib
 import json
 import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
@@ -166,8 +167,10 @@ def run(items: list[Item], cfg: RunConfig, fresh: bool = False, log: Callable[[s
     def do_judge(task):
         it, v = task
         text = answers[(it.id, v)]["text"]
+        start = time.monotonic()
         verdict = judge.judge(it, text)
-        rec = {"id": it.id, "variant": v, "answer_text": text, **asdict(verdict)}
+        rec = {"id": it.id, "variant": v, "answer_text": text, **asdict(verdict),
+               "elapsed_ms": int((time.monotonic() - start) * 1000)}
         jwriter.write(rec)
         judgments[(it.id, v)] = rec
         log(f"[{jcounter.next()}/{len(todo_j)}] судья {v:<11} {it.id} " + (verdict.kind if verdict.ok else f"ОШИБКА: {verdict.error}"))
