@@ -35,6 +35,30 @@ public class TesseractRecognizerTests
         Assert.Contains("hit the road", PhraseNormalizer.Normalize(lines[1].Text));
     }
 
+    [Theory]
+    [InlineData(1, "threads=1")]
+    [InlineData(null, "threads=")]
+    public async Task Thread_limit_is_passed_to_tesseract(int? limit, string expected)
+    {
+        if (OperatingSystem.IsWindows())
+            Assert.Skip("подставной tesseract — shell-скрипт");
+        // Вместо tesseract — скрипт, который печатает, сколько потоков ему разрешили.
+        var script = Path.Combine(Path.GetTempPath(), $"fake-tesseract-{Guid.NewGuid():N}.sh");
+        await File.WriteAllTextAsync(script, "#!/bin/sh\necho \"threads=$OMP_THREAD_LIMIT\"\n");
+        File.SetUnixFileMode(script, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        Environment.SetEnvironmentVariable("OMP_THREAD_LIMIT", null);
+        try
+        {
+            var recognizer = Create(new OcrOptions { TesseractPath = script, ThreadLimit = limit });
+
+            Assert.Equal(expected, await recognizer.RecognizeAsync(new MemoryStream([1, 2, 3])));
+        }
+        finally
+        {
+            File.Delete(script);
+        }
+    }
+
     [Fact]
     public async Task Missing_tesseract_is_reported_clearly()
     {

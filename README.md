@@ -213,6 +213,7 @@ Llm__ApiKey=ollama Llm__BaseUrl=http://localhost:11434/v1 Llm__Model=llama3.2 do
 | `Ocr:TesseractPath` | `tesseract` | Путь к Tesseract (по умолчанию из PATH) |
 | `Ocr:Language` | `eng` | Языки распознавания, например `eng+rus` |
 | `Ocr:PageSegmentationMode` | пусто | `--psm` Tesseract; для одного блока диалога попробуйте `6` |
+| `Ocr:ThreadLimit` | `1` | Потоки Tesseract (`OMP_THREAD_LIMIT`); пусто — без ограничения |
 
 Ключи не коммитьте: для локальной работы удобнее `dotnet user-secrets set "Llm:ApiKey" "..."`.
 
