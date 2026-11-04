@@ -1,0 +1,968 @@
+{
+ "run_dir": "out/full",
+ "n": 120,
+ "seed": 2026,
+ "pool": 446,
+ "rows": [
+  {
+   "row": 1,
+   "id": "c021",
+   "variant": "llm_context",
+   "judge_choice": 4,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 2,
+   "id": "p030",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 3,
+   "id": "s007",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 4,
+   "id": "s008",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 5,
+   "id": "s031",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 6,
+   "id": "s069",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 7,
+   "id": "c018",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 8,
+   "id": "p014",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 9,
+   "id": "s023",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 10,
+   "id": "s027",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 11,
+   "id": "s016",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 12,
+   "id": "p048",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 13,
+   "id": "s055",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 14,
+   "id": "s019",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 15,
+   "id": "s014",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 16,
+   "id": "s046",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 17,
+   "id": "s054",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 18,
+   "id": "s053",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 19,
+   "id": "s005",
+   "variant": "dictionary",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 20,
+   "id": "s050",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 21,
+   "id": "s053",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 22,
+   "id": "s021",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 23,
+   "id": "p051",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 24,
+   "id": "p017",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 25,
+   "id": "c001",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 26,
+   "id": "s026",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 27,
+   "id": "c014",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 28,
+   "id": "c019",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 29,
+   "id": "p025",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 30,
+   "id": "c017",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 31,
+   "id": "p053",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 32,
+   "id": "c002",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 33,
+   "id": "s038",
+   "variant": "dictionary",
+   "judge_choice": 2,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 34,
+   "id": "s064",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 35,
+   "id": "s037",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 36,
+   "id": "p029",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 37,
+   "id": "p012",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 38,
+   "id": "p044",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 39,
+   "id": "p019",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 40,
+   "id": "p035",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 41,
+   "id": "p037",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 42,
+   "id": "p040",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 43,
+   "id": "s049",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 44,
+   "id": "s069",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 45,
+   "id": "s030",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 46,
+   "id": "c014",
+   "variant": "dictionary",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 47,
+   "id": "s045",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 48,
+   "id": "p034",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 49,
+   "id": "c016",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 50,
+   "id": "s016",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 51,
+   "id": "s013",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 52,
+   "id": "p026",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 53,
+   "id": "s061",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 54,
+   "id": "p054",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 55,
+   "id": "c025",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 56,
+   "id": "s031",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 57,
+   "id": "s041",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 58,
+   "id": "s043",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 59,
+   "id": "s019",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 60,
+   "id": "p029",
+   "variant": "dictionary",
+   "judge_choice": 2,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 61,
+   "id": "c005",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 62,
+   "id": "s042",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 63,
+   "id": "p039",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 64,
+   "id": "p038",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 65,
+   "id": "p055",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 66,
+   "id": "p048",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 67,
+   "id": "c016",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 68,
+   "id": "p044",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 69,
+   "id": "s021",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 70,
+   "id": "s015",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 71,
+   "id": "s006",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 72,
+   "id": "c020",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 73,
+   "id": "p048",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 74,
+   "id": "s007",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 75,
+   "id": "s067",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 76,
+   "id": "s059",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 77,
+   "id": "s058",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 78,
+   "id": "s010",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 79,
+   "id": "p020",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 80,
+   "id": "s066",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 81,
+   "id": "s017",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 82,
+   "id": "s003",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 83,
+   "id": "s056",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 84,
+   "id": "s009",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 85,
+   "id": "s050",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 86,
+   "id": "s019",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 87,
+   "id": "s068",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 88,
+   "id": "c023",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 89,
+   "id": "c009",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 90,
+   "id": "s010",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 91,
+   "id": "s035",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 92,
+   "id": "s068",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 93,
+   "id": "s067",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 94,
+   "id": "p049",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 95,
+   "id": "s001",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 96,
+   "id": "s052",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 97,
+   "id": "s003",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 98,
+   "id": "p015",
+   "variant": "llm_context",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 99,
+   "id": "c022",
+   "variant": "dictionary",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 100,
+   "id": "s028",
+   "variant": "dictionary",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 101,
+   "id": "p054",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 102,
+   "id": "s038",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 103,
+   "id": "s014",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 104,
+   "id": "s057",
+   "variant": "llm_plain",
+   "judge_choice": 4,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 105,
+   "id": "s016",
+   "variant": "llm_plain",
+   "judge_choice": 4,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 106,
+   "id": "p044",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 107,
+   "id": "p028",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 108,
+   "id": "s065",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 109,
+   "id": "s069",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 110,
+   "id": "s006",
+   "variant": "llm_plain",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 111,
+   "id": "s043",
+   "variant": "dictionary",
+   "judge_choice": 2,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 112,
+   "id": "s034",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 113,
+   "id": "p050",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 114,
+   "id": "p010",
+   "variant": "llm_plain",
+   "judge_choice": 3,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 115,
+   "id": "p026",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 116,
+   "id": "p022",
+   "variant": "dictionary",
+   "judge_choice": 2,
+   "correct_choice": 1,
+   "none_choice": 4
+  },
+  {
+   "row": 117,
+   "id": "c002",
+   "variant": "llm_context",
+   "judge_choice": 2,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 118,
+   "id": "c006",
+   "variant": "llm_context",
+   "judge_choice": 3,
+   "correct_choice": 3,
+   "none_choice": 4
+  },
+  {
+   "row": 119,
+   "id": "p001",
+   "variant": "llm_plain",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  },
+  {
+   "row": 120,
+   "id": "s023",
+   "variant": "dictionary",
+   "judge_choice": 1,
+   "correct_choice": 2,
+   "none_choice": 4
+  }
+ ]
+}
