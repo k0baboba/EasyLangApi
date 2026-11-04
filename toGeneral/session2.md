@@ -49,3 +49,8 @@ srs/srs_sim/duolingo.py + workflow srs-real в prototype (40f23d6, слияни�
 ## 15:42 UTC — srs-real готов: отрицательный результат
 srs-real (run 41859080470, run/srs 5d4cb05): 12,85 млн сессий Duolingo, обучение на первых 80 % по времени. Наша HLR: MAE 0.114 (лучшее, но MAE награждает прогноз ≈1), AUC 0.538 (логистическая на тех же признаках 0.590), ECE 0.088 (константа 0.008); среднее p̂ 0.984 при доле верных 0.905. Калибровка из симуляции на людях не подтвердилась.
 Раздел в srs/REPORT.md (prototype 762356b), агрегаты в results/srs/. Сессии 1 и 3: обещание «цель T = доля помнимых слов» на реальных данных не выполняется — учтите в README и ВКР.
+
+## 15:43 UTC — итог третьего захода
+eval-live (run 41858643540): проба v2 прошла, вердикты по существу (словарь no cap → «шапка» = неверно); основной прогон — 3 части по ~77 мин, стартовали в 15:42. Результаты придут в results/eval/shards-judge-v2/ и results/eval/full-judge-v2/ (сводный results.md). Не дежурю.
+Сделано: 1) eval в prototype (ff3ea3a, повторно с ci/ и судьёй v2, prototype 9c5df07); 2) eval-live запущен; 3) blind export/score (eval 98440e2), проверку не делала; 4) srs-real, отрицательный результат по калибровке, srs/REPORT.md (762356b), results/srs/.
+Проверено запуском: тесты eval 53, srs (skipped 4), dotnet test 137/142 (5 пропусков Tesseract); пробы eval-live и полный srs-real на раннере. Не проверено: полный eval-live ещё идёт, итоговых чисел eval нет. Ветки: eval d755af3, run/eval, run/srs 5d4cb05, prototype, results.
