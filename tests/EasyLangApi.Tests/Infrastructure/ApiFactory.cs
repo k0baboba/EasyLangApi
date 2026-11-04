@@ -1,5 +1,6 @@
 using EasyLangApi.Data;
 using EasyLangApi.Explaining;
+using EasyLangApi.Recognition;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -25,6 +26,9 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     /// <summary>Заменять ли IPhraseExplainer подставным. false — проверяем настоящий выбор реализации.</summary>
     public bool UseFakeExplainer { get; init; } = true;
 
+    /// <summary>Если задан — подменяет Tesseract.</summary>
+    public ITextRecognizer? Recognizer { get; init; }
+
     public ApiFactory WithSetting(string key, string? value)
     {
         _settings[key] = value;
@@ -42,6 +46,8 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
             services.AddSingleton<TimeProvider>(Time);
             if (UseFakeExplainer)
                 services.AddScoped<IPhraseExplainer>(_ => Explainer);
+            if (Recognizer is not null)
+                services.AddSingleton(Recognizer);
         });
     }
 

@@ -3,6 +3,7 @@ using EasyLangApi.Episodes;
 using EasyLangApi.Explaining;
 using EasyLangApi.Infrastructure;
 using EasyLangApi.Lookups;
+using EasyLangApi.Recognition;
 using EasyLangApi.Review;
 using EasyLangApi.Vocabulary;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,10 @@ builder.Services.AddDbContext<AppDbContext>((sp, options) =>
                       ?? "Data Source=easylang.db"));
 
 builder.Services.AddPhraseExplainers(builder.Configuration);
+builder.Services.Configure<OcrOptions>(builder.Configuration.GetSection(OcrOptions.SectionName));
+builder.Services.AddSingleton<ITextRecognizer, TesseractRecognizer>();
+builder.Services.AddSingleton<SrtTextSource>();
+builder.Services.AddScoped<ImageTextSource>();
 builder.Services.AddScoped<EpisodeImporter>();
 builder.Services.AddScoped<LookupService>();
 builder.Services.AddScoped<ReviewService>();
@@ -33,6 +38,7 @@ await app.Services.MigrateDatabaseAsync();
 
 app.MapGet("/translate", () => "Привет");
 app.MapEpisodeEndpoints();
+app.MapRecognitionEndpoints();
 app.MapLookupEndpoints();
 app.MapVocabularyEndpoints();
 app.MapReviewEndpoints();

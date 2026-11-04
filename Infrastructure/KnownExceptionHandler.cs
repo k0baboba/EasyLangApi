@@ -1,4 +1,5 @@
 using EasyLangApi.Explaining;
+using EasyLangApi.Recognition;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace EasyLangApi.Infrastructure;
@@ -16,6 +17,8 @@ public sealed class KnownExceptionHandler(
         (int Status, string Title)? known = exception switch
         {
             ExplainerUnavailableException => (StatusCodes.Status503ServiceUnavailable, "Сервис разбора фраз недоступен"),
+            TextRecognitionUnavailableException => (StatusCodes.Status503ServiceUnavailable, "Распознавание текста недоступно"),
+            TextRecognitionFailedException => (StatusCodes.Status422UnprocessableEntity, "Не удалось распознать изображение"),
             _ => null,
         };
         if (known is null)

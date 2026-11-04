@@ -44,3 +44,33 @@ Content-Type: application/json
 {
   "wasCorrect": true
 }
+
+### 9. Распознать текст со скриншота (нужен установленный tesseract)
+POST {{host}}/recognize
+Content-Type: multipart/form-data; boundary=EasyLangBoundary
+
+--EasyLangBoundary
+Content-Disposition: form-data; name="title"
+
+Harbor Lights
+--EasyLangBoundary
+Content-Disposition: form-data; name="image"; filename="sample.png"
+Content-Type: image/png
+
+< ./sample.png
+--EasyLangBoundary--
+
+### 10. Дописать следующий скриншот в тот же эпизод (контекст продолжится)
+POST {{host}}/recognize
+Content-Type: multipart/form-data; boundary=EasyLangBoundary
+
+--EasyLangBoundary
+Content-Disposition: form-data; name="episodeId"
+
+2
+--EasyLangBoundary
+Content-Disposition: form-data; name="image"; filename="sample.png"
+Content-Type: image/png
+
+< ./sample.png
+--EasyLangBoundary--

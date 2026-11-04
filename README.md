@@ -12,6 +12,10 @@
 Нужен [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). Больше ничего:
 база — файл SQLite, создаётся при первом запуске.
 
+Для распознавания текста со скриншотов нужен ещё [Tesseract](https://tesseract-ocr.github.io/tessdoc/Installation.html)
+(`sudo apt install tesseract-ocr`, `brew install tesseract`, установщик UB Mannheim для Windows).
+Без него приложение работает, а `POST /recognize` отвечает 503 с объяснением.
+
 ```bash
 dotnet run
 ```
@@ -45,6 +49,7 @@ dotnet test tests/EasyLangApi.Tests
 | `POST` | `/episodes` | Форма `multipart/form-data`: `file` — файл `.srt`, `title` — название (необязательно). Разбирает на реплики с таймингами |
 | `GET` | `/episodes` | Список эпизодов |
 | `GET` | `/episodes/{id}/lines` | Реплики эпизода |
+| `POST` | `/recognize` | Форма: `image` — PNG/JPEG/BMP/GIF/TIFF/WebP, `title` — название игры (необязательно), `episodeId` — дописать в существующий эпизод. Распознанные абзацы сохраняются как реплики |
 | `GET` | `/lines/{id}/explain?phrase=...` | Разбор фразы с контекстом: название эпизода, говорящий, текущая реплика, две до и две после. Результат сохраняется |
 | `GET` | `/vocabulary` | Сохранённые элементы и где их видели в последний раз |
 | `GET` | `/review/next` | Следующий элемент на повторение (`204`, если повторять нечего). Каждый вызов — новый показ с `reviewId` |
@@ -52,7 +57,15 @@ dotnet test tests/EasyLangApi.Tests
 
 Ошибки возвращаются в формате [ProblemDetails](https://www.rfc-editor.org/rfc/rfc9457):
 `400` — неверный запрос, `404` — нет такой реплики/показа, `409` — на показ уже ответили,
-`503` — внешний разборщик недоступен.
+`422` — Tesseract не смог прочитать изображение, `503` — внешний разборщик или Tesseract недоступен.
+
+## Распознавание текста
+
+`ITextRecognizer` → `TesseractRecognizer` запускает командную строку `tesseract`.
+Распознанный текст попадает в тот же поток, что и субтитры: оба источника реализуют
+`ITextSource` (`SrtTextSource`, `ImageTextSource`) и сохраняются через `EpisodeImporter`.
+Поэтому `/lines/{id}/explain` для реплики со скриншота получает тот же контекст:
+название (`title`), соседние абзацы и реплики предыдущих скриншотов того же эпизода.
 
 ## Модель данных
 
@@ -84,6 +97,9 @@ dotnet test tests/EasyLangApi.Tests
 | `Llm:BaseUrl` | `https://api.openai.com/v1/` | Адрес API |
 | `Llm:Model` | `gpt-4o-mini` | Модель |
 | `Llm:ExplanationLanguage` | `Russian` | На каком языке объяснять |
+| `Ocr:TesseractPath` | `tesseract` | Путь к Tesseract (по умолчанию из PATH) |
+| `Ocr:Language` | `eng` | Языки распознавания, например `eng+rus` |
+| `Ocr:PageSegmentationMode` | пусто | `--psm` Tesseract; для одного блока диалога попробуйте `6` |
 
 Ключи не коммитьте: для локальной работы удобнее `dotnet user-secrets set "Llm:ApiKey" "..."`.
 
@@ -91,9 +107,10 @@ dotnet test tests/EasyLangApi.Tests
 
 ```
 Data/          EF Core: контекст, сущности, миграции
-Episodes/      загрузка субтитров, разбор SRT
+Episodes/      загрузка субтитров, разбор SRT, ITextSource
 Explaining/    IPhraseExplainer, словарь, языковая модель, сборщик промпта
 Lookups/       сценарий «разобрать фразу»
+Recognition/   распознавание текста (Tesseract), POST /recognize
 Vocabulary/    нормализация фраз, список словаря
 Review/        выдача на повторение и пересчёт интервала
 Infrastructure/ обработка ожидаемых ошибок

@@ -78,7 +78,7 @@ public sealed class LookupService(AppDbContext db, IPhraseExplainer explainer, T
             .ToListAsync(cancellationToken);
 
         return new PhraseContext(
-            Title: line.Episode.Title,
+            Title: string.IsNullOrWhiteSpace(line.Episode.Title) ? null : line.Episode.Title,
             Speaker: SpeakerParser.TryExtract(line.Text),
             Before: neighbours.Where(n => n.Index < line.Index).Select(n => n.Text).ToList(),
             CurrentLine: line.Text,

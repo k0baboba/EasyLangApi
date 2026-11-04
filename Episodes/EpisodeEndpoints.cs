@@ -29,6 +29,7 @@ public static class EpisodeEndpoints
     private static async Task<Results<Created<EpisodeSummary>, ProblemHttpResult>> UploadAsync(
         IFormFile? file,
         [FromForm] string? title,
+        SrtTextSource source,
         EpisodeImporter importer,
         CancellationToken cancellationToken)
     {
@@ -37,11 +38,10 @@ public static class EpisodeEndpoints
         if (file.Length > MaxUploadBytes)
             return TypedResults.Problem($"Файл больше {MaxUploadBytes / 1024 / 1024} МБ.", statusCode: 400);
 
-        string content;
-        using (var reader = new StreamReader(file.OpenReadStream(), detectEncodingFromByteOrderMarks: true))
-            content = await reader.ReadToEndAsync(cancellationToken);
+        IReadOnlyList<SourceLine> lines;
+        await using (var stream = file.OpenReadStream())
+            lines = await source.ReadLinesAsync(stream, cancellationToken);
 
-        var lines = SrtParser.Parse(content);
         if (lines.Count == 0)
             return TypedResults.Problem("В файле не найдено ни одной реплики в формате SRT.", statusCode: 400);
 

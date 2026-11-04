@@ -46,6 +46,20 @@ public static class ApiClientExtensions
         return lines.Single(l => l!["index"]!.GetValue<int>() == index)!["id"]!.GetValue<int>();
     }
 
+    public static async Task<HttpResponseMessage> RecognizeAsync(
+        this HttpClient client, byte[] image, string fileName = "screen.png", string? title = null, int? episodeId = null)
+    {
+        using var form = new MultipartFormDataContent();
+        var file = new ByteArrayContent(image);
+        file.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+        form.Add(file, "image", fileName);
+        if (title is not null)
+            form.Add(new StringContent(title), "title");
+        if (episodeId is not null)
+            form.Add(new StringContent(episodeId.Value.ToString()), "episodeId");
+        return await client.PostAsync("/recognize", form);
+    }
+
     public static Task<HttpResponseMessage> ExplainAsync(this HttpClient client, int lineId, string phrase) =>
         client.GetAsync($"/lines/{lineId}/explain?phrase={Uri.EscapeDataString(phrase)}");
 
