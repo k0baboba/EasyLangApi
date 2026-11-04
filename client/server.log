@@ -18,23 +18,10 @@ info: Microsoft.Hosting.Lifetime[0]
 warn: EasyLangApi.Auth.SigningKeyProvider[0]
       Jwt:SigningKey ?? ????? - ???????????? ????????? ????. Access-?????? ?????????? ??????????? ????? ???????????.
 info: System.Net.Http.HttpClient.DictionaryExplainer.LogicalHandler[100]
-      Start processing HTTP request GET https://api.dictionaryapi.dev/api/v2/entries/en/Are%20Are
+      Start processing HTTP request GET https://api.dictionaryapi.dev/api/v2/entries/en/spill%20the%20beans
 info: System.Net.Http.HttpClient.DictionaryExplainer.ClientHandler[100]
-      Sending HTTP request GET https://api.dictionaryapi.dev/api/v2/entries/en/Are%20Are
+      Sending HTTP request GET https://api.dictionaryapi.dev/api/v2/entries/en/spill%20the%20beans
 info: System.Net.Http.HttpClient.DictionaryExplainer.ClientHandler[101]
-      Received HTTP response headers after 440.631ms - 502
+      Received HTTP response headers after 328.2893ms - 200
 info: System.Net.Http.HttpClient.DictionaryExplainer.LogicalHandler[101]
-      End processing HTTP request after 446.9986ms - 502
-warn: EasyLangApi.Infrastructure.KnownExceptionHandler[0]
-      ?????? ??????? ???? ??????????
-      EasyLangApi.Explaining.ExplainerUnavailableException: ??????? ??????? ????? 502.
-         at EasyLangApi.Explaining.DictionaryExplainer.FetchAsync(String term, Boolean serverErrorMeansNotFound, CancellationToken cancellationToken) in D:\a\EasyLangApi\EasyLangApi\Explaining\DictionaryExplainer.cs:line 94
-         at EasyLangApi.Explaining.DictionaryExplainer.ExplainAsync(String phrase, PhraseContext context, CancellationToken cancellationToken) in D:\a\EasyLangApi\EasyLangApi\Explaining\DictionaryExplainer.cs:line 29
-         at EasyLangApi.Lookups.LookupService.ExplainAsync(Int32 lineId, String phrase, CancellationToken cancellationToken) in D:\a\EasyLangApi\EasyLangApi\Lookups\LookupService.cs:line 40
-         at EasyLangApi.Lookups.LookupEndpoints.ExplainAsync(Int32 id, String phrase, LookupService lookups, CancellationToken cancellationToken) in D:\a\EasyLangApi\EasyLangApi\Lookups\LookupEndpoints.cs:line 28
-         at Microsoft.AspNetCore.Http.RequestDelegateFactory.ExecuteTaskResult[T](Task`1 task, HttpContext httpContext)
-         at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
-         at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
-         at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
-         at Microsoft.AspNetCore.Diagnostics.StatusCodePagesMiddleware.Invoke(HttpContext context)
-         at Microsoft.AspNetCore.Diagnostics.ExceptionHandlerMiddlewareImpl.<Invoke>g__Awaited|10_0(ExceptionHandlerMiddlewareImpl middleware, HttpContext context, Task task)
+      End processing HTTP request after 333.6404ms - 200

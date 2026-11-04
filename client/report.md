@@ -36,12 +36,18 @@
 **удалось**
 
 ### Клик по словам (Shift+клик — фраза) и «Разобрать»
-  фраза в поле: «Are Are»
+  фраза в поле: «spill the beans»
   ответ в окне:
 ```
-Словарь ответил кодом 502.
+spill the beans  /spɪl ðə biːnz/
+To reveal a secret; to disclose.
+
+• (verb) To reveal a secret; to disclose.
+   «They had planned it as a surprise party, but somebody spilled the beans.»
+
+Добавлено в словарь.
 ```
   скриншот `06-explained.png` (1024x768)
-**не удалось**: ожидалась фраза «spill the beans», а в поле «Are Are»
+**удалось**
 
-Итого шагов с ошибкой: 1.
+Итого шагов с ошибкой: 0.
