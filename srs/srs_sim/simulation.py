@@ -7,7 +7,7 @@ from typing import Callable
 
 from .events import ReviewEvent
 from .learner import LearnerParams, SyntheticLearner
-from .schedulers import AdaptiveScheduler, Scheduler
+from .schedulers import Scheduler
 
 
 @dataclass(frozen=True)
@@ -105,7 +105,8 @@ def simulate(
         backlog_end=sum(1 for d in due.values() if d < final_day),
         retention_by_day=retention_by_day,
         reviews_by_day=reviews_by_day,
-        brier=scheduler.brier_score() if isinstance(scheduler, AdaptiveScheduler) else None,
+        # Прогноз есть у любого планировщика с brier_score (Python-адаптивный и мост к C#).
+        brier=scheduler.brier_score() if hasattr(scheduler, "brier_score") else None,
     )
 
 

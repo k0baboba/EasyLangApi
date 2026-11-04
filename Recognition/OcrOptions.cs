@@ -17,4 +17,12 @@ public sealed class OcrOptions
     public int? PageSegmentationMode { get; set; }
 
     public int TimeoutSeconds { get; set; } = 30;
+
+    /// <summary>
+    /// Сколько потоков OpenMP разрешить Tesseract (переменная OMP_THREAD_LIMIT). По умолчанию 1:
+    /// когда процессор занят (параллельные запросы, другие процессы), многопоточный Tesseract
+    /// замедляется на порядки — в проверке 18 с вместо 0,1 с на одной картинке.
+    /// null — не ограничивать.
+    /// </summary>
+    public int? ThreadLimit { get; set; } = 1;
 }

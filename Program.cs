@@ -36,6 +36,10 @@ builder.Services.AddScoped<LookupService>();
 builder.Services.AddOptions<ReviewOptions>()
     .Bind(builder.Configuration.GetSection(ReviewOptions.SectionName))
     .Validate(o => o.Adaptive.TargetRetention is > 0 and < 1, "Review:Adaptive:TargetRetention должен быть между 0 и 1.")
+    .Validate(o => o.Adaptive.InitialWeights is null || o.Adaptive.InitialWeights.Length == HalfLifeRegression.FeatureNames.Count,
+        $"Review:Adaptive:InitialWeights — ровно {HalfLifeRegression.FeatureNames.Count} числа.")
+    .Validate(o => o.Adaptive.MinIntervalDays > 0 && o.Adaptive.MaxIntervalDays >= o.Adaptive.MinIntervalDays,
+        "Review:Adaptive: нужно 0 < MinIntervalDays <= MaxIntervalDays.")
     .ValidateOnStart();
 builder.Services.AddSingleton<FixedIntervalScheduler>();
 builder.Services.AddSingleton<AdaptiveScheduler>();

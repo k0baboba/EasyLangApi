@@ -48,6 +48,10 @@ public sealed class TesseractRecognizer(IOptions<OcrOptions> options, ILogger<Te
             startInfo.ArgumentList.Add(psm.ToString());
         }
 
+        // Так рекомендует документация Tesseract, если несколько распознаваний идут параллельно.
+        if (settings.ThreadLimit is { } threads)
+            startInfo.Environment["OMP_THREAD_LIMIT"] = threads.ToString();
+
         using var process = new Process { StartInfo = startInfo };
         try
         {
