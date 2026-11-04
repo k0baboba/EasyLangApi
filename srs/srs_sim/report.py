@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import math
 from pathlib import Path
 from typing import Sequence
 
@@ -48,13 +49,15 @@ def render_retention_chart(summaries: Sequence[Summary], title: str) -> str:
     days = len(chosen[0].retention_by_day)
     sample = list(range(CHART_STEP_DAYS, days, CHART_STEP_DAYS)) + [days - 1]
     palette = ", ".join(CHART_COLORS[: len(chosen)])
+    values = [s.retention_by_day[d] * 100 for s in chosen for d in sample]
+    y_min = max(0, math.floor((min(values) - 2) / 10) * 10)
     out = [
         "```mermaid",
         f'%%{{init: {{"themeVariables": {{"xyChart": {{"plotColorPalette": "{palette}"}}}}}}}}%%',
         "xychart-beta",
         f'    title "{title}"',
         f"    x-axis \"день\" [{', '.join(str(d) for d in sample)}]",
-        '    y-axis "средняя p вспомнить, %" 0 --> 100',
+        f'    y-axis "средняя p вспомнить, %" {y_min} --> 100',
     ]
     for s in chosen:
         out.append(f"    line [{', '.join(f'{s.retention_by_day[d] * 100:.1f}' for d in sample)}]")
@@ -63,6 +66,22 @@ def render_retention_chart(summaries: Sequence[Summary], title: str) -> str:
         f"{color} — `{s.scheduler}`" for color, s in zip(CHART_COLORS, chosen)
     )
     return "\n".join(out) + f"\n\nЛинии (mermaid не рисует легенду): {legend}."
+
+
+def render_efficiency_chart(summaries: Sequence[Summary], title: str) -> str:
+    names = ", ".join(f'"{s.scheduler}"' for s in summaries)
+    values = [s.known_per_100.mean for s in summaries]
+    top = math.ceil(max(values) + 0.5)
+    return "\n".join([
+        "```mermaid",
+        f'%%{{init: {{"themeVariables": {{"xyChart": {{"plotColorPalette": "{CHART_COLORS[0]}"}}}}}}}}%%',
+        "xychart-beta",
+        f'    title "{title}"',
+        f"    x-axis [{names}]",
+        f'    y-axis "слов с p ≥ 0.9 на 100 повторений" 0 --> {top}',
+        f"    bar [{', '.join(f'{v:.2f}' for v in values)}]",
+        "```",
+    ])
 
 
 def render_auto(results: dict[str, list[Summary]], scenarios: Sequence[Scenario], seed_list: list[int]) -> str:
@@ -83,6 +102,8 @@ def render_auto(results: dict[str, list[Summary]], scenarios: Sequence[Scenario]
             render_table(summaries),
             "",
             render_retention_chart(summaries, f"{sc.title}: средняя вероятность вспомнить"),
+            "",
+            render_efficiency_chart(summaries, f"{sc.title}: эффективность"),
         ]
     parts += ["", AUTO_END]
     return "\n".join(parts)

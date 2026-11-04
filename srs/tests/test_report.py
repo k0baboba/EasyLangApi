@@ -44,7 +44,8 @@ class ReportTests(unittest.TestCase):
     def test_contains_markers_tables_and_charts(self):
         self.assertTrue(self.auto.startswith(AUTO_BEGIN))
         self.assertTrue(self.auto.endswith(AUTO_END))
-        self.assertEqual(self.auto.count("xychart-beta"), len(SCENARIOS))
+        self.assertEqual(self.auto.count("xychart-beta"), 2 * len(SCENARIOS))
+        self.assertEqual(self.auto.count("    bar ["), len(SCENARIOS))
         for name, _ in FACTORIES:
             self.assertEqual(self.auto.count(f"| `{name}` |"), len(SCENARIOS))
 
