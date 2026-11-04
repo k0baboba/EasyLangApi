@@ -1,6 +1,7 @@
 using System.Net;
 using EasyLangApi.Explaining;
 using EasyLangApi.Tests.Infrastructure;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace EasyLangApi.Tests.Unit;
 
@@ -16,7 +17,9 @@ public class DictionaryExplainerTests
     private static (DictionaryExplainer Explainer, StubHttpHandler Handler) Create(Func<HttpRequestMessage, HttpResponseMessage> respond)
     {
         var handler = new StubHttpHandler(respond);
-        return (new DictionaryExplainer(handler.CreateClient("https://dict.test/entries/en/")), handler);
+        var explainer = new DictionaryExplainer(
+            handler.CreateClient("https://dict.test/entries/en/"), NullLogger<DictionaryExplainer>.Instance);
+        return (explainer, handler);
     }
 
     [Fact]
@@ -64,8 +67,50 @@ public class DictionaryExplainerTests
         Assert.EndsWith("/dead%20beat", handler.Requests[0].RequestUri!.AbsoluteUri);
     }
 
+    [Theory]
+    [InlineData(HttpStatusCode.InternalServerError)]
+    [InlineData(HttpStatusCode.BadGateway)]
+    [InlineData(HttpStatusCode.ServiceUnavailable)]
+    public async Task Server_error_on_multiword_phrase_falls_back_to_separate_words(HttpStatusCode phraseStatus)
+    {
+        var (explainer, handler) = Create(request => request.RequestUri!.AbsolutePath switch
+        {
+            var path when path.EndsWith("/dead%20beat") => new HttpResponseMessage(phraseStatus),
+            var path when path.EndsWith("/beat") => StubHttpHandler.Json(BeatJson),
+            _ => StubHttpHandler.Json("""{"title":"No Definitions Found"}""", HttpStatusCode.NotFound),
+        });
+
+        var result = await explainer.ExplainAsync("dead beat", PhraseContext.Empty);
+
+        // Как при 404: фраза целиком не найдена, но значения слов есть
+        Assert.False(result.Found);
+        Assert.Null(result.Summary);
+        Assert.NotEmpty(result.Senses);
+        Assert.All(result.Senses, s => Assert.Equal("beat", s.Word));
+        Assert.Equal(3, handler.Requests.Count);
+    }
+
     [Fact]
-    public async Task Server_error_becomes_unavailable()
+    public async Task Server_error_on_phrase_and_on_words_is_unavailable()
+    {
+        var (explainer, _) = Create(_ => new HttpResponseMessage(HttpStatusCode.ServiceUnavailable));
+
+        await Assert.ThrowsAsync<ExplainerUnavailableException>(
+            () => explainer.ExplainAsync("dead beat", PhraseContext.Empty));
+    }
+
+    [Fact]
+    public async Task Client_error_other_than_404_on_multiword_phrase_is_still_unavailable()
+    {
+        var (explainer, handler) = Create(_ => new HttpResponseMessage(HttpStatusCode.TooManyRequests));
+
+        await Assert.ThrowsAsync<ExplainerUnavailableException>(
+            () => explainer.ExplainAsync("dead beat", PhraseContext.Empty));
+        Assert.Single(handler.Requests); // к словам не переходили
+    }
+
+    [Fact]
+    public async Task Server_error_on_single_word_is_unavailable()
     {
         var (explainer, _) = Create(_ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
 
