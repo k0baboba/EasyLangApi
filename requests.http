@@ -1,0 +1,46 @@
+# Запросы для проверки потока вручную.
+# Rider / Visual Studio / VS Code (расширение REST Client): запускайте по порядку сверху вниз.
+# Сначала: dotnet run
+
+@host = http://localhost:5057
+
+### 1. Загрузить субтитры (sample.srt из корня репозитория)
+POST {{host}}/episodes
+Content-Type: multipart/form-data; boundary=EasyLangBoundary
+
+--EasyLangBoundary
+Content-Disposition: form-data; name="title"
+
+Night Shift S01E01
+--EasyLangBoundary
+Content-Disposition: form-data; name="file"; filename="sample.srt"
+Content-Type: application/x-subrip
+
+< ./sample.srt
+--EasyLangBoundary--
+
+### 2. Список эпизодов
+GET {{host}}/episodes
+
+### 3. Реплики эпизода — отсюда берём id реплики
+GET {{host}}/episodes/1/lines
+
+### 4. Разобрать фразу в контексте реплики 3 ("LEO: I'm beat. Double shift at the docks again.")
+GET {{host}}/lines/3/explain?phrase=beat
+
+### 5. Выражение из нескольких слов (реплика 5)
+GET {{host}}/lines/5/explain?phrase=spill the beans
+
+### 6. Словарь
+GET {{host}}/vocabulary
+
+### 7. Следующий элемент на повторение. Запомните reviewId из ответа.
+GET {{host}}/review/next
+
+### 8. Ответ на показ: помнил (true) / не помнил (false)
+POST {{host}}/review/1
+Content-Type: application/json
+
+{
+  "wasCorrect": true
+}
