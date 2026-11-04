@@ -63,7 +63,9 @@ def chat(http: HttpClient, cfg: LlmConfig, messages: list[dict], temperature: fl
         body["seed"] = cfg.seed
     url = join_url(cfg.base_url, "chat/completions")
     try:
-        resp = http.request("POST", url, body, {"Authorization": f"Bearer {cfg.api_key}"})
+        # Ollama ключ не проверяет, поэтому без ключа заголовок просто не отправляем.
+        headers = {"Authorization": f"Bearer {cfg.api_key}"} if cfg.api_key else {}
+        resp = http.request("POST", url, body, headers)
     except ServiceError as e:
         raise ServiceError(_describe(e), e.status, e.body) from None
     if resp.status == 404:
