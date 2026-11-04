@@ -7,11 +7,21 @@ namespace EasyLangApi.Tests.Unit;
 
 /// <summary>
 /// Перекрёстная проверка порта модели: те же входы, что у Python-версии из srs/,
-/// должны давать те же веса, вероятности и интервалы.
+/// должны давать те же веса, вероятности и интервалы — бит в бит, без допуска.
+/// (Эталоны получены на Python 3.13 с glibc; Math.Pow и Math.Log2 в .NET на Linux — те же функции libm.)
 /// </summary>
 public class HalfLifeRegressionTests
 {
-    private const double Tolerance = 1e-12;
+
+    [Theory]
+    // Ожидаемое — sum(w * xi for w, xi in zip(...)) в Python 3.13; наивная сумма дала бы
+    // 0.6000000000000001 и 1.0 соответственно.
+    [InlineData(new[] { 0.1, 0.2, 0.3, 0.0 }, 0.6)]
+    [InlineData(new[] { 1e16, 1.0, -1e16, 1.0 }, 2.0)]
+    public void Dot_product_matches_python_compensated_sum(double[] weights, double expected)
+    {
+        Assert.Equal(expected, HalfLifeRegression.DotProduct(weights, [1.0, 1.0, 1.0, 1.0]));
+    }
 
     [Fact]
     public void Model_matches_python_on_explicit_sequence()
@@ -35,12 +45,12 @@ public class HalfLifeRegressionTests
 
         double[] expectedWeights = [0.09573691513848234, 0.08408860700697711, 0.054034571139350444, 0.022479410051635174];
         for (var i = 0; i < expectedWeights.Length; i++)
-            Assert.Equal(expectedWeights[i], model.Weights[i], Tolerance);
-        Assert.Equal(1.2638272935954276, model.HalfLifeDays(stats[1]), Tolerance);
-        Assert.Equal(1.2272398424634008, model.HalfLifeDays(stats[2]), Tolerance);
-        Assert.Equal(1.2236323421779682, model.HalfLifeDays(stats[3]), Tolerance);
-        Assert.Equal(1.194444237526481, model.HalfLifeDays(stats[4]), Tolerance);
-        Assert.Equal(1.0686111052291036, model.HalfLifeDays(default), Tolerance);
+            Assert.Equal(expectedWeights[i], model.Weights[i]);
+        Assert.Equal(1.2638272935954276, model.HalfLifeDays(stats[1]));
+        Assert.Equal(1.2272398424634008, model.HalfLifeDays(stats[2]));
+        Assert.Equal(1.2236323421779682, model.HalfLifeDays(stats[3]));
+        Assert.Equal(1.194444237526481, model.HalfLifeDays(stats[4]));
+        Assert.Equal(1.0686111052291036, model.HalfLifeDays(default));
     }
 
     [Fact]
@@ -75,8 +85,8 @@ public class HalfLifeRegressionTests
             // Python показал элемент именно тогда, когда его назначил C#: расписания совпадают.
             Assert.Equal(due[review.Item], at);
 
-            var recall = 1 - scheduler.ForgettingProbability(item, history, answers, at)!.Value;
-            Assert.True(Math.Abs(review.Recall - recall) < Tolerance, $"шаг {step}: p {recall} вместо {review.Recall}");
+            var forgetting = scheduler.ForgettingProbability(item, history, answers, at)!.Value;
+            Assert.True(review.Forgetting == forgetting, $"шаг {step}: p забыть {forgetting:R} вместо {review.Forgetting:R}");
 
             var shown = new ReviewEvent
             {
@@ -92,10 +102,10 @@ public class HalfLifeRegressionTests
 
         var weights = scheduler.Train(answers).Weights;
         for (var i = 0; i < golden.Weights.Count; i++)
-            Assert.Equal(golden.Weights[i], weights[i], Tolerance);
+            Assert.Equal(golden.Weights[i], weights[i]);
     }
 
     private sealed record Golden(double Target, int Days, int Items, List<double> Weights, List<GoldenReview> Reviews);
 
-    private sealed record GoldenReview(int Day, int Item, bool Correct, double Recall, int Interval);
+    private sealed record GoldenReview(int Day, int Item, bool Correct, double Forgetting, int Interval);
 }

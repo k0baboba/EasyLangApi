@@ -41,13 +41,14 @@ def run() -> dict:
         for _, item in sorted((d, i) for i, d in due.items() if d <= day):
             ok = answer(item, len(hist[item]))
             ev = ReviewEvent(item, day, day - last[item], ok)
-            p_recall = s.recall_probability(hist[item], ev.elapsed_days)
+            # Сравниваем вероятность забывания: её отдаёт API приложения (forgettingProbability).
+            forgetting = s.forgetting_probability(hist[item], ev.elapsed_days)
             s.observe(hist[item], ev)
             hist[item].append(ev)
             last[item] = day
             interval = s.next_interval(hist[item])
             due[item] = day + interval
-            reviews.append({"day": day, "item": item, "correct": ok, "recall": p_recall, "interval": interval})
+            reviews.append({"day": day, "item": item, "correct": ok, "forgetting": forgetting, "interval": interval})
     return {
         "target": TARGET,
         "days": DAYS,

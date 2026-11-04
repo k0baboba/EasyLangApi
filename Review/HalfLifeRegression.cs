@@ -60,12 +60,30 @@ public sealed class HalfLifeRegression
     public double HalfLifeDays(ItemStats stats)
     {
         var x = Features(stats);
-        var log2HalfLife = 0.0;
-        for (var i = 0; i < x.Length; i++)
-            log2HalfLife += _weights[i] * x[i];
+        var log2HalfLife = DotProduct(_weights, x);
         // Ограничиваем, чтобы ранний шум в весах не дал h = 0 или бесконечность.
         log2HalfLife = Math.Max(MinLog2HalfLife, Math.Min(log2HalfLife, MaxLog2HalfLife));
         return Math.Pow(2.0, log2HalfLife);
+    }
+
+    /// <summary>
+    /// θ · x так же, как sum(w * xi for ...) в Python 3.12+: там sum() складывает float
+    /// с компенсацией ошибок округления (алгоритм Неймайера). Наивная сумма расходилась бы
+    /// с Python в последнем бите, и решения планировщиков со временем могли бы разойтись.
+    /// </summary>
+    internal static double DotProduct(double[] weights, double[] x)
+    {
+        var sum = weights[0] * x[0];
+        var compensation = 0.0;
+        for (var i = 1; i < x.Length; i++)
+        {
+            var term = weights[i] * x[i];
+            var next = sum + term;
+            compensation += Math.Abs(sum) >= Math.Abs(term) ? (sum - next) + term : (term - next) + sum;
+            sum = next;
+        }
+
+        return compensation != 0 && double.IsFinite(compensation) ? sum + compensation : sum;
     }
 
     public double RecallProbability(ItemStats stats, double elapsedDays) =>

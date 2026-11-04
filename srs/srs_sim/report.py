@@ -115,13 +115,13 @@ TEMPLATE = """# Отчёт
 """
 
 
-def update_report(path: Path, auto: str) -> None:
-    """Заменить автоматическую часть отчёта, сохранив текст вокруг неё."""
+def update_report(path: Path, auto: str, begin: str = AUTO_BEGIN, end_marker: str = AUTO_END) -> None:
+    """Заменить автоматическую часть отчёта (между маркерами), сохранив текст вокруг неё."""
     if path.exists():
         text = path.read_text(encoding="utf-8")
-        start, end = text.find(AUTO_BEGIN), text.find(AUTO_END)
+        start, end = text.find(begin), text.find(end_marker)
         if start != -1 and end != -1 and start < end:
-            text = text[:start] + auto + text[end + len(AUTO_END):]
+            text = text[:start] + auto + text[end + len(end_marker):]
         else:
             text = text.rstrip("\n") + "\n\n" + auto + "\n"
     else:
