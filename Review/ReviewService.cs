@@ -3,6 +3,7 @@ using EasyLangApi.Data;
 using EasyLangApi.Explaining;
 using EasyLangApi.Lookups;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EasyLangApi.Review;
 
@@ -36,17 +37,20 @@ public sealed record AnswerOutcome(AnswerStatus Status, ReviewAnswer? Answer = n
 /// ответ дописывается в неё же. Так в истории видно и показы без ответа.
 /// </summary>
 public sealed class ReviewService(
-    AppDbContext db, IReviewScheduler scheduler, ExampleLineFinder examples, TimeProvider time)
+    AppDbContext db, IReviewScheduler scheduler, ExampleLineFinder examples, IOptions<ReviewOptions> options, TimeProvider time)
 {
     /// <returns>null, если повторять сейчас нечего.</returns>
     public async Task<ReviewCard?> NextAsync(CancellationToken cancellationToken)
     {
         var now = time.GetUtcNow().UtcDateTime;
-        var item = await db.KnowledgeItems
-            .Where(k => k.DueAt <= now)
-            .OrderBy(k => k.DueAt)
-            .ThenBy(k => k.Id)
-            .FirstOrDefaultAsync(cancellationToken);
+        var userAnswers = await LoadUserAnswersAsync(cancellationToken);
+        var estimator = options.Value.EffectiveQueueOrder == QueueOrder.ForgettingProbability
+            ? scheduler.CreateEstimator(userAnswers)
+            : null;
+
+        var item = estimator is null
+            ? await MostOverdueAsync(now, cancellationToken)
+            : await MostAtRiskAsync(estimator, now, cancellationToken);
         if (item is null)
             return null;
 
@@ -68,8 +72,9 @@ public sealed class ReviewService(
                    ?? new SelectedLine(lookup.LineId, lookup.LineText, lookup.EpisodeTitle, []);
 
         var history = await LoadHistoryAsync(item.Id, cancellationToken);
-        var userAnswers = await LoadUserAnswersAsync(cancellationToken);
-        var forgetting = scheduler.ForgettingProbability(item, history, userAnswers, now);
+        var forgetting = estimator is not null
+            ? estimator.ForgettingProbability(item, history, now)
+            : scheduler.ForgettingProbability(item, history, userAnswers, now);
 
         var shown = new ReviewEvent { KnowledgeItemId = item.Id, ShownAt = now };
         db.ReviewEvents.Add(shown);
@@ -119,6 +124,43 @@ public sealed class ReviewService(
         return new AnswerOutcome(
             AnswerStatus.Accepted,
             new ReviewAnswer(shown.Id, item.Id, wasCorrect, item.IntervalDays, item.DueAt));
+    }
+
+    /// <summary>Очередь по дате: самый просроченный элемент, при равенстве — меньший id.</summary>
+    private Task<KnowledgeItem?> MostOverdueAsync(DateTime now, CancellationToken cancellationToken) =>
+        db.KnowledgeItems
+            .Where(k => k.DueAt <= now)
+            .OrderBy(k => k.DueAt)
+            .ThenBy(k => k.Id)
+            .FirstOrDefaultAsync(cancellationToken);
+
+    /// <summary>
+    /// Очередь по риску: среди элементов со сроком — тот, что вероятнее всего забыт сейчас; при равенстве —
+    /// как в очереди по дате. В отличие от симуляции srs/ (порядок на день считается один раз утром),
+    /// здесь выбор пересчитывается на каждый запрос с моделью, обученной на всех ответах к этому моменту.
+    /// </summary>
+    private async Task<KnowledgeItem?> MostAtRiskAsync(
+        IForgettingEstimator estimator, DateTime now, CancellationToken cancellationToken)
+    {
+        var due = await db.KnowledgeItems.Where(k => k.DueAt <= now).ToListAsync(cancellationToken);
+        if (due.Count == 0)
+            return null;
+
+        var ids = due.Select(k => k.Id).ToList();
+        var histories = (await db.ReviewEvents
+                .Where(e => ids.Contains(e.KnowledgeItemId))
+                .OrderBy(e => e.ShownAt)
+                .ThenBy(e => e.Id)
+                .ToListAsync(cancellationToken))
+            .ToLookup(e => e.KnowledgeItemId);
+
+        return due
+            .Select(k => (Item: k, Risk: estimator.ForgettingProbability(k, histories[k.Id].ToList(), now)))
+            .OrderByDescending(x => x.Risk)
+            .ThenBy(x => x.Item.DueAt)
+            .ThenBy(x => x.Item.Id)
+            .First()
+            .Item;
     }
 
     /// <summary>Все ответы текущего пользователя (фильтр по владельцу добавит EF) — на них учится адаптивная модель.</summary>

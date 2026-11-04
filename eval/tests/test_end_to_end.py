@@ -161,6 +161,24 @@ class MockRunTests(unittest.TestCase):
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             self.assertEqual(cli.main(["report", "--out", str(out)]), 0)
 
+    def test_shards_merge_into_same_report_as_single_run(self):
+        base, _ = self.start()
+        common = ["run", "--base-url", f"{base}/v1", "--model", "m", "--limit", "9",
+                  "--dictionary-url", f"{base}/api/v2/entries/en/", "--retries", "0"]
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+            for i in range(3):
+                self.assertEqual(cli.main(common[:-4] + ["--shard", f"{i}/3", "--limit", "3"] + common[-4:]
+                                          + ["--out", str(self.tmp / f"part{i}")]), 0)
+            self.assertEqual(cli.main(["merge", "--into", str(self.tmp / "all")]
+                                      + [str(self.tmp / f"part{i}") for i in range(3)]), 0)
+        merged = read_jsonl(self.tmp / "all" / "judgments.jsonl")
+        self.assertEqual(len(merged), 9 * 3)
+        self.assertEqual({k[0] for k in merged}, {it.id for it in ITEMS[:9]})
+
+    def test_bad_shard_value(self):
+        with redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            cli.main(["run", "--base-url", "http://x/v1", "--model", "m", "--shard", "3/3"])
+
     def test_cli_requires_model(self):
         with redirect_stderr(io.StringIO()) as err:
             self.assertEqual(cli.main(["run", "--base-url", "http://x/v1"]), 2)

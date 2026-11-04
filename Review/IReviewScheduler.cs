@@ -19,4 +19,15 @@ public interface IReviewScheduler
     /// <summary>Вероятность, что к моменту <paramref name="at"/> элемент забыт; null — модель этого не умеет.</summary>
     double? ForgettingProbability(
         KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, IReadOnlyList<UserAnswer> userAnswers, DateTime at);
+
+    /// <summary>
+    /// Оценщик вероятности забыть, обученный один раз на ответах пользователя, — чтобы оценить
+    /// сразу много элементов (порядок очереди). null — модель вероятностей не умеет.
+    /// </summary>
+    IForgettingEstimator? CreateEstimator(IReadOnlyList<UserAnswer> userAnswers);
+}
+
+public interface IForgettingEstimator
+{
+    double ForgettingProbability(KnowledgeItem item, IReadOnlyList<ReviewEvent> itemHistory, DateTime at);
 }

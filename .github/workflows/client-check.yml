@@ -1,0 +1,91 @@
+name: client-check
+
+# Проверка десктопного клиента на windows-latest: сервер, клиент, хоткей через SendInput,
+# выбор области мышью, окно результата. Запускается только пушем в ветку run/client.
+# Скриншоты и отчёт — в artifact client-check и в ветку results (папка client/).
+on:
+  push:
+    branches: ["run/client"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: client-check
+  cancel-in-progress: false
+
+jobs:
+  client:
+    name: Клиент на Windows
+    runs-on: windows-latest
+    timeout-minutes: 40
+    env:
+      OUT: out/client
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Tesseract (Chocolatey)
+        shell: pwsh
+        run: |
+          choco install tesseract --no-progress -y
+          & 'C:\Program Files\Tesseract-OCR\tesseract.exe' --version
+
+      - name: Собрать сервер и клиент
+        shell: pwsh
+        run: |
+          dotnet build EasyLangApi.csproj -c Release
+          dotnet build client/EasyLangClient -c Release
+
+      # Всё в одном шаге: на Windows-раннере процессы, запущенные в шаге, не переживают его конец
+      # (первый запуск: сервер был здоров, а следующий шаг получил «connection refused»).
+      - name: Сервер, тестовый пользователь, проверка клиента
+        shell: pwsh
+        timeout-minutes: 15
+        run: |
+          New-Item -ItemType Directory -Force -Path $env:OUT | Out-Null
+          $env:Ocr__TesseractPath = 'C:\Program Files\Tesseract-OCR\tesseract.exe'
+          $env:ASPNETCORE_URLS = 'http://localhost:5057'
+          $server = Start-Process dotnet -ArgumentList 'bin/Release/net10.0/EasyLangApi.dll' -PassThru `
+            -RedirectStandardOutput "$env:OUT/server.log" -RedirectStandardError "$env:OUT/server.err.log"
+          for ($i = 0; $i -lt 60; $i++) {
+            try { Invoke-RestMethod http://localhost:5057/health; break } catch { Start-Sleep 2 }
+          }
+
+          $password = [Convert]::ToHexString([Security.Cryptography.RandomNumberGenerator]::GetBytes(16)).ToLower()
+          Write-Host "::add-mask::$password"
+          $email = 'client-check@example.com'
+          Invoke-RestMethod -Method Post -Uri http://localhost:5057/auth/register -ContentType 'application/json' `
+            -Body (@{ email = $email; password = $password } | ConvertTo-Json) | Out-Null
+          $settings = 'client/EasyLangClient/bin/Release/net10.0-windows/settings.json'
+          $s = Get-Content $settings -Raw | ConvertFrom-Json
+          $s.email = $email
+          $s | ConvertTo-Json | Set-Content $settings
+
+          $exe = (Resolve-Path 'client/EasyLangClient/bin/Release/net10.0-windows/EasyLangClient.exe').Path
+          try {
+            # Проверка клиента — в Windows PowerShell 5.1 (см. комментарий в начале скрипта).
+            powershell -NoProfile -ExecutionPolicy Bypass -File tools/client-check.ps1 `
+              -ClientExe $exe -Password $password -OutDir (Resolve-Path $env:OUT).Path
+            $code = $LASTEXITCODE
+          } finally {
+            Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue
+          }
+          exit $code
+
+      - name: Artifact
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: client-check
+          path: out/client
+
+      - name: В ветку results
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash tools/push-results.sh client "$OUT"

@@ -17,6 +17,9 @@ class SimConfig:
     new_items_per_day: int = 10     # сколько новых слов в день пользователь разбирает в игре
     daily_budget: int | None = None  # максимум повторений в день; None — без ограничения
     recall_threshold: float = 0.9   # «знает слово», если истинная вероятность вспомнить не ниже
+    # Порядок очереди дня: "due" — сначала самые просроченные; "forgetting" — сначала те, что
+    # планировщик считает вероятнее всего забытыми (нужен forgetting_many; иначе — как "due").
+    queue_order: str = "due"
 
 
 @dataclass
@@ -62,8 +65,9 @@ def simulate(
         # 1. Замер знаний на начало дня (до повторений и новых слов).
         retention_by_day.append(_mean_recall(learner, day))
 
-        # 2. Повторения: сначала самые просроченные, при равенстве — по id.
-        queue = sorted((d, i) for i, d in due.items() if d <= day)
+        # 2. Повторения. Очередь — все элементы со сроком <= сегодня, порядок задаёт queue_order.
+        queue = order_queue(scheduler, config.queue_order, day,
+                            [(d, i) for i, d in due.items() if d <= day], history, last_contact)
         if config.daily_budget is not None:
             queue = queue[: config.daily_budget]
         for _, item in queue:
@@ -108,6 +112,25 @@ def simulate(
         # Прогноз есть у любого планировщика с brier_score (Python-адаптивный и мост к C#).
         brier=scheduler.brier_score() if hasattr(scheduler, "brier_score") else None,
     )
+
+
+def order_queue(scheduler: Scheduler, queue_order: str, day: int, due_today: list[tuple[int, int]],
+                history: dict[int, list[ReviewEvent]], last_contact: dict[int, int]) -> list[tuple[int, int]]:
+    """Порядок показа на день. Порядок считается один раз в начале дня.
+
+    "due": сначала самые просроченные, при равенстве — по id.
+    "forgetting": сначала с наибольшей предсказанной вероятностью забыть, при равенстве — как "due".
+    """
+    if queue_order == "due" or not hasattr(scheduler, "forgetting_many"):
+        if queue_order not in ("due", "forgetting"):
+            raise ValueError(f"unknown queue_order {queue_order!r}")
+        return sorted(due_today)
+    if queue_order != "forgetting":
+        raise ValueError(f"unknown queue_order {queue_order!r}")
+    entries = [(i, history[i], day - last_contact[i]) for _, i in due_today]
+    probabilities = scheduler.forgetting_many(day, entries)
+    ranked = sorted(zip(probabilities, due_today), key=lambda t: (-t[0], t[1]))
+    return [entry for _, entry in ranked]
 
 
 def _mean_recall(learner: SyntheticLearner, day: int) -> float:

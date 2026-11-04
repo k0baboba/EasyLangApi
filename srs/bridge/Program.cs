@@ -3,6 +3,8 @@
 //   {"op":"new"}                                                   → {"interval":1}
 //   {"op":"review","item":3,"day":10,"elapsed":4,"correct":true}   → {"interval":5,"forgetting":0.39}
 //   {"op":"weights"}                                               → {"weights":[...]} — текущие веса модели
+//   {"op":"forgetting_many","day":12,"items":[{"item":3,"elapsed":4},...]} → {"forgetting":[...]}
+//     — вероятности забыть для очереди дня одним обученным оценщиком (как ReviewService при QueueOrder)
 // "new" — интервал до первого показа нового элемента (история пуста).
 // "review" — ответ на показ: forgetting — прогноз вероятности забыть до ответа, interval — решение после.
 // Решения принимает EasyLangApi.Review.AdaptiveScheduler — тот же код, что в приложении:
@@ -77,6 +79,27 @@ while (await input.ReadLineAsync() is { } line)
 
             var schedule = Require(scheduler).Schedule(item, history, answers, at);
             response = new JsonObject { ["interval"] = schedule.IntervalDays, ["forgetting"] = forgetting };
+            break;
+        }
+
+        case "forgetting_many":
+        {
+            var at = start.AddDays(request["day"]!.GetValue<int>());
+            var estimator = Require(scheduler).CreateEstimator(answers);
+            var values = new JsonArray();
+            foreach (var entry in request["items"]!.AsArray())
+            {
+                var itemId = entry!["item"]!.GetValue<int>();
+                var elapsed = entry["elapsed"]!.GetValue<int>();
+                // Элемент без ответов мост ещё не видел: знакомство было elapsed дней назад.
+                var item = items.TryGetValue(itemId, out var known)
+                    ? known
+                    : new KnowledgeItem { Id = itemId + 1, FirstSeenAt = at.AddDays(-elapsed) };
+                var history = histories.TryGetValue(itemId, out var h) ? h : [];
+                values.Add(estimator.ForgettingProbability(item, history, at));
+            }
+
+            response = new JsonObject { ["forgetting"] = values };
             break;
         }
 
