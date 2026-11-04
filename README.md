@@ -42,6 +42,30 @@ curl -H "$AUTH" -H "Content-Type: application/json" -d '{"wasCorrect":true}' $H/
 
 Если пользователь уже есть, вместо `/auth/register` — `/auth/login` с тем же телом.
 
+## Docker
+
+```bash
+cp .env.example .env        # задайте JWT_SIGNING_KEY
+docker compose up --build   # http://localhost:8080
+```
+
+Образ содержит Tesseract, база лежит в томе `easylang-data`. С локальной языковой моделью:
+
+```bash
+docker compose --profile llm up --build
+docker compose exec ollama ollama pull llama3.2
+```
+
+и в `.env`: `LLM_API_KEY=ollama`, `LLM_BASE_URL=http://ollama:11434/v1`, `LLM_MODEL=llama3.2`.
+
+Проверка живости — `GET /health`.
+
+## CI
+
+[.github/workflows/ci.yml](.github/workflows/ci.yml): сборка, тесты (с установленным Tesseract,
+результаты — артефакт `test-results`), сборка Docker-образа и проверка, что контейнер поднимается
+и распознаёт `sample.png`.
+
 ## Тесты
 
 ```bash
@@ -60,6 +84,7 @@ dotnet test tests/EasyLangApi.Tests
 | `POST` | `/auth/refresh` | `{"refreshToken"}` → новая пара, старый refresh-токен отзывается |
 | `POST` | `/auth/logout` | `{"refreshToken"}` — отозвать |
 | `GET` | `/auth/me` | Текущий пользователь |
+| `GET` | `/health` | Проверка живости, без токена |
 | `POST` | `/episodes` | Форма `multipart/form-data`: `file` — файл `.srt`, `title` — название (необязательно). Разбирает на реплики с таймингами |
 | `GET` | `/episodes` | Список эпизодов |
 | `GET` | `/episodes/{id}/lines` | Реплики эпизода |

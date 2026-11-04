@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<KnownExceptionHandler>();
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddHealthChecks();
 
 // Строку подключения читаем при создании контекста, а не при старте:
 // так её можно подменить в тестах через конфигурацию.
@@ -58,6 +59,7 @@ app.UseRateLimiter();
 
 await app.Services.MigrateDatabaseAsync();
 
+app.MapHealthChecks("/health").AllowAnonymous();
 app.MapGet("/translate", () => "Привет").AllowAnonymous();
 app.MapAuthEndpoints();
 app.MapEpisodeEndpoints();

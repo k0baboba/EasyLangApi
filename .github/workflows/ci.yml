@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Сборка и тесты
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # Без Tesseract тесты настоящего распознавания пропускаются — в CI они должны выполняться.
+      - name: Установить Tesseract
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends tesseract-ocr tesseract-ocr-eng
+          tesseract --version
+
+      - name: Восстановить пакеты
+        run: |
+          dotnet restore EasyLangApi.csproj
+          dotnet restore tests/EasyLangApi.Tests
+
+      - name: Собрать
+        run: dotnet build EasyLangApi.csproj -c Release --no-restore
+
+      - name: Тесты
+        run: >
+          dotnet test tests/EasyLangApi.Tests -c Release --no-restore
+          --logger "trx;LogFileName=results.trx" --results-directory TestResults
+
+      - name: Сохранить результаты тестов
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+
+  docker:
+    name: Docker-образ
+    runs-on: ubuntu-24.04
+    needs: build-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Собрать образ
+        run: docker build -t easylangapi:ci .
+
+      - name: Проверить, что образ поднимается и распознаёт текст
+        run: |
+          docker run -d --name api -p 8080:8080 easylangapi:ci
+          for i in $(seq 1 30); do curl -fs http://localhost:8080/health && break; sleep 2; done
+          curl -fs http://localhost:8080/health
+          TOKEN=$(curl -fs -H "Content-Type: application/json" \
+            -d '{"email":"ci@example.com","password":"ci-password-123"}' \
+            http://localhost:8080/auth/register | jq -r .accessToken)
+          curl -fs -H "Authorization: Bearer $TOKEN" -F "file=@sample.srt" http://localhost:8080/episodes
+          curl -fs -H "Authorization: Bearer $TOKEN" -F "image=@sample.png" http://localhost:8080/recognize \
+            | jq -e '.lines | length > 0'
+
+      - name: Логи контейнера
+        if: always()
+        run: docker logs api || true

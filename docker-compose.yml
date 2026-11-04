@@ -1,0 +1,33 @@
+# Запуск:            docker compose up --build
+# С локальной LLM:   docker compose --profile llm up --build
+#                    docker compose exec ollama ollama pull llama3.2
+#                    и в .env: LLM_API_KEY=ollama, LLM_BASE_URL=http://ollama:11434/v1, LLM_MODEL=llama3.2
+# Переменные берутся из файла .env рядом (пример — .env.example).
+
+services:
+  api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      Jwt__SigningKey: ${JWT_SIGNING_KEY:-}
+      Llm__ApiKey: ${LLM_API_KEY:-}
+      Llm__BaseUrl: ${LLM_BASE_URL:-https://api.openai.com/v1/}
+      Llm__Model: ${LLM_MODEL:-gpt-4o-mini}
+    volumes:
+      - easylang-data:/data
+    restart: unless-stopped
+
+  # Необязательная локальная языковая модель. Запускается только с профилем llm.
+  ollama:
+    image: ollama/ollama:0.12.6
+    profiles: ["llm"]
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  easylang-data:
+  ollama-models:

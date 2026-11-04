@@ -1,0 +1,15 @@
+**/bin/
+**/obj/
+.git/
+.github/
+.vs/
+.vscode/
+.idea/
+tests/
+client/
+srs/
+docs/
+*.db
+*.db-shm
+*.db-wal
+.env
