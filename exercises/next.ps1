@@ -169,3 +169,5 @@ foreach ($f in $current.Failed) {
 }
 Write-Host ''
 Write-Host 'Сделали шаг — запустите next.ps1 снова и закоммитьте.' -ForegroundColor DarkGray
+# Явно: иначе код выхода скрипта — код последнего dotnet test (1 при красных тестах).
+exit 0
