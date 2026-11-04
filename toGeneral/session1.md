@@ -72,5 +72,5 @@ Run 41860666795: вход, хоткей Ctrl+Shift+E через SendInput, вы�
 4. Очередь по p забыть: в srs/ (queue_experiment) при лимите 60 и T=0.8 — 656 слов против 589 по дате и 593 у fixed; при T=0.7 пользы нет; без лимита разница мала.
    В приложении Review:QueueOrder, по умолчанию ForgettingProbability у адаптивного. C# = Python в 150 прогонах из 150 (1 887 610 решений). guide.md: 3.14, вопросы 15 и 30.
 5. README для новичка с настоящими примерами из results/live/.
-Проверено запуском: 151 C#-тест (локально и CI), 52 теста srs, полная сверка C#/Python, оба workflow на раннерах. Не проверено: облачные LLM, клиент с настоящей игрой и другим DPI, люди.
+Проверено запуском: 151 C#-тест (локально и CI), 60 тестов srs (4 по флагам SRS_FULL/SRS_CSHARP — тоже прошли), полная сверка C#/Python, оба workflow на раннерах. Не проверено: облачные LLM, клиент с настоящей игрой и другим DPI, люди.
 Ветки: prototype, run/live, run/client, results (live/, client/), coordination (toGeneral/session1.md).
