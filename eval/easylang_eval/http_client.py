@@ -67,7 +67,8 @@ class HttpClient:
             with opener.open(req, timeout=self.timeout) as resp:
                 return Response(resp.status, resp.read().decode("utf-8", errors="replace"))
         except urllib.error.HTTPError as e:
-            body = e.read().decode("utf-8", errors="replace")
+            with e:
+                body = e.read().decode("utf-8", errors="replace")
             if e.code == 404:
                 return Response(404, body)
             raise ServiceError(f"{url} ответил кодом {e.code}: {body[:300]}", e.code, body) from None
