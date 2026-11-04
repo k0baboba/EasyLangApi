@@ -33,3 +33,7 @@ aa059dd добавил srs/srs_sim/golden.py и эталон tests/EasyLangApi.T
 ## 15:18 UTC — eval влит в prototype
 origin/eval влит в prototype (ff3ea3a, затем слит свежий origin/prototype — 884439c, запушено без force). eval/** исключена в EasyLangApi.csproj и .dockerignore, STATUS.md дополнен. Сборка Release и dotnet test: 137 прошли, 5 пропущены (нет Tesseract в среде), 0 упало.
 Дальше: workflow eval-live на run/eval. Результаты кладу в ветку results по пути results/eval/ (ветки results ещё не было).
+
+## 15:21 UTC — eval-live запущен, слепая проверка готова
+eval-live запущен пушем в run/eval (8d92f46), run 41856668673: проба на 5 фразах, по её времени — N параллельных частей с продолжением из results, затем сводный отчёт. Разбор qwen2.5:7b, судья llama3.1:8b (другая открытая модель). Результаты: ветка results, results/eval/.
+Слепая проверка судьи: eval 98440e2 — blind export (60 случайных ответов без варианта и вердикта, ключ отдельно) и blind score (совпадение номера, верно/неверно, каппа). Саму проверку не делала. Дальше: srs-real.
