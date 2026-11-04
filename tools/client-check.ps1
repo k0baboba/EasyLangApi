@@ -1,4 +1,7 @@
 ﻿# Проверка десктопного клиента на Windows (workflow client-check, раннер windows-latest).
+# Запускается в Windows PowerShell 5.1 (powershell.exe): там Add-Type с WinForms компилируется
+# без возни со ссылками на сборки, как в PowerShell 7. Файл сохранён в UTF-8 с BOM — иначе 5.1
+# прочитает русские строки неверно.
 #
 # Сервер уже запущен (http://localhost:5057), пользователь зарегистрирован, клиент собран.
 # Скрипт по шагам: показывает окно-«сцену» с sample.png, запускает клиент, входит через UI Automation,
@@ -10,7 +13,7 @@ param(
     [Parameter(Mandatory)] [string] $ClientExe,
     [Parameter(Mandatory)] [string] $Password,
     [Parameter(Mandatory)] [string] $OutDir,
-    [string] $ScenePng = (Resolve-Path (Join-Path $PSScriptRoot '..' 'sample.png')).Path,
+    [string] $ScenePng = (Resolve-Path (Join-Path (Split-Path $PSScriptRoot) 'sample.png')).Path,
     [string] $SceneTitle = 'Harbor Lights'
 )
 
@@ -181,7 +184,7 @@ function Value-Of([System.Windows.Automation.AutomationElement] $el) {
 
 Note "# Проверка клиента на Windows"
 Note ""
-Note "Раннер: $([Environment]::OSVersion.VersionString), пользователь $env:USERNAME, интерактивная сессия: $([Environment]::UserInteractive)."
+Note "Раннер: $([Environment]::OSVersion.VersionString), PowerShell $($PSVersionTable.PSVersion), пользователь $env:USERNAME, интерактивная сессия: $([Environment]::UserInteractive)."
 Note "Экраны: $(([System.Windows.Forms.Screen]::AllScreens | ForEach-Object { "$($_.Bounds.Width)x$($_.Bounds.Height)" }) -join ', ')."
 
 $scene = $null
@@ -208,7 +211,10 @@ Add-Type -AssemblyName System.Windows.Forms, System.Drawing
 `$f.Add_Shown({ `$r = `$pb.RectangleToScreen(`$pb.ClientRectangle); @{ x = `$r.X; y = `$r.Y; w = `$r.Width; h = `$r.Height } | ConvertTo-Json | Set-Content '$sceneRectFile' })
 [System.Windows.Forms.Application]::Run(`$f)
 "@
-    $script:scene = Start-Process pwsh -ArgumentList '-NoProfile', '-Command', $sceneScript -PassThru
+    # Через файл, а не -Command: Start-Process склеивает аргументы без кавычек.
+    $scenePath = Join-Path $OutDir 'scene.ps1'
+    Set-Content -Path $scenePath -Value $sceneScript -Encoding UTF8
+    $script:scene = Start-Process powershell -ArgumentList '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', "`"$scenePath`"" -PassThru
     $deadline = (Get-Date).AddSeconds(30)
     while (-not (Test-Path $sceneRectFile) -and (Get-Date) -lt $deadline) { Start-Sleep -Milliseconds 300 }
     if (-not (Test-Path $sceneRectFile)) { throw 'окно-сцена не показалось за 30 с' }

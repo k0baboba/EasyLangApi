@@ -67,7 +67,9 @@ jobs:
 
           $exe = (Resolve-Path 'client/EasyLangClient/bin/Release/net10.0-windows/EasyLangClient.exe').Path
           try {
-            ./tools/client-check.ps1 -ClientExe $exe -Password $password -OutDir $env:OUT
+            # Проверка клиента — в Windows PowerShell 5.1 (см. комментарий в начале скрипта).
+            powershell -NoProfile -ExecutionPolicy Bypass -File tools/client-check.ps1 `
+              -ClientExe $exe -Password $password -OutDir (Resolve-Path $env:OUT).Path
             $code = $LASTEXITCODE
           } finally {
             Stop-Process -Id $server.Id -Force -ErrorAction SilentlyContinue
