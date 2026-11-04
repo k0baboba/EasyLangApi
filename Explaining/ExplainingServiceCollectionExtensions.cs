@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Http.Resilience;
+using Polly;
 using Microsoft.Extensions.Options;
 
 namespace EasyLangApi.Explaining;
@@ -19,7 +21,16 @@ public static class ExplainingServiceCollectionExtensions
             http.BaseAddress = WithTrailingSlash(settings.BaseUrl);
             http.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
             http.DefaultRequestHeaders.UserAgent.ParseAdd("EasyLangApi/1.0");
-        });
+        })
+        // Временные сбои (5xx, 408, 429, обрыв) повторяем: всего три попытки с короткой
+        // растущей задержкой. 404 и 400 стратегия по умолчанию не повторяет.
+        .AddResilienceHandler("dictionary-retry", pipeline => pipeline.AddRetry(new HttpRetryStrategyOptions
+        {
+            MaxRetryAttempts = 2,
+            Delay = TimeSpan.FromMilliseconds(200),
+            BackoffType = DelayBackoffType.Exponential,
+            UseJitter = true,
+        }));
 
         services.AddHttpClient<LlmExplainer>((sp, http) =>
         {
@@ -28,9 +39,13 @@ public static class ExplainingServiceCollectionExtensions
             http.Timeout = TimeSpan.FromSeconds(settings.TimeoutSeconds);
         });
 
+        // С ключом LLM — языковая модель, а при её недоступности словарь (декоратор).
         services.AddScoped<IPhraseExplainer>(sp =>
             sp.GetRequiredService<IOptions<LlmOptions>>().Value.IsEnabled
-                ? sp.GetRequiredService<LlmExplainer>()
+                ? new FallbackExplainer(
+                    sp.GetRequiredService<LlmExplainer>(),
+                    sp.GetRequiredService<DictionaryExplainer>(),
+                    sp.GetRequiredService<ILogger<FallbackExplainer>>())
                 : sp.GetRequiredService<DictionaryExplainer>());
 
         return services;

@@ -62,6 +62,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, ICurrentUser c
         modelBuilder.Entity<Lookup>(lookup =>
         {
             lookup.HasQueryFilter(l => l.KnowledgeItem.UserId == CurrentUserId);
+            // Суточная квота считает наблюдения элементов пользователя по CreatedAt.
+            lookup.HasIndex(l => new { l.KnowledgeItemId, l.CreatedAt });
         });
 
         modelBuilder.Entity<ReviewEvent>(ev =>

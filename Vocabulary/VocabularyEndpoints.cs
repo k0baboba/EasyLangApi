@@ -22,10 +22,41 @@ public static class VocabularyEndpoints
         return app;
     }
 
-    private static async Task<List<VocabularyItem>> ListAsync(AppDbContext db, CancellationToken cancellationToken)
+    public const int MaxTake = 100;
+
+    /// <summary>Как сортировать: по строке параметра sort — функция, которая дописывает OrderBy к запросу.</summary>
+    private static readonly Dictionary<string, Func<IQueryable<KnowledgeItem>, IQueryable<KnowledgeItem>>> Sorts =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["recent"] = q => q.OrderByDescending(k => k.FirstSeenAt).ThenByDescending(k => k.Id),
+            ["phrase"] = q => q.OrderBy(k => k.PhraseNormalized).ThenBy(k => k.Id),
+            ["due"] = q => q.OrderBy(k => k.DueAt).ThenBy(k => k.Id),
+        };
+
+    private static async Task<Results<Ok<List<VocabularyItem>>, ProblemHttpResult>> ListAsync(
+        int? skip, int? take, bool? due, string? sort, AppDbContext db, TimeProvider time, CancellationToken cancellationToken)
     {
-        var rows = await db.KnowledgeItems
-            .OrderByDescending(k => k.FirstSeenAt)
+        if (take is < 1 or > MaxTake)
+            return TypedResults.Problem($"Параметр 'take' должен быть от 1 до {MaxTake}.", statusCode: 400);
+        if (skip is < 0)
+            return TypedResults.Problem("Параметр 'skip' не может быть отрицательным.", statusCode: 400);
+        if (!Sorts.TryGetValue(sort ?? "recent", out var applySort))
+            return TypedResults.Problem($"Параметр 'sort': {string.Join(", ", Sorts.Keys)}.", statusCode: 400);
+
+        IQueryable<KnowledgeItem> items = db.KnowledgeItems;
+        if (due == true)
+        {
+            var now = time.GetUtcNow().UtcDateTime;
+            items = items.Where(k => k.DueAt <= now);
+        }
+
+        items = applySort(items);
+        if (skip is { } toSkip)
+            items = items.Skip(toSkip);
+        if (take is { } toTake)
+            items = items.Take(toTake);
+
+        var rows = await items
             .Select(k => new
             {
                 Item = k,
@@ -37,7 +68,7 @@ public static class VocabularyEndpoints
             })
             .ToListAsync(cancellationToken);
 
-        return rows.Select(r => new VocabularyItem(
+        return TypedResults.Ok(rows.Select(r => new VocabularyItem(
                 r.Item.Id,
                 r.Item.PhraseNormalized,
                 r.Item.FirstSeenAt,
@@ -47,7 +78,7 @@ public static class VocabularyEndpoints
                 r.Last is null
                     ? null
                     : new LastSeen(r.Last.Phrase, r.Last.LineText, r.Last.EpisodeTitle, ReadSummary(r.Last.ExplanationJson), r.Last.CreatedAt)))
-            .ToList();
+            .ToList());
     }
 
     /// <summary>Реплики с этим элементом; singleUnknownOnly=true — только те, где он единственный незнакомый.</summary>

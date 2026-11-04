@@ -1,4 +1,5 @@
 using EasyLangApi.Explaining;
+using EasyLangApi.Lookups;
 using EasyLangApi.Quotas;
 using EasyLangApi.Recognition;
 using Microsoft.AspNetCore.Diagnostics;
@@ -21,6 +22,7 @@ public sealed class KnownExceptionHandler(
             TextRecognitionUnavailableException => (StatusCodes.Status503ServiceUnavailable, "Распознавание текста недоступно"),
             TextRecognitionFailedException => (StatusCodes.Status422UnprocessableEntity, "Не удалось распознать изображение"),
             QuotaExceededException => (StatusCodes.Status429TooManyRequests, "Квота исчерпана"),
+            DuplicatePhraseException => (StatusCodes.Status409Conflict, "Конфликт параллельных запросов"),
             _ => null,
         };
         if (known is null)

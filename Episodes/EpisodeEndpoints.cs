@@ -29,7 +29,7 @@ public static class EpisodeEndpoints
     private static async Task<Results<Created<EpisodeSummary>, ProblemHttpResult>> UploadAsync(
         IFormFile? file,
         [FromForm] string? title,
-        SrtTextSource source,
+        IEnumerable<ISubtitleSource> sources,
         EpisodeImporter importer,
         CancellationToken cancellationToken)
     {
@@ -38,12 +38,20 @@ public static class EpisodeEndpoints
         if (file.Length > MaxUploadBytes)
             return TypedResults.Problem($"Файл больше {MaxUploadBytes / 1024 / 1024} МБ.", statusCode: 400);
 
+        // Формат — по расширению: каждая зарегистрированная реализация знает своё.
+        var extension = Path.GetExtension(file.FileName);
+        var source = sources.FirstOrDefault(s => string.Equals(s.Extension, extension, StringComparison.OrdinalIgnoreCase));
+        if (source is null)
+            return TypedResults.Problem(
+                $"Неподдерживаемый формат '{extension}'. Поддерживаются: {string.Join(", ", sources.Select(s => s.Extension))}.",
+                statusCode: 400);
+
         IReadOnlyList<SourceLine> lines;
         await using (var stream = file.OpenReadStream())
             lines = await source.ReadLinesAsync(stream, cancellationToken);
 
         if (lines.Count == 0)
-            return TypedResults.Problem("В файле не найдено ни одной реплики в формате SRT.", statusCode: 400);
+            return TypedResults.Problem($"В файле не найдено ни одной реплики в формате {source.FormatName}.", statusCode: 400);
 
         var episodeTitle = string.IsNullOrWhiteSpace(title) ? Path.GetFileNameWithoutExtension(file.FileName) : title.Trim();
         var episode = await importer.ImportAsync(episodeTitle, file.FileName, lines, cancellationToken);

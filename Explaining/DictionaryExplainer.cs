@@ -16,6 +16,7 @@ public sealed class DictionaryExplainer(HttpClient http, ILogger<DictionaryExpla
     private const int MaxSenses = 6;
     private const int DefinitionsPerMeaning = 2;
     private const int MaxWordsInFallback = 4;
+    private const int MaxParallelRequests = 2;
 
     public async Task<Explanation> ExplainAsync(
         string phrase, PhraseContext context, CancellationToken cancellationToken = default)
@@ -36,9 +37,30 @@ public sealed class DictionaryExplainer(HttpClient http, ILogger<DictionaryExpla
         {
             if (isMultiWord)
             {
-                foreach (var word in words.Where(w => w.Length > 2).Take(MaxWordsInFallback))
+                // Слова спрашиваем одновременно, но не больше MaxParallelRequests за раз:
+                // бесплатный словарь не любит пачек запросов. Семафор свой у каждого вызова.
+                using var gate = new SemaphoreSlim(MaxParallelRequests);
+                var lookups = words
+                    .Where(w => w.Length > 2)
+                    .Take(MaxWordsInFallback)
+                    .Select(async word =>
+                    {
+                        await gate.WaitAsync(cancellationToken);
+                        try
+                        {
+                            return (Word: word, Entries: await FetchAsync(word, serverErrorMeansNotFound: false, cancellationToken));
+                        }
+                        finally
+                        {
+                            gate.Release();
+                        }
+                    })
+                    .ToList();
+
+                // WhenAll возвращает результаты в порядке задач, а await пробрасывает первое
+                // исключение как есть (ExplainerUnavailableException, а не AggregateException).
+                foreach (var (word, wordEntries) in await Task.WhenAll(lookups))
                 {
-                    var wordEntries = await FetchAsync(word, serverErrorMeansNotFound: false, cancellationToken);
                     if (wordEntries is not null)
                         senses.AddRange(ToSenses(word, wordEntries).Take(DefinitionsPerMeaning));
                 }

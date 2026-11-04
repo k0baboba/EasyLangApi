@@ -7,6 +7,7 @@ using EasyLangApi.Lookups;
 using EasyLangApi.Quotas;
 using EasyLangApi.Recognition;
 using EasyLangApi.Review;
+using EasyLangApi.Stats;
 using EasyLangApi.Vocabulary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -30,6 +31,8 @@ builder.Services.AddPhraseExplainers(builder.Configuration);
 builder.Services.Configure<OcrOptions>(builder.Configuration.GetSection(OcrOptions.SectionName));
 builder.Services.AddSingleton<ITextRecognizer, TesseractRecognizer>();
 builder.Services.AddSingleton<SrtTextSource>();
+builder.Services.AddSingleton<ISubtitleSource>(sp => sp.GetRequiredService<SrtTextSource>());
+builder.Services.AddSingleton<ISubtitleSource, VttTextSource>();
 builder.Services.AddScoped<ImageTextSource>();
 builder.Services.AddScoped<EpisodeImporter>();
 builder.Services.AddScoped<LookupService>();
@@ -71,6 +74,7 @@ app.MapRecognitionEndpoints();
 app.MapLookupEndpoints();
 app.MapVocabularyEndpoints();
 app.MapReviewEndpoints();
+app.MapStatsEndpoints();
 
 app.Run();
 

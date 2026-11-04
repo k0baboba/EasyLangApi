@@ -5,6 +5,7 @@ using EasyLangApi.Episodes;
 using EasyLangApi.Explaining;
 using EasyLangApi.Vocabulary;
 using EasyLangApi.Quotas;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -67,10 +68,32 @@ public sealed class LookupService(
             CreatedAt = now,
         };
         db.Lookups.Add(lookup);
-        await db.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await db.SaveChangesAsync(cancellationToken);
+        }
+        catch (DbUpdateException ex) when (isNewItem && IsUniqueViolation(ex))
+        {
+            // Соседний запрос успел создать тот же элемент. Убираем свой из отслеживания,
+            // берём его элемент и сохраняем наблюдение ещё раз.
+            var existing = await db.KnowledgeItems.FirstOrDefaultAsync(k => k.PhraseNormalized == normalized, cancellationToken)
+                           ?? throw new DuplicatePhraseException("Элемент словаря создаётся параллельно, повторите запрос.", ex);
+            // Отсоединяем свой элемент. Наблюдение ссылалось на него обязательной связью, поэтому EF
+            // отсоединит и его как «сироту». Добавляем наблюдение заново — уже к найденному элементу.
+            db.Entry(item).State = EntityState.Detached;
+            lookup.KnowledgeItem = existing;
+            db.Lookups.Add(lookup);
+            item = existing;
+            isNewItem = false;
+            await db.SaveChangesAsync(cancellationToken);
+        }
 
         return new LookupResult(lookup.Id, item.Id, isNewItem, phrase, context, explanation);
     }
+
+    /// <summary>SQLITE_CONSTRAINT_UNIQUE (2067): вставка нарушила уникальный индекс.</summary>
+    private static bool IsUniqueViolation(DbUpdateException ex) =>
+        ex.InnerException is SqliteException { SqliteErrorCode: 19, SqliteExtendedErrorCode: 2067 };
 
     /// <summary>Разборы стоят денег (LLM) — ограничиваем их число в сутки. Фильтр по пользователю добавит EF.</summary>
     private async Task EnsureDailyQuotaAsync(DateTime now, CancellationToken cancellationToken)

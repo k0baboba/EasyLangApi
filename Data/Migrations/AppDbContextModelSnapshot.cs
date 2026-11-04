@@ -134,9 +134,9 @@ namespace EasyLangApi.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("KnowledgeItemId");
-
                     b.HasIndex("LineId");
+
+                    b.HasIndex("KnowledgeItemId", "CreatedAt");
 
                     b.ToTable("Lookups");
                 });

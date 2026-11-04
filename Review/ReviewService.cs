@@ -104,9 +104,25 @@ public sealed class ReviewService(
         var history = await LoadHistoryAsync(shown.KnowledgeItemId, cancellationToken);
         // Ответы из базы — без текущего: он ещё не сохранён. Добавляем его сами.
         var userAnswers = await LoadUserAnswersAsync(cancellationToken);
-        // shown уже отслеживается контекстом, поэтому в history это тот же объект.
-        shown.AnsweredAt = now;
-        shown.WasCorrect = wasCorrect;
+
+        // Проверка «ещё не отвечено» и запись ответа — одна операция в базе:
+        // UPDATE ... WHERE Id = @id AND AnsweredAt IS NULL. Параллельный ответ обновит 0 строк.
+        var claimed = await db.ReviewEvents
+            .Where(e => e.Id == reviewId && e.AnsweredAt == null)
+            .ExecuteUpdateAsync(set => set
+                .SetProperty(e => e.AnsweredAt, now)
+                .SetProperty(e => e.WasCorrect, wasCorrect), cancellationToken);
+        if (claimed == 0)
+            return new AnswerOutcome(AnswerStatus.AlreadyAnswered);
+
+        // ExecuteUpdate прошёл мимо отслеживания. shown — тот же объект, что в history, поэтому
+        // обновляем его в памяти. Пишем и исходное значение: так EF считает поле уже сохранённым
+        // (IsModified = false здесь не подходит — он вернул бы старое значение).
+        var entry = db.Entry(shown);
+        entry.Property(e => e.AnsweredAt).OriginalValue = now;
+        entry.Property(e => e.AnsweredAt).CurrentValue = now;
+        entry.Property(e => e.WasCorrect).OriginalValue = wasCorrect;
+        entry.Property(e => e.WasCorrect).CurrentValue = wasCorrect;
         var item = shown.KnowledgeItem;
         userAnswers.Add(new UserAnswer(shown.Id, item.Id, item.FirstSeenAt, shown.ShownAt, now, wasCorrect));
 
