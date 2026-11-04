@@ -36,3 +36,7 @@ guide отличается от prototype только docs/guide.md. Дальш
 ## 15:18 UTC — часть 1 готова: guide под обучаемый AdaptiveScheduler
 guide: влит prototype e1e1cfa (d2bf4db), переписаны 3.14, вопросы 25–26, пункт 2 вопроса 30, порядок чтения, тесты 126→142, OMP_THREAD_LIMIT (ced7bd2).
 Тесты 142/142 локально (dotnet 10.0.114, tesseract 5.3.4). guide влит в prototype, снова 142/142, запушено без force. Дальше: тренажёр exercises.
+
+## 15:30 UTC — тренажёр: ветка exercises запушена (2fe529c)
+20 шагов в 10 задачах (порядок тем по fromGeneral), тесты шагов + exercises/next.ps1 (UTF-8 BOM, PS 5.1). Локально: все 20 шагов красные (next.ps1 -Expect AllRed в pwsh 7), основные 142/142. CI: workflow «Тренажёр» (.github/workflows/exercises.yml), Windows-прогон ещё не смотрела.
+Решение: гонки (шаги 09, 13) воспроизводятся SaveChangesInterceptor-барьером в тестах. Шаги 13 и 16 — около 10 минут, а не меньше: проверка и запись атомарны, мельче не режется. Дальше: решения в exercises-solutions.
