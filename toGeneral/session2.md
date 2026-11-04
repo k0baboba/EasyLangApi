@@ -54,3 +54,7 @@ srs-real (run 41859080470, run/srs 5d4cb05): 12,85 млн сессий Duolingo,
 eval-live (run 41858643540): проба v2 прошла, вердикты по существу (словарь no cap → «шапка» = неверно); основной прогон — 3 части по ~77 мин, стартовали в 15:42. Результаты придут в results/eval/shards-judge-v2/ и results/eval/full-judge-v2/ (сводный results.md). Не дежурю.
 Сделано: 1) eval в prototype (ff3ea3a, повторно с ci/ и судьёй v2, prototype 9c5df07); 2) eval-live запущен; 3) blind export/score (eval 98440e2), проверку не делала; 4) srs-real, отрицательный результат по калибровке, srs/REPORT.md (762356b), results/srs/.
 Проверено запуском: тесты eval 53, srs (skipped 4), dotnet test 137/142 (5 пропусков Tesseract); пробы eval-live и полный srs-real на раннере. Не проверено: полный eval-live ещё идёт, итоговых чисел eval нет. Ветки: eval d755af3, run/eval, run/srs 5d4cb05, prototype, results.
+
+## 16:48 UTC — п.1 сделан
+srs/REPORT.md: таблица 2 статьи, сравнение с HLR -lex (AUC 0.538 против 0.537), вывод 2 переписан, ограничение «статья не открывалась» заменено на «сравнение приблизительное». Вывод про калибровку и цель T оставлен. prototype 098e45f.
+Дальше: слепая проверка на 120 ответах.
