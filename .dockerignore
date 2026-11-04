@@ -8,6 +8,7 @@
 tests/
 client/
 srs/
+eval/
 docs/
 *.db
 *.db-shm
