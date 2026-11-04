@@ -4,16 +4,19 @@ namespace EasyLangClient;
 internal sealed class LoginForm : Form
 {
     private readonly ApiClient _api;
-    private readonly TextBox _email = new() { Width = 260 };
-    private readonly TextBox _password = new() { Width = 260, UseSystemPasswordChar = true };
-    private readonly Label _status = new() { AutoSize = true, ForeColor = Color.Firebrick, MaximumSize = new Size(260, 0) };
-    private readonly Button _login = new() { Text = "Войти", AutoSize = true };
-    private readonly Button _register = new() { Text = "Регистрация", AutoSize = true };
+    private readonly TextBox _email = new() { Width = 260, Name = "email" };
+    private readonly TextBox _password = new() { Width = 260, UseSystemPasswordChar = true, Name = "password" };
+    private readonly Label _status = new() { AutoSize = true, ForeColor = Color.Firebrick, MaximumSize = new Size(260, 0), Name = "status" };
+    private readonly Button _login = new() { Text = "Войти", AutoSize = true, Name = "login" };
+    private readonly Button _register = new() { Text = "Регистрация", AutoSize = true, Name = "register" };
 
     public LoginForm(ApiClient api, string email)
     {
         _api = api;
         _email.Text = email;
+        // Name у окна и контролов — это AutomationId в UI Automation: по нему окно находят
+        // автотесты клиента (tools/client-check.ps1), не завися от текста на русском.
+        Name = "EasyLangLogin";
         Text = "EasyLang — вход";
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = MinimizeBox = false;
