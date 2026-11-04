@@ -71,7 +71,16 @@ function Show-Step($stepInfo, [int]$hintLevel) {
 function Invoke-ExerciseTests {
     $resultsDir = Join-Path ([System.IO.Path]::GetTempPath()) ('easylang-exercises-' + [guid]::NewGuid().ToString('N'))
     Write-Host 'Прогоняю тесты тренажёра (первый раз — около минуты)...' -ForegroundColor DarkGray
-    $output = & dotnet test $testsDir --nologo --logger 'trx;LogFileName=exercises.trx' --results-directory $resultsDir 2>&1
+    # Windows PowerShell 5.1 превращает строки stderr внешней программы в ошибки, а при Stop — в
+    # прерывающие. Красные тесты пишут в stderr, это нормально, поэтому на время вызова — Continue.
+    $previous = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        $output = & dotnet test $testsDir --nologo --logger 'trx;LogFileName=exercises.trx' --results-directory $resultsDir 2>&1 |
+            ForEach-Object { "$_" }
+    } finally {
+        $ErrorActionPreference = $previous
+    }
     $trx = Join-Path $resultsDir 'exercises.trx'
     if (-not (Test-Path $trx)) {
         Write-Host 'Тесты не запустились: скорее всего, код не собирается. Ошибки сборки:' -ForegroundColor Red
