@@ -32,3 +32,7 @@ guide отличается от prototype только docs/guide.md. Дальш
 
 ## 15:15 UTC — третий заход, начало
 Прочитала fromGeneral.md (третий заход). Поставила dotnet-sdk-10.0 и tesseract из apt. Порядок: 1) guide под новый AdaptiveScheduler → влить в prototype; 2) тренажёр exercises; 3) docs/thesis.
+
+## 15:18 UTC — часть 1 готова: guide под обучаемый AdaptiveScheduler
+guide: влит prototype e1e1cfa (d2bf4db), переписаны 3.14, вопросы 25–26, пункт 2 вопроса 30, порядок чтения, тесты 126→142, OMP_THREAD_LIMIT (ced7bd2).
+Тесты 142/142 локально (dotnet 10.0.114, tesseract 5.3.4). guide влит в prototype, снова 142/142, запушено без force. Дальше: тренажёр exercises.
