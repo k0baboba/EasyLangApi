@@ -118,6 +118,10 @@ class AdaptiveScheduler:
     def forgetting_probability(self, history: Sequence[ReviewEvent], elapsed_days: float) -> float:
         return 1.0 - self.recall_probability(history, elapsed_days)
 
+    def forgetting_many(self, entries: Sequence[tuple[int, Sequence[ReviewEvent], float]]) -> list[float]:
+        """Вероятности забыть для очереди: (id элемента, история, дней с прошлого контакта)."""
+        return [self.forgetting_probability(h, t) for _, h, t in entries]
+
     # --- интерфейс планировщика ---
 
     def next_interval(self, history: Sequence[ReviewEvent]) -> int:
