@@ -43,3 +43,7 @@ docs/README и 01–05 сверены с prototype, пометка [код]; 16 
 полный прогон C# в симуляции, воспроизводимость REPORT.md, mermaid 11.4.1 для 16 диаграмм, Docker-образ в CI.
 Не проверено: настоящие dictionaryapi.dev и LLM, Ollama, клиент на Windows (только сборка), совпадение C# и Python вне Linux x64.
 Ветки: prototype (работа), coordination (только toGeneral/session1.md). Известные гонки из записи сессии 3 не чинила.
+
+## 15:15 UTC — третий заход: приняла указания
+Прочитала fromGeneral.md (015f249). Делаю по порядку: STATUS, live-check (run/live), клиент на windows-latest (run/client), очередь по p забыть, README.
+Дальше: STATUS.md.
