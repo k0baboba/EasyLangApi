@@ -9,7 +9,7 @@ namespace EasyLangApi.Explaining;
 /// поэтому контекст используется только чтобы поставить первым значение,
 /// которое делит слова со сценой.
 /// </summary>
-public sealed class DictionaryExplainer(HttpClient http) : IPhraseExplainer
+public sealed class DictionaryExplainer(HttpClient http, ILogger<DictionaryExplainer> logger) : IPhraseExplainer
 {
     public const string SourceName = "dictionary";
 
@@ -20,7 +20,13 @@ public sealed class DictionaryExplainer(HttpClient http) : IPhraseExplainer
     public async Task<Explanation> ExplainAsync(
         string phrase, PhraseContext context, CancellationToken cancellationToken = default)
     {
-        var entries = await FetchAsync(phrase, cancellationToken);
+        var words = PhraseNormalizer.Tokenize(phrase).Distinct().ToList();
+        var isMultiWord = words.Count > 1;
+
+        // На выражения из нескольких слов словарь отвечает не только 404, но иногда и 5xx.
+        // Для такой фразы 5xx значит то же, что 404: переходим к отдельным словам.
+        // Если словарь лежит целиком, упадут и запросы по словам — тогда уже 503.
+        var entries = await FetchAsync(phrase, serverErrorMeansNotFound: isMultiWord, cancellationToken);
         var senses = entries is null ? [] : ToSenses(phrase, entries);
         var foundAsWhole = senses.Count > 0;
 
@@ -28,12 +34,11 @@ public sealed class DictionaryExplainer(HttpClient http) : IPhraseExplainer
         // значения отдельных слов, но не называем это смыслом фразы (Found = false).
         if (!foundAsWhole)
         {
-            var words = PhraseNormalizer.Tokenize(phrase).Distinct().ToList();
-            if (words.Count > 1)
+            if (isMultiWord)
             {
                 foreach (var word in words.Where(w => w.Length > 2).Take(MaxWordsInFallback))
                 {
-                    var wordEntries = await FetchAsync(word, cancellationToken);
+                    var wordEntries = await FetchAsync(word, serverErrorMeansNotFound: false, cancellationToken);
                     if (wordEntries is not null)
                         senses.AddRange(ToSenses(word, wordEntries).Take(DefinitionsPerMeaning));
                 }
@@ -53,8 +58,12 @@ public sealed class DictionaryExplainer(HttpClient http) : IPhraseExplainer
         };
     }
 
-    /// <summary>null — словарь не знает слова (404). Сетевые сбои превращаются в ExplainerUnavailableException.</summary>
-    private async Task<List<DictionaryEntry>?> FetchAsync(string term, CancellationToken cancellationToken)
+    /// <summary>
+    /// null — словарь не знает слова (404, а при <paramref name="serverErrorMeansNotFound"/> — и 5xx).
+    /// Остальные ошибки и сетевые сбои превращаются в ExplainerUnavailableException.
+    /// </summary>
+    private async Task<List<DictionaryEntry>?> FetchAsync(
+        string term, bool serverErrorMeansNotFound, CancellationToken cancellationToken)
     {
         HttpResponseMessage response;
         try
@@ -75,6 +84,12 @@ public sealed class DictionaryExplainer(HttpClient http) : IPhraseExplainer
         {
             if (response.StatusCode == HttpStatusCode.NotFound)
                 return null;
+            if (serverErrorMeansNotFound && (int)response.StatusCode >= 500)
+            {
+                logger.LogInformation("Словарь ответил {Status} на '{Term}', разбираем по словам", (int)response.StatusCode, term);
+                return null;
+            }
+
             if (!response.IsSuccessStatusCode)
                 throw new ExplainerUnavailableException($"Словарь ответил кодом {(int)response.StatusCode}.");
 
